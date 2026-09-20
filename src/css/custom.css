@@ -1,0 +1,31 @@
+/**
+ * Global styles. Infima variables are overridden here.
+ */
+:root {
+  --ifm-color-primary: #2456c9;
+  --ifm-color-primary-dark: #2150b9;
+  --ifm-color-primary-darker: #204db0;
+  --ifm-color-primary-darkest: #1a3f92;
+  --ifm-color-primary-light: #2f62d9;
+  --ifm-color-primary-lighter: #3a6cde;
+  --ifm-color-primary-lightest: #5b86e6;
+  --ifm-code-font-size: 95%;
+  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.1);
+  --ifm-font-family-base: 'Pretendard', system-ui, -apple-system, 'Segoe UI', Roboto, 'Noto Sans KR', sans-serif;
+}
+
+[data-theme='dark'] {
+  --ifm-color-primary: #7ea2f4;
+  --ifm-color-primary-dark: #5f8bf1;
+  --ifm-color-primary-darker: #5080f0;
+  --ifm-color-primary-darkest: #2359e6;
+  --ifm-color-primary-light: #9dbaf7;
+  --ifm-color-primary-lighter: #adc4f8;
+  --ifm-color-primary-lightest: #dbe6fc;
+  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
+}
+
+.markdown img {
+  max-width: 100%;
+  height: auto;
+}

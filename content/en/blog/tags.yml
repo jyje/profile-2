@@ -1,0 +1,108 @@
+achievements:
+  label: Achievements
+  permalink: /achievements
+  description: Selected curations of my professional achievements and works
+ai:
+  label: AI
+  permalink: /ai
+  description: AI and related topics 🧑‍💻
+awards:
+  label: Awards
+  permalink: /awards
+  description: Awards and achievements 🎉
+aws:
+  label: AWS
+  permalink: /aws
+  description: For an in-depth understanding, this is my detailed article related to Amazon Web Services (AWS), covering its features, practical applications. I focus on AWS services including EKS, EC2, S3, and more.
+careers:
+  label: Careers
+  permalink: /careers
+  description: My career journey and experiences 🧑‍💻
+certifications:
+  label: Certifications
+  permalink: /certifications
+  description: Professional certifications and licenses I have earned
+devops:
+  label: DevOps
+  permalink: /devops
+  description: Posts related to DevOps. DevOps is a set of practices that combines software development (Dev) and IT operations (Ops). It aims to shorten the systems development life cycle and provide continuous delivery with high software quality.
+digital-twins:
+  label: Digital Twins
+  permalink: /digital-twins
+  description: Works on Digital Twins.
+hyundai-autoever:
+  label: Hyundai AutoEver
+  permalink: /hyundai-autoever
+  description: Works at [Hyundai AutoEver](https://www.linkedin.com/company/hyundai-autoever).
+kit:
+  label: kit
+  permalink: /kit
+  description: Study in kit
+kubernetes:
+  label: Kubernetes
+  permalink: /kubernetes
+  description: Kubernetes related posts
+linkedin:
+  label: LinkedIn
+  permalink: /linkedin
+  description: Articles and updates shared on LinkedIn 🔗
+linux-foundation:
+  label: Linux Foundation
+  permalink: /linux-foundation
+  description: Linux Foundation related posts. The cover image is from the Linux Foundation.
+llm:
+  label: LLM
+  permalink: /llm
+  description: Large Language Models and Generative AI 🤖
+math:
+  label: Math
+  permalink: /math
+  description: My math note
+maxst:
+  label: MAXST
+  permalink: /maxst
+  description: Works at [MAXST](https://www.linkedin.com/company/maxst).
+mlops:
+  label: MLOps
+  permalink: /mlops
+  description: MLOps is a practice for collaboration and communication between data scientists and operations professionals to help manage production ML (Machine Learning) lifecycles. It focuses on automation and monitoring at all steps of ML system construction, including integration, testing, releasing, deployment, and infrastructure management.
+onpremise:
+  label: On-Premise
+  permalink: /onpremise
+  description: As growing public cloud services, on-premise is still a good alternative and backup plan for companies. This tag covers the on-premise infrastructure, including Kubernetes, DevOps, and more. I focus on the on-premise infrastructure, including bare-metal Kubernetes, Hybrid Architectures, and more.
+paper:
+  label: Paper
+  permalink: /paper
+  description: Paper Works
+postech:
+  label: POSTECH
+  permalink: /postech
+  description: Study in POSTECH
+raspberrypi:
+  label: Raspberry Pi
+  permalink: /raspberrypi
+  description: Raspberry Pi is a arm based single board computer that is popular among hobbyists and educators. It is used in a wide range of projects from home automation to robotics. I use pies for various projects and will be sharing my experiences here.
+rating:
+  label: Rating Systems
+  permalink: /rating
+  description: Research on Rating Systems
+recap:
+  label: Recap
+  permalink: /recap
+  description: Posts looking back on the period's achievements, experiences, and lessons learned.
+tech-note:
+  label: Technical Notes
+  permalink: /tech-note
+  description: Technical notes
+thesis:
+  label: Thesis
+  permalink: /thesis
+  description: Thesis for degree
+github:
+  label: Github
+  permalink: /github
+  description: Github related posts
+security:
+  label: Security
+  permalink: /security
+  description: Security related posts

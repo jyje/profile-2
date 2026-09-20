@@ -1,0 +1,423 @@
+# If you have a `resume.json` file, copy it into `_data` and delete this file.
+# If you don't have a JSON Resume you can just edit this YAML file instead.
+# See also: <https://jsonresume.org/>.
+basics:
+  name: 전제영
+  name-english: Jeayoung Jeon
+  label: "AI Platform Engineer"
+  # picture: "/assets/img/profile/jyje-o2024.jpg"
+  email: "jyjeon@outlook.com"
+  # linkedin: "jyje"  # moved to profiles for ordering
+  website: "https://jyje.online"
+  # github: "jyje"
+  # googlescholar: "gwCPQM8AAAAJ"
+  location:
+    address: "" # "2712 Broadway St"
+    postalCode: "" # "CA 94115"
+    city: "Seoul" # "Seoul"
+    countryCode: "KR" # "KR"
+    region: "" # "California"
+  profiles:
+    - network: LinkedIn
+      username: LinkedIn
+      url: https://www.linkedin.com/in/jyje
+    - network: Github
+      username: Github
+      url: http://github.com/jyje
+    # - network: StackShare
+    #   username: StackShare
+    #   url: https://stackshare.io/jyje/jyje-pro-stack
+  contents:
+    # skills:
+    #   note: "제 스킬 중 현업에 바로 쓸 수 있는 것은 강조하였습니다."
+    publications:
+      note: "제 논문 목록은 [Google Scholar](https://scholar.google.com/citations?user=gwCPQM8AAAAJ&hl=ko)에서 확인할 수 있습니다."
+    resume-ko:
+      title: 이력서
+      abstract: >
+        **도메인 특화 AI 환경을 인프라부터 워크로드까지 연결하는 AI Platform Engineer**입니다. Agentic AI 시스템과 이를 구동하는 Kubernetes·GPU·LLMOps 플랫폼, 안정적인 운영을 위한 AIOps를 함께 설계하며 현재 차량SW 검증 플랫폼의 아키텍처와 개발을 리드합니다.
+
+          - <span class="resume-abstract-emoji no-print" aria-hidden="true">🤖</span> **Agentic AI 시스템:** 에이전트 하네스·워크플로우와 MCP·도메인 도구를 통합하고 평가 환경을 구현할 수 있습니다.
+          - <span class="resume-abstract-emoji no-print" aria-hidden="true">☁️</span> **AI 플랫폼 & AIOps:** 하이브리드 Kubernetes, GPU, LLMOps, 관측·운영 자동화를 연결해 도메인 워크로드를 운영할 수 있습니다.
+          - <span class="resume-abstract-emoji no-print" aria-hidden="true">🧭</span> **아키텍처·기술 리딩:** 개발 그룹의 테크리드로서 SecOps(취약점·네트워크·인증·AI 가드레일)와 FinOps(토큰·인프라 효율화)를 설계 초기에 반영하고 우선순위에 따라 구현할 수 있습니다.
+
+        차량·Computer Vision 연구, MLOps 플랫폼 구축, Agentic AI 개발로 이어진 경력의 상세는 [**포트폴리오**](https://jyje.online/ko/portfolio)에서 확인할 수 있습니다.
+
+labels:
+  role: 역할
+  roles: 역할
+  results: 성과
+  growth: 성장
+  area: 전공
+  keywords: 키워드
+  gpa: GPA
+  volunteer: Other Activities
+  present: present
+
+
+work:
+  -
+    company: 현대오토에버
+    headerIcon: "🧑‍💻"
+    position: "리드 AI 플랫폼 엔지니어"
+    website: https://www.hyundai-autoever.com
+    startDate: "2025-02-24"
+    endDate: {}
+    roles:
+      items:
+        - header: AI/LLM Platform
+          content: >
+            사내 툴체인용 Agentic AI 통합·평가 환경의 아키텍처 및 개발 리드
+        - header: Cloud-Native AI
+          content: >
+            Kubernetes 기반 LLMOps·AIOps로 Private LLM 워크로드 환경 구성
+  -
+    company: 맥스트
+    headerIcon: "🧑‍🔬"
+    position: "리드 MLOps & DevOps 엔지니어"
+    website: https://www.linkedin.com/company/maxst
+    startDate: "2021-01-16"
+    endDate: "2024-10-31"
+    roles:
+      items:
+        - header: MLOps
+          content: >
+            Kubeflow 연구환경 자체 구축·운영 및 디지털 트윈 상품 출시 지원
+        - header: DevOps
+          content: >
+            하이브리드 Kubernetes 도입·온보딩 및 개발환경 제공
+  # -
+  #   company: "POSTECH"  — 연구 경험은 Skills에 표시 (Computer Vision, FPGA, SLAM)
+  #   startDate: "2012-03-01"
+  #   endDate: "2020-08-28"
+  # -
+  #   company: "GIST"
+  #   position: "Undergraduate Internship"
+  #   website: "https://me.gist.ac.kr/biomems/index.do"
+  #   startDate: "2010-07-26"
+  #   endDate: "2010-08-15"
+  #   summary: >
+  #     As an undergraduate student, I participated in an internship program at the BioMEMS Lab in GIST, where I engaged in the following tasks:
+  #   highlights:
+  #     - Study on BioMEMSs equivarant to Electronic RLC circuits
+  #     - Preview of Graduate Program and Experiments
+
+
+projects:
+  -
+    headerIcon: "🚙"
+    position: "차량SW 검증을 위한 Agentic AI 플랫폼"
+    company: 현대오토에버
+    startDate: "2026-04-01"
+    endDate: {}
+    roles:
+      description: "플랫폼 아키텍트 · 테크 리드"
+    results:
+      items:
+        - header: 플랫폼 아키텍처
+          content: >
+            Deep Agents 기반 에이전트 통합·도구 실행·평가 구조 설계 및 개발 주도
+
+  -
+    headerIcon: "🤖"
+    position: "Codebeamer AI Assistant"
+    company: 현대오토에버
+    startDate: "2025-02-24"
+    endDate: "2025-11-30"
+    roles:
+      description: "Agentic AI 테크 리드"
+    results:
+      items:
+        - header: 도메인 에이전트
+          content: >
+            RAG·MCP 도구를 통합한 AI Assistant 구현 및 사내 툴체인 실행 검증
+
+  -
+    headerIcon: "🧑‍🔬"
+    position: "온프레미스 MLOps 플랫폼 구축"
+    company: 맥스트
+    startDate: "2024-01-01"
+    endDate: "2024-06-30"
+    roles:
+      description: "MLOps 플랫폼 아키텍트 · 테크 리드 [기여도 90%]"
+    results:
+      items:
+        - header: GPU 활용 3배
+          content: >
+            하이브리드 Kubernetes로 유휴 GPU를 통합해 24/7 연구환경 제공
+        - header: 제품화
+          content: >
+            Kubeflow 학습환경으로 디지털 트윈 상품 출시 지원
+
+education:
+  -
+    institution: "포항공과대학교 (POSTECH)"
+    website: "https://eee.postech.ac.kr/"
+    area: "전기전자공학 · 컴퓨터비전·신호처리"
+    headerIcon: "🎓"
+    studyType: "석사학위(통합과정수료)"
+    keywords:
+      - 엣지컴퓨터비전
+      - 디지털트윈
+      - SLAM
+      - ADAS
+    startDate: "2012-03-01"
+    endDate: "2020-08-31"
+    gpa: "3.2/4.3"
+    thesis: "Virtual Visual-SLAM, 2020"
+    # courses:
+    #   - Advanced Driver Assistance Systems (ADAS)
+    #   - Simultaneous Localization and Mapping (SLAM)
+    #   - Computer Vision Algorithms
+  -
+    institution: "금오공과대학교 (kit)"
+    website: "https://eng.kumoh.ac.kr/eng"
+    area: "전자공학부, 전자 및 정보통신"
+    headerIcon: "🎓"
+    studyType: "학사학위"
+    keywords:
+      - 디지털신호처리
+      - 전자통신
+      - 가시광통신
+      - FPGA
+    startDate: "2008-03-01"
+    endDate: "2012-02-28"
+    gpa: "4.3/4.5"
+    thesis: "LED 조명을 이용한 수중 환경에서의 가시광 통신 연구, 2011"
+    # courses:
+    #   - Digital Signal Processing
+    #   - Visual Light Communication
+    #   - Electronic Communication with Complex Analysis
+    #   - Finite Programmable Gate Array (FPGA)
+
+skills:
+  -
+    name: AI Tooling & Workflow
+    keywords:
+      - Claude Code
+      - Hermes Agent
+      - Codex
+      - GitHub Copilot
+  -
+    name: Agentic AI Systems
+    keywords:
+      - Python/FastAPI
+      - LangGraph/Deep Agents
+      - RAG/MCP
+      - Agent Protocol/A2A
+      - Agent Evaluation
+  -
+    name: AI Platform & AIOps
+    keywords:
+      - Public/Private LLM
+      - AIOps/LLMOps
+      - LangSmith
+      - Langfuse
+      - LGTM Observability
+      - vLLM
+      - Kubeflow
+      - Run:ai
+      - Milvus/Qdrant/pgvector
+  -
+    name: Cloud-Native Infrastructure
+    keywords:
+      - Kubernetes
+      - Hybrid Clusters
+      - AWS EKS/On-Prem
+      - Argo Projects/GitOps
+      - IaC
+  -
+    name: SecOps
+    keywords:
+      - Istio
+      - OIDC/RBAC
+      - Network Policy
+      - AI Guardrails
+      - Vulnerability Response
+  -
+    name: FinOps
+    keywords:
+      - LiteLLM
+      - Karpenter
+      - Hybrid GPU/Cloud
+      - Cost Optimization
+  -
+    name: AI Research Foundation
+    keywords:
+      - Computer Vision/SLAM
+      - PyTorch/OpenCV
+      - Digital Twins
+      - GPU Optimization
+      - Vehicle SW
+
+  # -
+  #  name: Tool, OS and Hardware
+  #   keywords:
+  #     - Visual Studio Code
+  #     - Visual Studio
+  #     - Jupyter Notebook
+  #     - MATLAB/Simulink
+  #     - Windows
+  #     - WSL2
+  #     - Ubuntu
+  #     - Alpine
+  #     - MacOS
+  #     - ARM64/Raspberry Pi
+  #     - AMD64/Bare Metal
+  #     - FPGA
+
+volunteer:
+  -
+    organization: "GitHub"
+    position: "AI 플랫폼·AIOps 오픈소스 프로젝트"
+    website: "https://github.com/jyje"
+    startDate: "2024-08-21"
+    endDate: {}
+    highlights:
+      - title: "jyje/cluster"
+        website: "https://github.com/jyje/cluster"
+        description: "Raspberry Pi Kubernetes에서 GitOps·LLMOps·Agentic AI 운영"
+      - title: "jyje/hermes-agent-helm"
+        website: "https://github.com/jyje/hermes-agent-helm"
+        description: "Self-hosted AI 에이전트 팀을 위한 Helm chart 개발"
+      # - title: "jyje/ansible"
+      #   website: "https://github.com/jyje/ansible"
+      # - title: "jyje/claude-docker"
+      #   website: "https://github.com/jyje/claude-docker"
+  # -
+  #   organization: "LangChain OpenWiki"
+  #   position: "AI 오픈소스 기여"
+  #   website: "https://github.com/langchain-ai/openwiki/releases/tag/0.1.2"
+  #   startDate: "2026-07-13"
+  #   endDate: "2026-07-13"
+  #   highlights:
+  #     - "OpenWiki 0.1.2 릴리스 기여"
+  -
+    organization: "한빛앤·한빛미디어"
+    position: "AI 에이전트 개발서 베타리더"
+    website: "https://www.linkedin.com/company/hanbit-media-%ED%95%9C%EB%B9%9B%EB%AF%B8%EB%94%94%EC%96%B4/"
+    startDate: "2026-03-01"
+    endDate: "2026-03-31"
+    highlights:
+      - title: "AI 에이전트 개발서"
+        website: "https://www.linkedin.com/in/parknayeon/"
+        description: "기술 리뷰·교정 및 추천사 작성"
+
+
+awards:
+  # - 
+  #   title: "🏅 알테라 디자인 컨테스트 2014, 우수상"
+  #   date: "2014-05-01"
+  #   awarder: "Intel-Altera Korea"
+  #   summary: "[System] FPGA, Vision-Based Driver Support Navigation System"
+  # -
+  #   title: "🥈 알테라 디자인 컨테스트 2013, 2위 입상"
+  #   date: "2013-05-01"
+  #   awarder: "Intel-Altera Korea"
+  #   summary: "[System] FPGA, Vision-Based Traffic Sign Recognition System"
+  # - (이력서에서 수상 항목 생략)
+
+publications:
+  -
+    name: "🎓 실제 환경과 가상 환경을 위한 동시적 위치 추정 및 지도 작성 방법"
+    publisher: "POSTECH, 학위논문"
+    authors: "<u>전제영</u>"
+    contribution: "1저자"
+    releaseDate: "2020-07-24"
+    website: "http://postech.dcollection.net/common/orgView/200000341295"
+  # -
+  #   name: "📄 Advanced Dehazing Method using Halo Map Based on Dark Channel Prior"
+  #   publisher: "ITC-CSCC"
+  #   authors: "SungYong Jo, JeongMok Ha, <u>Jeayoung Jeon</u>, Hong Jeong"
+  #   contribution: "3저자"
+  #   releaseDate: "2015-06-30"
+  #   website: "https://www.dbpia.co.kr/Journal/articleDetail?nodeId=NODE06386175"
+  -
+    name: "📄 Cost Aggregation Table: Cost Aggregation Method Using Summed Area Table Scheme for Dense Stereo Correspondence"
+    publisher: "ISVC, Advances in Visual Computing, 10th International Symposium"
+    authors: "JeongMok Ha, <u>Jeayoung Jeon</u>, GiYeong Bae, SungYong Jo & Hong Jeong"
+    contribution: "2저자"
+    releaseDate: "2014-11-08"
+    website: "https://doi.org/10.1007/978-3-319-14249-4_78"
+  -
+    name: "📄 Polygonal symmetry transform for detecting rectangular traffic signs"
+    publisher: "ICCAS, 14th International Conference on Control, Automation and Systems"
+    authors: "<u>Jea Young Jeon</u>, JeongMok Ha, Sung Yong Jo, Gi Yeong Bae, Hong Jeong"
+    contribution: "1저자"
+    releaseDate: "2014-10-22"
+    website: "https://doi.org/10.1109/ICCAS.2014.6987934"
+  -
+    name: "🎓 LED 조명을 이용한 수중 환경에서의 가시광 통신 연구"
+    publisher: "ICS-KIEE"
+    authors: "이대희, 박기성, <u>전제영</u>, 양연모"
+    contribution: "공동 1저자"
+    releaseDate: "2011-04-22"
+    website: "https://www.dbpia.co.kr/Journal/articleDetail?nodeId=NODE01951197"
+
+certificates:
+  -
+    title: "KCSA"
+    organization: Cloud Native Computing Foundation
+    organization_short: CNCF
+    verified: "2025-10-27"
+    expired: "2027-10-27"
+    website: https://www.credly.com/badges/1206ad1c-e348-4328-934d-72e44ca434be
+  -
+    title: "KCNA"
+    organization: Cloud Native Computing Foundation
+    organization_short: CNCF
+    verified: "2025-10-22"
+    expired: "2027-10-22"
+    website: https://www.credly.com/badges/759e92f0-7b3b-4788-8eff-c20ad1e2c645
+  -
+    title: "CAPA"
+    organization: Cloud Native Computing Foundation
+    organization_short: CNCF
+    verified: "2024-09-13"
+    expired: "2026-09-13"
+    website: https://www.credly.com/badges/ee42c2c7-2ac3-411f-8713-cc26cbec8022
+  -
+    title: "CKAD"
+    organization: Cloud Native Computing Foundation
+    organization_short: CNCF
+    verified: "2024-06-01"
+    expired: "2026-06-01"
+    website: https://www.credly.com/badges/9e072a3a-57d0-403e-8bef-5831d618675c
+  -
+    title: "CKA"
+    organization: Cloud Native Computing Foundation
+    organization_short: CNCF
+    verified: "2024-03-16"
+    expired: "2027-03-16"
+    website: https://www.credly.com/badges/d944bde7-222a-4ce5-b4e6-4e6c84df0ef8
+
+languages:
+  -
+    language: "Korean"
+    fluency: "Native"
+  -
+    language: "English"
+    fluency: "Working Proficiency"
+
+interests:
+  -
+    name: "Research/Dev"
+    keywords:
+      - "Agentic RAG"
+      - "Digital Twins"
+      - "AMD-to-ARM Transition"
+      - "Hybrid Clusters"
+      - "Home Clusters"
+  -
+    name: "DevOps Culture"
+    keywords:
+      - "Coop First, Tech Next"
+      - "Automate as Possible"
+      - "Internal Development Platform"
+
+# references:
+#   - 
+#     name: "Erlich Bachman"
+#     reference: >
+#       It is my pleasure to recommend Richard, his performance working as a consultant for Main St.
+#       Company proved that he will be a valuable addition to any company.

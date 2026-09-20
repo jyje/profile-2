@@ -1,0 +1,162 @@
+.resume {
+  max-width: 52rem;
+  margin: 0 auto;
+  padding: 2rem 1rem 4rem;
+}
+
+.top {
+  margin-bottom: 1.5rem;
+  padding-bottom: 1.2rem;
+  border-bottom: 2px solid var(--ifm-color-primary);
+}
+
+.name {
+  margin: 0;
+  font-size: 2.2rem;
+}
+
+.name small {
+  font-size: 1rem;
+  font-weight: 400;
+  color: var(--ifm-color-emphasis-600);
+}
+
+.label {
+  margin: 0.2rem 0 0.6rem;
+  color: var(--ifm-color-primary);
+  font-weight: 600;
+}
+
+.contact {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem 1rem;
+  margin: 0 0 1rem;
+  font-size: 0.92rem;
+  color: var(--ifm-color-emphasis-700);
+}
+
+.abstract p,
+.abstract ul {
+  margin: 0 0 0.5rem;
+}
+
+.abstract ul {
+  padding-left: 1.2rem;
+}
+
+.section {
+  margin-top: 1.8rem;
+}
+
+.sectionTitle {
+  margin: 0 0 0.8rem;
+  padding-bottom: 0.25rem;
+  border-bottom: 1px solid var(--ifm-color-emphasis-300);
+  font-size: 1.2rem;
+  letter-spacing: 0.02em;
+}
+
+.card {
+  margin-bottom: 1rem;
+  padding: 0.8rem 1rem;
+  border: 1px solid var(--ifm-color-emphasis-200);
+  border-radius: 8px;
+}
+
+.cardHeader {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: baseline;
+}
+
+.cardTitle {
+  margin: 0;
+  font-size: 1.05rem;
+}
+
+.icon {
+  margin-right: 0.4rem;
+}
+
+.cardSub {
+  margin-top: 0.1rem;
+  color: var(--ifm-color-emphasis-700);
+  font-size: 0.93rem;
+}
+
+.date {
+  flex-shrink: 0;
+  color: var(--ifm-color-emphasis-600);
+  font-size: 0.85rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.items {
+  margin: 0.5rem 0 0;
+  padding-left: 1.2rem;
+  font-size: 0.93rem;
+  line-height: 1.5;
+}
+
+.tags,
+.note {
+  margin: 0.4rem 0 0;
+  color: var(--ifm-color-emphasis-700);
+  font-size: 0.88rem;
+}
+
+.plain {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.plain li {
+  margin-bottom: 0.4rem;
+}
+
+.skills > div {
+  display: grid;
+  grid-template-columns: 11rem 1fr;
+  gap: 0.6rem;
+  margin-bottom: 0.5rem;
+}
+
+.skills dt {
+  font-weight: 600;
+  font-size: 0.93rem;
+}
+
+.skills dd {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+  margin: 0;
+}
+
+.chip,
+.chipStrong {
+  white-space: nowrap;
+  padding: 0.05rem 0.55rem;
+  border-radius: 999px;
+  border: 1px solid var(--ifm-color-emphasis-300);
+  font-size: 0.82rem;
+}
+
+.chipStrong {
+  border-color: var(--ifm-color-primary);
+  background: var(--ifm-color-primary-contrast-background);
+  font-weight: 600;
+}
+
+@media (max-width: 600px) {
+  .skills > div {
+    grid-template-columns: 1fr;
+  }
+  .cardHeader {
+    flex-direction: column;
+    gap: 0.2rem;
+  }
+}

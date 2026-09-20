@@ -1,0 +1,424 @@
+# If you have a `resume.json` file, copy it into `_data` and delete this file.
+# If you don't have a JSON Resume you can just edit this YAML file instead.
+# See also: <https://jsonresume.org/>.
+basics:
+  name: Jeayoung Jeon
+  name-english: Jeayoung Jeon
+  label: "AI Platform Engineer"
+  # picture: "/assets/img/profile/jyje-o2024.jpg"
+  email: "jyjeon@outlook.com"
+  # linkedin: "jyje"  # moved to profiles for ordering
+  website: "https://jyje.online"
+  # github: "jyje"
+  # googlescholar: "gwCPQM8AAAAJ"
+  location:
+    address: "" # "2712 Broadway St"
+    postalCode: "" # "CA 94115"
+    city: "Seoul" # "Seoul"
+    countryCode: "KR" # "KR"
+    region: "" # "California"
+  profiles:
+    - network: LinkedIn
+      username: LinkedIn
+      url: https://www.linkedin.com/in/jyje
+    - network: Github
+      username: Github
+      url: http://github.com/jyje
+    # - network: StackShare
+    #   username: StackShare
+    #   url: https://stackshare.io/jyje/jyje-pro-stack
+  contents:
+    # skills:
+    #   note: "Highlighted items are specialized in industry-ready."
+    publications:
+      note: "Full list is available on [Google Scholar](https://scholar.google.com/citations?user=gwCPQM8AAAAJ&hl=ko)."
+    resume-en:
+      title: Résumé
+      abstract: >
+        I build **domain-specific AI environments from infrastructure to workloads**. As an AI Platform Engineer, I design Agentic AI systems, the Kubernetes/GPU/LLMOps platforms that run them, and the AIOps practices that keep them operable. I now lead architecture and development for a vehicle SW verification Agentic AI platform.
+
+          - <span class="resume-abstract-emoji no-print" aria-hidden="true">🤖</span> **Agentic AI Systems:** Can integrate agent harnesses, workflows, MCP, and domain tools; build evaluation environments.
+          - <span class="resume-abstract-emoji no-print" aria-hidden="true">☁️</span> **AI Platform & AIOps:** Can connect hybrid Kubernetes, GPUs, LLMOps, observability, and automation to keep domain workloads operable.
+          - <span class="resume-abstract-emoji no-print" aria-hidden="true">🧭</span> **Architecture & Technical Leadership:** As a development-group tech lead, can embed SecOps (vulnerability, network, identity, AI guardrails) and FinOps (token, infrastructure efficiency) into early design and implementation.
+
+        My career connects automotive and computer vision research, MLOps platform engineering, and Agentic AI development. See my [**portfolio**](https://jyje.online/en/portfolio) for evidence and implementation details.
+
+labels:
+  role: Role
+  roles: Roles
+  results: Results
+  growth: Growth
+  area: Field
+  keywords: Keywords
+  gpa: GPA
+  volunteer: Other Activities
+  present: present
+
+projects:
+  -
+    headerIcon: "🚙"
+    position: "Agentic AI Platform for Vehicle SW Verification"
+    company: Hyundai AutoEver
+    startDate: "2026-04-01"
+    endDate: {}
+    roles:
+      description: "Platform Architect · Tech Lead"
+    results:
+      items:
+        - header: Platform Architecture
+          content: >
+            Led Deep Agents integration, tool execution, and evaluation design
+
+  -
+    headerIcon: "🤖"
+    position: "Codebeamer AI Assistant"
+    company: Hyundai AutoEver
+    startDate: "2025-02-24"
+    endDate: "2025-11-30"
+    roles:
+      description: "Agentic AI Tech Lead"
+    results:
+      items:
+        - header: Domain Agent
+          content: >
+            Built a RAG/MCP assistant and validated in-house toolchain execution
+
+  -
+    headerIcon: "🧑‍🔬"
+    position: "On-Premise MLOps Platform"
+    company: MAXST
+    website: https://www.linkedin.com/company/maxst
+    startDate: "2024-01-01"
+    endDate: "2024-06-30"
+    roles:
+      description: "MLOps Platform Architect · Tech Lead [90% contribution]"
+    results:
+      items:
+        - header: 3x GPU Utilization
+          content: >
+            Unified idle GPUs with hybrid Kubernetes for a 24/7 research environment
+        - header: Product Delivery
+          content: >
+            Supported a digital twin launch with Kubeflow training environments
+
+
+work:
+  -
+    company: Hyundai AutoEver
+    headerIcon: "🧑‍💻"
+    position: "Lead AI Platform Engineer"
+    website: https://www.hyundai-autoever.com/eng
+    startDate: "2025-02-24"
+    endDate: {}
+    roles:
+      items:
+        - header: AI/LLM Platform
+          content: >
+            Lead Agentic AI integration and evaluation for in-house toolchains
+        - header: Cloud-Native AI
+          content: >
+            Build Kubernetes-based LLMOps/AIOps for private LLM workloads
+  -
+    company: MAXST
+    headerIcon: "🧑‍🔬"
+    position: "Lead MLOps & DevOps Engineer"
+    website: https://www.linkedin.com/company/maxst
+    startDate: "2021-01-16"
+    endDate: "2024-10-31"
+    roles:
+      items:
+        - header: MLOps
+          content: >
+            Built and operated Kubeflow research environments; supported a digital twin launch
+        - header: DevOps
+          content: >
+            Introduced hybrid Kubernetes, onboarded teams, and provided development environments
+  # -
+  #   company: "POSTECH"  — research experience shown in skills (Computer Vision, FPGA, SLAM)
+  #   startDate: "2012-03-01"
+  #   endDate: "2020-08-28"
+  # -
+  #   company: "GIST"
+  #   position: "Undergraduate Internship"
+  #   website: "https://me.gist.ac.kr/biomems/index.do"
+  #   startDate: "2010-07-26"
+  #   endDate: "2010-08-15"
+  #   summary: >
+  #     As an undergraduate student, I participated in an internship program at the BioMEMS Lab in GIST, where I engaged in the following tasks:
+  #   highlights:
+  #     - Study on BioMEMSs equivarant to Electronic RLC circuits
+  #     - Preview of Graduate Program and Experiments
+
+education:
+  -
+    institution: "POSTECH"
+    website: "https://eee.postech.ac.kr/"
+    area: "Electrical Engineering · Computer Vision & Signal Processing"
+    headerIcon: "🎓"
+    studyType: "Master's Degree (Integrated Program)"
+    keywords:
+      - Edge Computer Vision
+      - Digital Twins
+      - SLAM
+      - ADAS
+    startDate: "2012-03-01"
+    endDate: "2020-08-31"
+    gpa: "3.2/4.3"
+    thesis: "Virtual Visual-SLAM, 2020"
+    # courses:
+    #   - Advanced Driver Assistance Systems (ADAS)
+    #   - Simultaneous Localization and Mapping (SLAM)
+    #   - Computer Vision Algorithms
+  -
+    institution: "kit"
+    website: "https://eng.kumoh.ac.kr/eng"
+    area: "Electronics & Communications"
+    headerIcon: "🎓"
+    studyType: "Bachelor's Degree"
+    keywords:
+      - Digital Signal Processing
+      - Electronic Communication
+      - Visible Light Communication
+      - FPGA
+    startDate: "2008-03-01"
+    endDate: "2012-02-28"
+    gpa: "4.3/4.5"
+    thesis: "Underwater LED VLC, 2011"
+    # courses:
+    #   - Digital Signal Processing
+    #   - Visual Light Communication
+    #   - Electronic Communication with Complex Analysis
+    #   - Finite Programmable Gate Array (FPGA)
+
+skills:
+  -
+    name: AI Tooling & Workflow
+    keywords:
+      - Claude Code
+      - Hermes Agent
+      - Codex
+      - GitHub Copilot
+  -
+    name: Agentic AI Systems
+    keywords:
+      - Python/FastAPI
+      - LangGraph/Deep Agents
+      - RAG/MCP
+      - Agent Protocol/A2A
+      - Agent Evaluation
+  -
+    name: AI Platform & AIOps
+    keywords:
+      - Public/Private LLM
+      - AIOps/LLMOps
+      - LangSmith
+      - Langfuse
+      - LGTM Observability
+      - vLLM
+      - Kubeflow
+      - Run:ai
+      - Milvus/Qdrant/pgvector
+  -
+    name: Cloud-Native Infrastructure
+    keywords:
+      - Kubernetes
+      - Hybrid Clusters
+      - AWS EKS/On-Prem
+      - Argo Projects/GitOps
+      - IaC
+  -
+    name: SecOps
+    keywords:
+      - Istio
+      - OIDC/RBAC
+      - Network Policy
+      - AI Guardrails
+      - Vulnerability Response
+  -
+    name: FinOps
+    keywords:
+      - LiteLLM
+      - Karpenter
+      - Hybrid GPU/Cloud
+      - Cost Optimization
+  -
+    name: AI Research Foundation
+    keywords:
+      - Computer Vision/SLAM
+      - PyTorch/OpenCV
+      - Digital Twins
+      - GPU Optimization
+      - Vehicle SW
+
+  # -
+  #  name: Tool, OS and Hardware
+  #   keywords:
+  #     - Visual Studio Code
+  #     - Visual Studio
+  #     - Jupyter Notebook
+  #     - MATLAB/Simulink
+  #     - Windows
+  #     - WSL2
+  #     - Ubuntu
+  #     - Alpine
+  #     - MacOS
+  #     - ARM64/Raspberry Pi
+  #     - AMD64/Bare Metal
+  #     - FPGA
+
+volunteer:
+  -
+    organization: "GitHub"
+    position: "Open Source AI Platform & AIOps"
+    website: "https://github.com/jyje"
+    startDate: "2024-08-21"
+    endDate: {}
+    highlights:
+      - title: "jyje/cluster"
+        website: "https://github.com/jyje/cluster"
+        description: "Run GitOps, LLMOps, and Agentic AI on Raspberry Pi Kubernetes"
+      - title: "jyje/hermes-agent-helm"
+        website: "https://github.com/jyje/hermes-agent-helm"
+        description: "Helm chart for self-hosted AI agent teams"
+      # - title: "jyje/ansible"
+      #   website: "https://github.com/jyje/ansible"
+      # - title: "jyje/claude-docker"
+      #   website: "https://github.com/jyje/claude-docker"
+  # -
+  #   organization: "LangChain OpenWiki"
+  #   position: "AI Open Source Contribution"
+  #   website: "https://github.com/langchain-ai/openwiki/releases/tag/0.1.2"
+  #   startDate: "2026-07-13"
+  #   endDate: "2026-07-13"
+  #   highlights:
+  #     - "Contributed to the OpenWiki 0.1.2 release"
+  -
+    organization: "Hanbit N · Hanbit Media"
+    position: "AI Agent Development Book · Beta Reader"
+    website: "https://www.linkedin.com/company/hanbit-media-%ED%95%9C%EB%B9%9B%EB%AF%B8%EB%94%94%EC%96%B4/"
+    startDate: "2026-03-01"
+    endDate: "2026-03-31"
+    highlights:
+      - title: "AI Agent Book"
+        website: "https://www.linkedin.com/in/parknayeon/"
+        description: "Technical review and endorsement"
+
+
+awards:
+  # -
+  #   title: "🥈 Altera Design Contest 2013, 2nd Prize"
+  #   date: "2013-05-01"
+  #   awarder: "Intel-Altera Korea"
+  #   summary: "[System] FPGA, Vision-Based Traffic Sign Recognition System"
+  # - (awards omitted from resume for brevity)
+  # -
+  #   title: "🏅 NAVER Power KiN 2011"
+  #   date: "2012-01-01"
+  #   awarder: "NAVER"
+  #   summary: "Knowledge Expert in `Electronics Engineering, Math and Programming`. 723 Answers, Accepted 98.1%"
+  #   website: "https://m.site.naver.com/1y6qP"
+
+publications:
+  -
+    name: "🎓 Virtual Visual-SLAM for Real-World Environments"
+    publisher: "POSTECH, Thesis"
+    authors: "<u>Jeayoung Jeon</u>"
+    contribution: "1st"
+    releaseDate: "2020-07-24"
+    website: "http://postech.dcollection.net/common/orgView/200000341295"
+  # -
+  #   name: "📄 Advanced Dehazing Method using Halo Map Based on Dark Channel Prior"
+  #   publisher: "ITC-CSCC"
+  #   authors: "SungYong Jo, JeongMok Ha, <u>Jeayoung Jeon</u>, Hong Jeong"
+  #   contribution: "3rd"
+  #   releaseDate: "2015-06-30"
+  #   website: "https://www.dbpia.co.kr/Journal/articleDetail?nodeId=NODE06386175"
+  -
+    name: "📄 Cost Aggregation Table: Cost Aggregation Method Using Summed Area Table Scheme for Dense Stereo Correspondence"
+    publisher: "ISVC, Advances in Visual Computing, 10th International Symposium"
+    authors: "JeongMok Ha, <u>Jeayoung Jeon</u>, GiYeong Bae, SungYong Jo & Hong Jeong"
+    contribution: "2nd"
+    releaseDate: "2014-11-08"
+    website: "https://doi.org/10.1007/978-3-319-14249-4_78"
+  -
+    name: "📄 Polygonal symmetry transform for detecting rectangular traffic signs"
+    publisher: "ICCAS, 14th International Conference on Control, Automation and Systems"
+    authors: "<u>Jea Young Jeon</u>, JeongMok Ha, Sung Yong Jo, Gi Yeong Bae, Hong Jeong"
+    contribution: "1st"
+    releaseDate: "2014-10-22"
+    website: "https://doi.org/10.1109/ICCAS.2014.6987934"
+  -
+    name: "🎓 A Study on a Visible Light Communication using LED in Under-water Environment"
+    publisher: "ICS-KIEE"
+    authors: "Daehee Lee, Ki-Sung Park, <u>Jea-Young Jeon</u>, Yeon-Mo Yang"
+    contribution: "1st, equivalent"
+    releaseDate: "2011-04-22"
+    website: "https://www.dbpia.co.kr/Journal/articleDetail?nodeId=NODE01951197"
+
+certificates:
+  -
+    title: "KCSA"
+    organization: Cloud Native Computing Foundation
+    organization_short: CNCF
+    verified: "2025-10-27"
+    expired: "2027-10-27"
+    website: https://www.credly.com/badges/1206ad1c-e348-4328-934d-72e44ca434be
+  -
+    title: "KCNA"
+    organization: Cloud Native Computing Foundation
+    organization_short: CNCF
+    verified: "2025-10-22"
+    expired: "2027-10-22"
+    website: https://www.credly.com/badges/759e92f0-7b3b-4788-8eff-c20ad1e2c645
+  -
+    title: "CAPA"
+    organization: Cloud Native Computing Foundation
+    organization_short: CNCF
+    verified: "2024-09-13"
+    expired: "2026-09-13"
+    website: https://www.credly.com/badges/ee42c2c7-2ac3-411f-8713-cc26cbec8022
+  -
+    title: "CKAD"
+    organization: Cloud Native Computing Foundation
+    organization_short: CNCF
+    verified: "2024-06-01"
+    expired: "2026-06-01"
+    website: https://www.credly.com/badges/9e072a3a-57d0-403e-8bef-5831d618675c
+  -
+    title: "CKA"
+    organization: Cloud Native Computing Foundation
+    organization_short: CNCF
+    verified: "2024-03-16"
+    expired: "2027-03-16"
+    website: https://www.credly.com/badges/d944bde7-222a-4ce5-b4e6-4e6c84df0ef8
+
+languages:
+  -
+    language: "Korean"
+    fluency: "Native"
+  -
+    language: "English"
+    fluency: "Working Proficiency"
+
+interests:
+  -
+    name: "Research/Dev"
+    keywords:
+      - "Agentic RAG"
+      - "Digital Twins"
+      - "AMD-to-ARM Transition"
+      - "Hybrid Clusters"
+      - "Home Clusters"
+  -
+    name: "DevOps Culture"
+    keywords:
+      - "Coop First, Tech Next"
+      - "Automate as Possible"
+      - "Internal Development Platform"
+
+# references:
+#   - 
+#     name: "Erlich Bachman"
+#     reference: >
+#       It is my pleasure to recommend Richard, his performance working as a consultant for Main St.
+#       Company proved that he will be a valuable addition to any company.
