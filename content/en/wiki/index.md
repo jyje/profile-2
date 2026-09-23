@@ -17,4 +17,4 @@ This wiki is the **knowledge base** of the profile site. The blog is a chronolog
 
 ## Related posts
 
-- [Blog posts](/en/blog)
+- [Blog posts](/blog)
