@@ -35,7 +35,7 @@ const md = (s: unknown) => marked.parseInline(String(s ?? '').trim(), {async: fa
 const Html = ({text}: {text: unknown}) => <span dangerouslySetInnerHTML={{__html: md(text)}} />;
 
 const ym = (d?: string) => (d ? d.slice(0, 7) : '');
-const period = (start?: string, end: unknown, present: string) =>
+const period = (start: string | undefined, end: unknown, present: string) =>
   `${ym(start)} – ${typeof end === 'string' && end ? ym(end) : present}`;
 
 function Link({href, children}: {href?: string; children: ReactNode}) {
