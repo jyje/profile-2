@@ -54,6 +54,7 @@ const config: Config = {
         blog: {
           path: 'content/ko/blog',
           routeBasePath: 'blog',
+          blogListComponent: '@site/src/components/BlogListPage',
           blogSidebarCount: 'ALL',
           blogSidebarTitle: 'Posts',
           showReadingTime: true,
