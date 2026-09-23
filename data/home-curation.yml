@@ -1,0 +1,35 @@
+# Home page editorial choices. Paths are relative to content/{locale}/{blog,wiki}/
+# and omit the .md extension. The English page uses Korean wiki notes when
+# a translated note does not exist yet.
+featured:
+  - kind: blog
+    id: 2026-02-22-recap-2025
+  - kind: wiki
+    id: knowledge/portfolio/widearth-digital-twins-platforms-at-maxst
+
+daily:
+  blog:
+    count: 2
+    ids:
+      - 2023-12-31-devops-hybrid-clusters-with-onpremise-baremetal-k8s-and-aws-eks
+      - 2024-03-16-cka-certified-kubernetes-administrator
+      - 2024-06-01-ckad-certified-kubernetes-application-developer
+      - 2024-06-30-mlops-onpremise-mlops-with-open-source-projects
+      - 2024-09-14-capa-certified-argo-project-associate
+      - 2024-11-01-widearth-digital-twins-platforms-at-maxst
+      - 2024-11-19-github-foundations
+      - 2025-10-22-kcna-kubernetes-and-cloud-native-associate
+      - 2025-10-27-kcsa-kubernetes-and-cloud-native-security-associate
+  wiki:
+    count: 2
+    ids:
+      - knowledge/argo-cd
+      - knowledge/argo-workflows
+      - knowledge/cncf
+      - knowledge/container
+      - knowledge/devops
+      - knowledge/docker
+      - knowledge/istio
+      - knowledge/k8s
+      - knowledge/microk8s
+      - knowledge/service-mesh

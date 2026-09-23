@@ -6,6 +6,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import * as yaml from 'js-yaml';
+import {buildCuration} from './build-curation.mjs';
 
 const ROOT = path.resolve(import.meta.dirname, '..');
 const MIRRORS = [
@@ -39,6 +40,7 @@ function convertData() {
 function syncAll() {
   mirror();
   convertData();
+  buildCuration();
 }
 
 syncAll();
@@ -46,17 +48,46 @@ console.log('[sync-content] synced');
 
 if (process.argv.includes('--watch')) {
   let timer;
+  const watched = new Set();
   const onChange = (_evt, name) => {
     if (name && name.split(path.sep).some((s) => s.startsWith('.'))) return;
     clearTimeout(timer);
     timer = setTimeout(() => {
       syncAll();
+      refreshWatchers();
       console.log('[sync-content] resynced');
     }, 150);
   };
-  for (const dir of ['content/en', 'data']) {
-    const p = path.join(ROOT, dir);
-    if (fs.existsSync(p)) fs.watch(p, {recursive: true}, onChange);
+
+  function walk(dir, paths) {
+    paths.add(dir);
+    for (const entry of fs.readdirSync(dir, {withFileTypes: true})) {
+      if (!skip(entry.name)) continue;
+      const entryPath = path.join(dir, entry.name);
+      paths.add(entryPath);
+      if (entry.isDirectory()) walk(entryPath, paths);
+    }
   }
-  console.log('[sync-content] watching content/en and data');
+
+  function refreshWatchers() {
+    const paths = new Set();
+    for (const dir of ['content/ko', 'content/en', 'data']) {
+      const source = path.join(ROOT, dir);
+      if (fs.existsSync(source)) walk(source, paths);
+    }
+    for (const p of watched) {
+      if (!paths.has(p)) {
+        fs.unwatchFile(p);
+        watched.delete(p);
+      }
+    }
+    for (const p of paths) {
+      if (watched.has(p)) continue;
+      fs.watchFile(p, {interval: 500}, onChange);
+      watched.add(p);
+    }
+  }
+
+  refreshWatchers();
+  console.log('[sync-content] polling content and data');
 }
