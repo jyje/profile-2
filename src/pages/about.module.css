@@ -1,0 +1,170 @@
+.hero {
+  padding: 5.5rem 0 4.5rem;
+  background: var(--site-surface);
+  border-bottom: 1px solid var(--site-border);
+}
+
+.eyebrow,
+.period {
+  color: var(--site-accent);
+  font-family: var(--site-font-utility);
+  font-size: 0.8rem;
+  font-weight: 650;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.name {
+  margin: 1rem 0 0.5rem;
+  font-size: clamp(3.25rem, 8vw, 6.5rem);
+  font-weight: 800;
+  letter-spacing: -0.065em;
+  line-height: 1;
+}
+
+.lead {
+  max-width: 52rem;
+  margin: 1.5rem 0;
+  font-size: clamp(1.35rem, 2.5vw, 2rem);
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.intro {
+  max-width: 45rem;
+  color: var(--site-muted);
+  font-size: 1.05rem;
+  line-height: 1.75;
+}
+
+.intro p {
+  margin-bottom: 0.8rem;
+}
+
+.contact {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 1rem;
+  font-weight: 650;
+}
+
+.main {
+  max-width: 72rem;
+  padding-top: 1rem;
+  padding-bottom: 5rem;
+}
+
+.section {
+  margin-top: 4.5rem;
+}
+
+.section h2 {
+  margin: 0 0 1.8rem;
+  font-size: clamp(1.55rem, 3vw, 2.2rem);
+  letter-spacing: -0.035em;
+}
+
+.focusGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0 2rem;
+}
+
+.focus {
+  padding: 1.4rem 0 1.7rem;
+  border-top: 1px solid var(--site-border);
+}
+
+.focus h3,
+.path h3 {
+  margin: 0 0 0.3rem;
+  font-size: 1.12rem;
+}
+
+.focus p,
+.path p {
+  max-width: 35rem;
+  margin: 0;
+  color: var(--site-muted);
+  line-height: 1.65;
+}
+
+.path {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--site-border);
+}
+
+.path li {
+  display: grid;
+  grid-template-columns: 12rem minmax(0, 1fr);
+  gap: 1.5rem;
+  padding: 1.5rem 0;
+  border-bottom: 1px solid var(--site-border);
+}
+
+.links {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.links a {
+  display: flex;
+  min-height: 9rem;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 1.35rem;
+  border: 1px solid var(--site-border);
+  border-radius: 0.45rem;
+  color: var(--ifm-font-color-base);
+  background: var(--site-surface);
+  text-decoration: none;
+  transition: border-color 160ms ease, transform 160ms ease;
+}
+
+.links a:hover {
+  border-color: var(--site-accent);
+  color: var(--ifm-font-color-base);
+  transform: translateY(-2px);
+}
+
+.links a span {
+  color: var(--site-accent);
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+.links small {
+  color: var(--site-muted);
+  font-size: 0.92rem;
+  line-height: 1.5;
+}
+
+@media (max-width: 700px) {
+  .hero {
+    padding: 3.5rem 0;
+  }
+
+  .focusGrid,
+  .links {
+    grid-template-columns: 1fr;
+  }
+
+  .path li {
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .links a {
+    transition: none;
+  }
+
+  .links a:hover {
+    transform: none;
+  }
+}

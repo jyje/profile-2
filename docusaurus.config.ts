@@ -8,14 +8,16 @@ import obsidianCallouts from './src/remark/obsidian-callouts.mjs';
 const config: Config = {
   title: 'jyje',
   tagline: 'AI Platform Engineer',
-  favicon: 'img/logo.svg',
+  favicon: 'img/favicon-32.png',
 
   future: {
     v4: true,
   },
 
-  url: 'https://jyje.online',
-  baseUrl: '/',
+  // Preview as a project Pages site with SITE_URL=https://jyje.github.io
+  // and SITE_BASE_URL=/profile-2/. Production keeps the custom domain root.
+  url: process.env.SITE_URL ?? 'https://jyje.online',
+  baseUrl: process.env.SITE_BASE_URL ?? '/',
 
   organizationName: 'jyje',
   projectName: 'profile-2',
@@ -75,6 +77,7 @@ const config: Config = {
   ],
 
   plugins: [
+    './plugins/color-cookie.cjs',
     [
       '@docusaurus/plugin-client-redirects',
       {
@@ -101,18 +104,27 @@ const config: Config = {
 
   themeConfig: {
     colorMode: {
-      respectPrefersColorScheme: true,
+      defaultMode: 'light',
+      respectPrefersColorScheme: false,
     },
     navbar: {
       title: 'jyje',
       logo: {
         alt: 'jyje',
-        src: 'img/logo.svg',
+        src: 'img/logo-128.png',
       },
       items: [
         {type: 'docSidebar', sidebarId: 'wikiSidebar', position: 'left', label: 'Wiki'},
         {to: '/blog', label: 'Blog', position: 'left'},
-        {to: '/resume', label: 'Resume', position: 'left'},
+        {
+          to: '/about',
+          label: 'About',
+          position: 'left',
+          items: [
+            {to: '/about', label: 'Profile'},
+            {to: '/resume', label: 'Resume'},
+          ],
+        },
         {type: 'localeDropdown', position: 'right'},
         {href: 'https://github.com/jyje', label: 'GitHub', position: 'right'},
       ],
