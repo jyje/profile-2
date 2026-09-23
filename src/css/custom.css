@@ -2,27 +2,52 @@
  * Global styles. Infima variables are overridden here.
  */
 :root {
-  --ifm-color-primary: #2456c9;
-  --ifm-color-primary-dark: #2150b9;
-  --ifm-color-primary-darker: #204db0;
-  --ifm-color-primary-darkest: #1a3f92;
-  --ifm-color-primary-light: #2f62d9;
-  --ifm-color-primary-lighter: #3a6cde;
-  --ifm-color-primary-lightest: #5b86e6;
+  --ifm-color-primary: #680c2c;
+  --ifm-color-primary-dark: #5a0a26;
+  --ifm-color-primary-darker: #4d0921;
+  --ifm-color-primary-darkest: #380619;
+  --ifm-color-primary-light: #812342;
+  --ifm-color-primary-lighter: #953856;
+  --ifm-color-primary-lightest: #ba748d;
+  --ifm-background-color: #ffffff;
+  --ifm-font-color-base: #193747;
+  --ifm-navbar-background-color: #ffffff;
   --ifm-code-font-size: 95%;
   --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.1);
   --ifm-font-family-base: 'Pretendard', system-ui, -apple-system, 'Segoe UI', Roboto, 'Noto Sans KR', sans-serif;
+  --site-surface: #f3f6f7;
+  --site-border: #cbd8dd;
+  --site-muted: #4e6470;
+  --site-accent: #680c2c;
+  --site-font-utility: 'SFMono-Regular', Consolas, 'Liberation Mono', monospace;
 }
 
 [data-theme='dark'] {
-  --ifm-color-primary: #7ea2f4;
-  --ifm-color-primary-dark: #5f8bf1;
-  --ifm-color-primary-darker: #5080f0;
-  --ifm-color-primary-darkest: #2359e6;
-  --ifm-color-primary-light: #9dbaf7;
-  --ifm-color-primary-lighter: #adc4f8;
-  --ifm-color-primary-lightest: #dbe6fc;
+  --ifm-color-primary: #f0a6bf;
+  --ifm-color-primary-dark: #db91aa;
+  --ifm-color-primary-darker: #cf85a0;
+  --ifm-color-primary-darkest: #a65974;
+  --ifm-color-primary-light: #f3b7cb;
+  --ifm-color-primary-lighter: #f6c5d5;
+  --ifm-color-primary-lightest: #fbe1e9;
+  --ifm-background-color: #13242e;
+  --ifm-font-color-base: #e8f0f3;
+  --ifm-navbar-background-color: #13242e;
   --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
+  --site-surface: #1d343f;
+  --site-border: #365360;
+  --site-muted: #bfd0d7;
+  --site-accent: #f0a6bf;
+}
+
+.navbar {
+  box-shadow: none;
+  border-bottom: 1px solid var(--site-border);
+}
+
+:focus-visible {
+  outline: 2px solid var(--site-accent);
+  outline-offset: 3px;
 }
 
 .markdown img {
