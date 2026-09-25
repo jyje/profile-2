@@ -2,6 +2,7 @@ import {themes as prismThemes} from 'prism-react-renderer';
 import type {Config} from '@docusaurus/types';
 import type * as Preset from '@docusaurus/preset-classic';
 import obsidianCallouts from './src/remark/obsidian-callouts.mjs';
+import contentTemplateBlocks from './plugins/content-templates/remark-plugin.cjs';
 
 // This runs in Node.js - Don't use client-side code here (browser APIs, JSX...)
 
@@ -52,7 +53,7 @@ const config: Config = {
           routeBasePath: 'wiki',
           tagsBasePath: '_tag-archives',
           sidebarPath: './sidebars.ts',
-          beforeDefaultRemarkPlugins: [obsidianCallouts],
+          beforeDefaultRemarkPlugins: [obsidianCallouts, contentTemplateBlocks],
         },
         blog: {
           path: 'content/ko/blog',
@@ -70,7 +71,10 @@ const config: Config = {
           onInlineTags: 'warn',
           onInlineAuthors: 'warn',
           onUntruncatedBlogPosts: 'ignore',
-          beforeDefaultRemarkPlugins: [obsidianCallouts],
+          beforeDefaultRemarkPlugins: [obsidianCallouts, contentTemplateBlocks],
+        },
+        pages: {
+          beforeDefaultRemarkPlugins: [contentTemplateBlocks],
         },
         theme: {
           customCss: './src/css/custom.css',

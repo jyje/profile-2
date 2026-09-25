@@ -1,0 +1,31 @@
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0 2rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.item {
+  padding: 1.1rem 0 1.35rem;
+  border-top: 1px solid var(--site-border);
+}
+
+.item h3 {
+  margin: 0 0 0.3rem;
+  font-size: 1.05rem;
+}
+
+.item p {
+  max-width: 35rem;
+  margin: 0;
+  color: var(--site-muted);
+  line-height: 1.65;
+}
+
+@media (max-width: 700px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}
