@@ -15,13 +15,15 @@ const config: Config = {
     v4: true,
   },
 
-  // Preview as a project Pages site with SITE_URL=https://jyje.github.io
-  // and SITE_BASE_URL=/profile-2/. Production keeps the custom domain root.
+  // GitHub Pages builds set SITE_URL and SITE_BASE_URL to publish under /profile-2/.
+  // Local and jyje.online builds keep their existing root URL by default.
   url: process.env.SITE_URL ?? 'https://jyje.online',
   baseUrl: process.env.SITE_BASE_URL ?? '/',
 
   organizationName: 'jyje',
   projectName: 'profile-2',
+  deploymentBranch: 'gh-pages',
+  trailingSlash: false,
 
   onBrokenLinks: 'throw',
 
