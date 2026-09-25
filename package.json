@@ -18,7 +18,8 @@
     "sync": "node scripts/sync-content.mjs",
     "prestart": "npm run sync",
     "prebuild": "npm run sync",
-    "dev": "concurrently -k -n sync,site \"node scripts/sync-content.mjs --watch\" \"docusaurus start --host 0.0.0.0\"",
+    "dev": "node scripts/dev-all.mjs",
+    "dev:ko": "concurrently -k -n sync,site \"node scripts/sync-content.mjs --watch\" \"docusaurus start --host 0.0.0.0\"",
     "dev:en": "concurrently -k -n sync,site \"node scripts/sync-content.mjs --watch\" \"docusaurus start --host 0.0.0.0 --locale en\"",
     "migrate:jekyll": "node scripts/migrate-from-jekyll.mjs"
   },
@@ -42,6 +43,7 @@
     "concurrently": "^10.0.5",
     "js-yaml": "^5.4.2",
     "marked": "^18.0.13",
+    "serve-handler": "6.1.7",
     "typescript": "~6.0.2"
   },
   "overrides": {

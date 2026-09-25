@@ -68,19 +68,22 @@ in repository settings before deployment; building locally does not enable Pages
 
 ```bash
 npm install
-npm run dev        # Korean site with content/en watcher (port 3000, all interfaces)
-npm run dev:en     # English-only live server on port 3000
+npm run dev        # all locales with automatic rebuild and reload (port 3000, all interfaces)
+npm run dev:ko     # Korean-only HMR server on port 3000
+npm run dev:en     # English-only HMR server on port 3000
 npm run build      # build both locales into build/
 npm run serve      # serve the built site
 npm run preview:lan # build and serve both locales on port 3000, all interfaces
 ```
 
-`npm run dev` and `npm run dev:en` are live-reload servers, but Docusaurus can run
-only one locale per development server. Use `npm run preview:lan` to check both
-`/` and `/en/` at `http://<your-LAN-IP>:3000/`. The preview serves a production
-build and does not live-reload: restart it after content or code changes.
-All three LAN scripts bind to `0.0.0.0`, which exposes them on every active
-network interface. Use them only on a trusted network.
+`npm run dev` is the default full-site development view: `/` and `/en/` are
+available together at `http://<your-LAN-IP>:3000/`. It rebuilds both locales
+after source changes and reloads open pages when the build succeeds. A full
+rebuild takes longer than HMR. Docusaurus can only run one locale per HMR server,
+so `dev:ko` and `dev:en` remain available for faster single-locale editing.
+`preview:lan` also serves both locales but does not watch for changes.
+All LAN scripts bind to `0.0.0.0`, which exposes them on every active network
+interface. Use them only on a trusted network.
 
 ## Authoring
 
