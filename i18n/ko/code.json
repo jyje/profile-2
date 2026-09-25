@@ -1,0 +1,46 @@
+{
+  "theme.blog.tagTitle": {
+    "message": "\"{tagName}\" 태그: {nPosts}",
+    "description": "The page title for a blog tag and its number of posts"
+  },
+  "theme.SearchBar.label": {
+    "message": "검색",
+    "description": "Accessible label for the site search field"
+  },
+  "theme.SearchBar.seeAll": {
+    "message": "전체 검색 결과 보기",
+    "description": "Link to view every search result"
+  },
+  "theme.SearchBar.noResultsText": {
+    "message": "검색 결과가 없습니다.",
+    "description": "Message shown when the search has no results"
+  },
+  "theme.SearchBar.searchInContext": {
+    "message": "{context}에서 모든 결과 보기",
+    "description": "Link to view all results in a search context"
+  },
+  "theme.SearchBar.seeAllOutsideContext": {
+    "message": "{context} 외 모든 결과 보기",
+    "description": "Link to view all results outside a search context"
+  },
+  "theme.SearchPage.existingResultsTitle": {
+    "message": "검색: {query}",
+    "description": "Heading shown above search results"
+  },
+  "theme.SearchPage.emptyResultsTitle": {
+    "message": "검색어를 입력하세요.",
+    "description": "Prompt shown before a search query is entered"
+  },
+  "theme.SearchPage.documentsFound.plurals": {
+    "message": "검색 결과 {count}개",
+    "description": "Count of search results"
+  },
+  "theme.SearchPage.noResultsText": {
+    "message": "검색 결과가 없습니다.",
+    "description": "Message shown when a search returns no results"
+  },
+  "theme.SearchPage.searchContext.everywhere": {
+    "message": "전체",
+    "description": "Search context that includes the whole site"
+  }
+}

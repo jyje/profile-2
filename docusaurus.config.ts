@@ -121,6 +121,22 @@ const config: Config = {
     ],
   ],
 
+  themes: [
+    [
+      '@easyops-cn/docusaurus-search-local',
+      {
+        hashed: 'filename',
+        language: ['en', 'ko'],
+        docsRouteBasePath: 'wiki',
+        docsDir: ['content/ko/wiki', 'content/en/wiki'],
+        blogRouteBasePath: 'blog',
+        blogDir: ['content/ko/blog', 'content/en/blog'],
+        indexPages: true,
+        searchBarPosition: 'right',
+      },
+    ],
+  ],
+
   themeConfig: {
     colorMode: {
       defaultMode: 'light',
