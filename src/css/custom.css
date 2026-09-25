@@ -47,6 +47,236 @@
   border-bottom: 1px solid var(--site-border);
 }
 
+.site-github-compact::before {
+  content: '';
+  display: inline-block;
+  width: 1.1em;
+  height: 1.1em;
+  margin-right: 0.4rem;
+  background-color: currentColor;
+  -webkit-mask: url('/img/github-mark.svg') center / contain no-repeat;
+  mask: url('/img/github-mark.svg') center / contain no-repeat;
+  vertical-align: middle;
+}
+
+.site-github-compact > svg {
+  display: none;
+}
+
+.site-language-icon {
+  margin-right: 5px;
+  vertical-align: text-bottom;
+}
+
+/* Keep the full navbar until its available width drops below 700px. */
+@media (min-width: 700px) and (max-width: 996px) {
+  .navbar__item {
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .navbar__toggle {
+    display: none;
+  }
+
+  .navbar__items--right > [class*='colorModeToggle_'] {
+    display: flex;
+  }
+
+  .navbar__items--right > [class*='navbarSearchContainer_'] {
+    position: static;
+  }
+
+  .navbar__search-input:not(:focus) {
+    width: 2rem;
+  }
+}
+
+/* Keep the documentation and blog sidebars in their desktop layout here. */
+@media (min-width: 920px) and (max-width: 996px) {
+  .blog-wrapper .row > aside.col--3 {
+    flex: 0 0 25%;
+    max-width: 25%;
+  }
+
+  .blog-wrapper .row > main.col--7 {
+    flex: 0 0 75%;
+    max-width: 75%;
+  }
+
+  .blog-wrapper .row > aside.col--3 nav {
+    display: block;
+  }
+
+  .theme-doc-sidebar-container {
+    display: block;
+    flex: 0 0 240px;
+    width: 240px;
+    margin-top: calc(-1 * var(--ifm-navbar-height));
+    border-right: 1px solid var(--ifm-toc-border-color);
+  }
+
+  .theme-doc-sidebar-container > div {
+    position: sticky;
+    top: 0;
+    height: 100%;
+    max-height: 100vh;
+  }
+
+  .theme-doc-sidebar-container > div > div {
+    display: flex;
+    flex-direction: column;
+    width: 240px;
+    height: 100%;
+    padding-top: var(--ifm-navbar-height);
+  }
+
+  .theme-doc-sidebar-container nav.menu {
+    flex-grow: 1;
+    min-height: 0;
+    overflow-y: auto;
+    padding: 0.5rem;
+  }
+
+  .theme-doc-sidebar-container + main {
+    flex-grow: 1;
+    max-width: calc(100% - 240px);
+  }
+}
+
+@media (max-width: 919px) {
+  .navbar-sidebar--show .navbar__items--right > [class*='navbarSearchContainer_'] {
+    display: none;
+  }
+
+  .navbar__items--right > .dropdown:has(> .site-locale-compact),
+  .navbar__items--right > .site-github-compact {
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .navbar__items--right > [class*='navbarSearchContainer_'] {
+    position: static;
+  }
+}
+
+@media (max-width: 996px) {
+  .navbar__items--right {
+    gap: 0.125rem;
+  }
+
+  .navbar__items--right > .dropdown:has(> .site-locale-compact),
+  .navbar__items--right > .site-github-compact {
+    box-sizing: border-box;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    padding: 0;
+  }
+
+  .navbar__items--right > .dropdown:has(> .site-locale-compact) > .site-locale-compact {
+    box-sizing: border-box;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    font-size: 0;
+  }
+
+  .navbar__items--right > .dropdown:has(> .site-locale-compact) .site-language-icon {
+    width: 1.25rem;
+    height: 1.25rem;
+    margin: 0;
+  }
+
+  .navbar__items--right > .dropdown:has(> .site-locale-compact) > .site-locale-compact::after {
+    display: none;
+  }
+
+  .navbar__items--right > .site-github-compact {
+    font-size: 0;
+  }
+
+  .navbar__items--right > .site-github-compact::before {
+    width: 1.25rem;
+    height: 1.25rem;
+    margin: 0;
+  }
+
+  .navbar__items--right > [class*='navbarSearchContainer_'] {
+    margin-inline-start: 0.125rem;
+  }
+
+  .navbar__items--right > [class*='navbarSearchContainer_'] .navbar__search {
+    margin-left: 0;
+  }
+}
+
+.site-about-split {
+  align-items: center;
+}
+
+.site-about-split__toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.35rem;
+  min-height: 1.6rem;
+  margin-left: 0.1rem;
+  padding: 0.15rem;
+  border: 0;
+  background: transparent;
+  color: var(--ifm-navbar-link-color);
+  cursor: pointer;
+}
+
+.site-about-split__toggle:hover {
+  color: var(--ifm-navbar-link-hover-color);
+}
+
+.site-about-split__caret {
+  width: 0;
+  height: 0;
+  border: 0.4em solid transparent;
+  border-top-color: currentColor;
+  transform: translateY(0.2em);
+}
+
+.navbar-sidebar .menu__list-item:not(.theme-doc-sidebar-item-category) > .menu__list-item-collapsible {
+  align-items: center;
+}
+
+.navbar-sidebar .menu__list-item:not(.theme-doc-sidebar-item-category) > .menu__list-item-collapsible > .menu__link {
+  flex: 0 1 auto;
+}
+
+.navbar-sidebar .menu__list-item:not(.theme-doc-sidebar-item-category) > .menu__list-item-collapsible > .menu__caret {
+  align-self: stretch;
+  flex: 0 0 1.75rem;
+  justify-content: center;
+  padding: 0;
+  background: transparent;
+  color: var(--ifm-menu-color);
+}
+
+.navbar-sidebar .menu__list-item:not(.theme-doc-sidebar-item-category) > .menu__list-item-collapsible:hover,
+.navbar-sidebar .menu__list-item:not(.theme-doc-sidebar-item-category) > .menu__list-item-collapsible:focus-within,
+.navbar-sidebar .menu__list-item:not(.theme-doc-sidebar-item-category) > .menu__list-item-collapsible--active {
+  background: var(--ifm-menu-color-background-hover);
+}
+
+.navbar-sidebar .menu__list-item:not(.theme-doc-sidebar-item-category) > .menu__list-item-collapsible > .menu__link:hover,
+.navbar-sidebar .menu__list-item:not(.theme-doc-sidebar-item-category) > .menu__list-item-collapsible > .menu__link:focus-visible,
+.navbar-sidebar .menu__list-item:not(.theme-doc-sidebar-item-category) > .menu__list-item-collapsible > .menu__caret:hover,
+.navbar-sidebar .menu__list-item:not(.theme-doc-sidebar-item-category) > .menu__list-item-collapsible > .menu__caret:focus-visible {
+  background: transparent;
+  color: var(--ifm-menu-color-active);
+}
+
 :focus-visible {
   outline: 2px solid var(--site-accent);
   outline-offset: 3px;

@@ -127,25 +127,36 @@ const config: Config = {
       respectPrefersColorScheme: false,
     },
     navbar: {
-      title: 'jyje',
+      title: 'jyje.online',
       logo: {
-        alt: 'jyje',
+        alt: 'jyje.online',
         src: 'img/logo-128.png',
       },
       items: [
-        {type: 'docSidebar', sidebarId: 'wikiSidebar', position: 'left', label: 'Wiki'},
-        {to: '/blog', label: 'Blog', position: 'left'},
+        {to: '/blog', label: 'Blog', className: 'site-blog-link', position: 'left'},
+        {type: 'docSidebar', sidebarId: 'wikiSidebar', position: 'left', label: 'Wiki', className: 'site-wiki-link'},
         {
           to: '/about',
           label: 'About',
+          className: 'site-about-split',
           position: 'left',
           items: [
             {to: '/about', label: 'Profile'},
             {to: '/resume', label: 'Resume'},
           ],
         },
-        {type: 'localeDropdown', position: 'right'},
-        {href: 'https://github.com/jyje', label: 'GitHub', position: 'right'},
+        {
+          type: 'localeDropdown',
+          className: 'site-locale-compact',
+          position: 'right',
+        },
+        {
+          href: 'https://github.com/jyje',
+          label: 'GitHub',
+          className: 'site-github-compact',
+          title: 'GitHub',
+          position: 'right',
+        },
       ],
     },
     footer: {
