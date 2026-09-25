@@ -41,55 +41,199 @@
   outline-offset: 2px;
 }
 
+.yearGroup {
+  margin-bottom: 3rem;
+}
+
+.yearHeading {
+  margin: 0 0 1rem;
+  color: var(--ifm-font-color-base);
+  font-size: 1.5rem;
+  line-height: 1.3;
+}
+
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 19rem), 1fr));
-  gap: 1.25rem;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 17rem), 1fr));
+  gap: 1rem;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  border-top: 1px solid var(--ifm-color-emphasis-300);
+}
+
+.listItem {
+  border-bottom: 1px solid var(--ifm-color-emphasis-300);
+}
+
+.listLink {
+  display: grid;
+  grid-template-columns: minmax(5.25rem, 7rem) minmax(0, 1fr);
+  align-items: start;
+  gap: 1rem;
+  padding: 1rem 0.25rem;
+  border-radius: var(--ifm-global-radius);
+  color: inherit;
+  text-decoration: none;
+}
+
+.listLink:hover {
+  background: var(--ifm-color-emphasis-100);
+  color: inherit;
+  text-decoration: none;
+}
+
+.listLink:focus-visible {
+  outline: 2px solid var(--ifm-color-primary);
+  outline-offset: -2px;
+}
+
+.listDate {
+  padding-top: 0.15rem;
+  color: var(--site-muted);
+  font-size: 0.825rem;
+  line-height: 1.4;
+  white-space: nowrap;
+}
+
+.listContent {
+  min-width: 0;
+}
+
+.listTitle {
+  margin: 0;
+  color: var(--ifm-font-color-base);
+  font-size: 1.05rem;
+  font-weight: 700;
+  line-height: 1.45;
+}
+
+.listLink:hover .listTitle {
+  color: var(--ifm-color-primary);
+}
+
+.listSummary {
+  margin: 0.35rem 0 0;
+  color: var(--site-muted);
+  font-size: 0.9rem;
+  line-height: 1.6;
 }
 
 .card {
-  display: flex;
   min-width: 0;
-  height: 100%;
-  flex-direction: column;
   overflow: hidden;
   border: 1px solid var(--ifm-color-emphasis-300);
   border-radius: var(--ifm-global-radius);
   background: var(--ifm-background-color);
-  transition: border-color 160ms ease, box-shadow 160ms ease;
+  transition: border-color 160ms ease, transform 160ms ease;
 }
 
-.card:hover {
+.card:hover,
+.card:focus-within {
   border-color: var(--ifm-color-primary);
-  box-shadow: 0 0.5rem 1.5rem rgb(0 0 0 / 8%);
+  transform: translateY(-2px);
 }
 
 .cardImage {
+  position: relative;
   aspect-ratio: 16 / 9;
   overflow: hidden;
   background: var(--ifm-color-emphasis-100);
 }
 
 .cardImage img {
+  position: absolute;
+  top: 50%;
+  left: 50%;
   display: block;
-  width: 100%;
+  width: auto;
   height: 100%;
-  object-fit: cover;
+  max-width: none;
+  transform: translate(-50%, -50%);
+}
+
+.cardLink {
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+  color: inherit;
+  text-decoration: none;
+}
+
+.cardLink:hover {
+  color: inherit;
+  text-decoration: none;
+}
+
+.cardLink:focus-visible {
+  outline: 2px solid var(--ifm-color-primary);
+  outline-offset: -3px;
 }
 
 .cardBody {
   display: flex;
   flex: 1;
   flex-direction: column;
-  padding: 1.25rem;
+  gap: 0.55rem;
+  padding: 1rem;
 }
 
-.cardBody :global(.markdown) {
-  flex: 1;
+.cardDate {
+  color: var(--site-muted);
+  font-size: 0.75rem;
+  line-height: 1.3;
 }
 
-.cardBody :global(footer) {
-  margin-top: auto;
+.cardTitle {
+  display: -webkit-box;
+  overflow: hidden;
+  margin: 0;
+  color: var(--ifm-font-color-base);
+  font-size: 1.12rem;
+  font-weight: 700;
+  line-height: 1.4;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.cardSummary {
+  display: -webkit-box;
+  overflow: hidden;
+  margin: 0;
+  color: var(--site-muted);
+  font-size: 0.875rem;
+  line-height: 1.5;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+}
+
+.loadMore {
+  display: flex;
+  justify-content: center;
+  margin-top: 2rem;
+}
+
+.loadMoreButton {
+  min-height: 2.75rem;
+  padding: 0 1.5rem;
+  border: 1px solid var(--ifm-color-primary);
+  border-radius: 999px;
+  background: var(--ifm-color-primary);
+  color: var(--ifm-background-color);
+  cursor: pointer;
+  font: inherit;
+  font-weight: 600;
+}
+
+.loadMoreButton:hover {
+  filter: brightness(0.92);
+}
+
+.loadMoreButton:focus-visible {
+  outline: 2px solid var(--ifm-color-primary);
+  outline-offset: 3px;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -99,6 +243,24 @@
 }
 
 @media (max-width: 576px) {
+  .yearGroup {
+    margin-bottom: 2.5rem;
+  }
+
+  .yearHeading {
+    font-size: 1.3rem;
+  }
+
+  .listLink {
+    grid-template-columns: 5rem minmax(0, 1fr);
+    gap: 0.75rem;
+    padding-block: 0.85rem;
+  }
+
+  .listTitle {
+    font-size: 1rem;
+  }
+
   .toggleButton {
     padding-inline: 0.7rem;
   }

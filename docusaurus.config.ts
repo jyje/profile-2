@@ -59,6 +59,7 @@ const config: Config = {
           blogListComponent: '@site/src/components/BlogListPage',
           blogSidebarCount: 'ALL',
           blogSidebarTitle: 'Posts',
+          postsPerPage: 'ALL',
           showReadingTime: true,
           feedOptions: {
             type: ['rss', 'atom'],
