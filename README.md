@@ -35,6 +35,20 @@ Light is the default color mode. When a visitor changes it, the choice is saved 
 `jyje_color_mode` cookie and restored on later visits. Docusaurus also keeps its own
 namespaced local storage value for the built-in theme switch.
 
+## Language preference
+
+Korean stays the default locale at `/`; English pages are under `/en/`.
+The local Docusaurus plugin in `plugins/locale-preference.cjs` remembers a visitor's
+navbar language choice in the `jyje_locale` cookie. Without that cookie, it uses
+the browser's preferred supported language. It checks that the corresponding page
+exists before moving, and leaves deliberate links within the site at their chosen
+URL. The cookie is scoped to the site's base path, including project Pages previews.
+
+This is a client-side convenience for a static GitHub Pages deployment, not an
+HTTP redirect: requests and clients without JavaScript receive the page at the
+requested URL. Known crawlers and automation are excluded from client routing.
+Both language URLs remain available to visitors and search engines.
+
 ## GitHub Pages
 
 The static site can run on GitHub Pages. For a project Pages preview at
