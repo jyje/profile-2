@@ -3,9 +3,16 @@
 # a translated note does not exist yet.
 featured:
   - kind: blog
-    id: 2026-02-22-recap-2025
+    id: 2024-06-30-mlops-onpremise-mlops-with-open-source-projects
   - kind: wiki
     id: knowledge/portfolio/widearth-digital-twins-platforms-at-maxst
+
+# Editorial reading order on the homepage. Keep this separate from the daily pool.
+reading:
+  - 2026-02-22-recap-2025
+  - 2025-02-24-hae-joined-hyundai-autoever-as-ai-mlops-engineer
+  - 2024-11-01-widearth-digital-twins-platforms-at-maxst
+  - 2023-12-31-devops-hybrid-clusters-with-onpremise-baremetal-k8s-and-aws-eks
 
 daily:
   blog:
@@ -14,7 +21,6 @@ daily:
       - 2023-12-31-devops-hybrid-clusters-with-onpremise-baremetal-k8s-and-aws-eks
       - 2024-03-16-cka-certified-kubernetes-administrator
       - 2024-06-01-ckad-certified-kubernetes-application-developer
-      - 2024-06-30-mlops-onpremise-mlops-with-open-source-projects
       - 2024-09-14-capa-certified-argo-project-associate
       - 2024-11-01-widearth-digital-twins-platforms-at-maxst
       - 2024-11-19-github-foundations

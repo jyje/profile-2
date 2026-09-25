@@ -47,7 +47,7 @@ function readItem(kind, id, locale) {
     id,
     kind,
     title: String(meta.title),
-    description: String(meta.description ?? '').trim(),
+    description: String(meta.description ?? '').replace(/<[^>]*>/g, '').split(/\s*Photo by\s*/i)[0].trim(),
     tags: Array.isArray(meta.tags) ? meta.tags.slice(0, 3).map(String) : [],
     date: kind === 'blog' ? id.slice(0, 10) : null,
     sourceLocale,
@@ -65,9 +65,17 @@ export function buildCuration() {
   if (!Array.isArray(config?.featured)) {
     throw new Error('home-curation.yml needs a featured list');
   }
-  const output = {featured: {}, daily: {}, counts: {}};
+  if (!Array.isArray(config?.reading) || new Set(config.reading).size !== config.reading.length) {
+    throw new Error('home-curation.yml needs a unique reading list');
+  }
+  const featuredBlogIds = new Set(config.featured.filter((item) => item.kind === 'blog').map((item) => item.id));
+  if (config.reading.some((id) => featuredBlogIds.has(id))) {
+    throw new Error('Featured blog post appears in reading list');
+  }
+  const output = {featured: {}, reading: {}, daily: {}, counts: {}};
   for (const locale of ['ko', 'en']) {
     output.featured[locale] = resolveGroup(config.featured, null, locale);
+    output.reading[locale] = resolveGroup(config.reading, 'blog', locale);
     output.daily[locale] = {};
     for (const kind of ['blog', 'wiki']) {
       const group = config.daily?.[kind];

@@ -9,62 +9,87 @@ import styles from './index.module.css';
 
 type Catalog = {
   featured: Record<string, CuratedItem[]>;
+  reading: Record<string, CuratedItem[]>;
   daily: Record<string, {blog: CuratedItem[]; wiki: CuratedItem[]}>;
   counts: {blog: number; wiki: number};
 };
 
 type Copy = {
   title: string;
-  eyebrow: string;
+  description: string;
+  identity: string;
   headline: string;
   introduction: string;
   about: string;
-  featuredTitle: string;
+  resume: string;
+  experience: string;
+  achievements: string;
+  featured: string;
   featuredIntro: string;
-  dailyTitle: string;
+  readPost: string;
+  reading: string;
+  readingIntro: string;
+  wiki: string;
+  wikiIntro: string;
+  openWiki: string;
+  daily: string;
   dailyIntro: string;
   blog: string;
-  wiki: string;
   allBlog: string;
   allWiki: string;
-  loading: string;
   korean: string;
 };
 
 const CATALOG = curation as Catalog;
 const COPY: Record<string, Copy> = {
   ko: {
-    title: '기록의 시작',
-    eyebrow: 'AI 플랫폼 엔지니어 전제영의 기록',
-    headline: '기술을 만들고, 기록합니다.',
-    introduction: '프로젝트에서 얻은 경험은 블로그에, 계속 다듬는 지식은 위키에 담았습니다. 오늘 읽을 글과 직접 고른 글에서 시작해 보세요.',
-    about: '소개 보기',
-    featuredTitle: '먼저 읽어보세요',
-    featuredIntro: '프로젝트와 경험을 보여주는 글을 직접 골랐습니다.',
-    dailyTitle: '오늘의 발견',
-    dailyIntro: '서울 날짜를 기준으로 매일 달라지는 블로그와 위키 글입니다.',
-    blog: '블로그',
+    title: 'Jeayoung Jeon (전제영) | AI 플랫폼 엔지니어',
+    description: 'AI 플랫폼 엔지니어 전제영의 프로젝트, 포스트, 위키를 모았습니다.',
+    identity: 'AI 플랫폼 엔지니어',
+    headline: 'Jeayoung Jeon (전제영)',
+    introduction: 'AI와 클러스터를 중심으로 연구와 제품 개발을 이어온 소프트웨어 엔지니어입니다. 문제해결을 위한 적정기술과 추진력, AI 네이티브 개발을 위한 기술 탐구에 관심이 많습니다.',
+    about: '소개',
+    resume: '이력서',
+    experience: '경험',
+    achievements: '성취',
+    featured: '먼저 읽을 글',
+    featuredIntro: '실제로 만들고 운영한 시스템을 중심으로 고른 이야기입니다.',
+    readPost: '글 읽기',
+    reading: '이어 읽기',
+    readingIntro: '프로젝트, 전환점, 회고를 따라 읽어보세요.',
     wiki: '위키',
-    allBlog: '블로그 전체',
-    allWiki: '위키 전체',
-    loading: '오늘의 글을 고르는 중입니다.',
+    wikiIntro: '블로그가 경험의 기록이라면, 위키는 작업 중 다시 찾는 문서입니다.',
+    openWiki: '문서 보기',
+    daily: '오늘의 발견',
+    dailyIntro: '한국 시간을 기준으로 매일 달라지는 포스트와 위키 문서입니다.',
+    blog: '블로그',
+    allBlog: '모든 포스트',
+    allWiki: '위키 둘러보기',
     korean: '한국어 원문',
   },
   en: {
-    title: 'Start reading',
-    eyebrow: 'Notes from Jeayoung Jeon, AI platform engineer',
-    headline: 'Build the work. Keep the notes.',
-    introduction: 'The blog holds project stories and experience. The wiki holds knowledge I continue to revise. Start with today’s selection or the pieces I chose to highlight.',
-    about: 'About me',
-    featuredTitle: 'Start here',
-    featuredIntro: 'A few selected pieces about projects and practice.',
-    dailyTitle: 'Today’s finds',
-    dailyIntro: 'A different set of blog posts and wiki notes each day in Seoul.',
-    blog: 'Blog',
+    title: 'Jeayoung Jeon (전제영) | AI Platform Engineer',
+    description: 'Projects, posts, and a wiki by Jeayoung Jeon, an AI platform engineer.',
+    identity: 'AI Platform Engineer',
+    headline: 'Jeayoung Jeon (전제영)',
+    introduction: 'I am a software engineer whose work connects research and product development across AI and clusters. I care about practical technology and the drive to solve problems, and I explore the technologies behind AI-native development.',
+    about: 'About',
+    resume: 'Resume',
+    experience: 'Experience',
+    achievements: 'Achievements',
+    featured: 'Start with a story',
+    featuredIntro: 'A closer look at a system I built and operated.',
+    readPost: 'Read the post',
+    reading: 'Keep reading',
+    readingIntro: 'Projects, turning points, and a year in review.',
     wiki: 'Wiki',
-    allBlog: 'All blog posts',
-    allWiki: 'All wiki notes',
-    loading: 'Choosing today’s reading.',
+    wikiIntro: 'The blog records experience. The wiki holds notes I keep revising and returning to.',
+    openWiki: 'Read the note',
+    daily: 'Today’s finds',
+    dailyIntro: 'Posts and wiki notes that change each day in Korea Standard Time.',
+    blog: 'Blog',
+    allBlog: 'All posts',
+    allWiki: 'Explore the wiki',
     korean: 'Korean original',
   },
 };
@@ -88,18 +113,6 @@ function ItemMeta({item, locale, label}: {item: CuratedItem; locale: string; lab
   );
 }
 
-function FeaturedCard({item, locale, rootBase}: {item: CuratedItem; locale: string; rootBase: string}) {
-  const copy = COPY[locale] ?? COPY.en;
-  return (
-    <a className={styles.featuredCard} href={rootBase + item.url.slice(1)}>
-      <ItemMeta item={item} locale={locale} label={item.kind === 'blog' ? copy.blog : copy.wiki} />
-      <span className={styles.featuredCardTitle}>{item.title}</span>
-      {item.description && <span className={styles.featuredDescription}>{item.description}</span>}
-      <span className={styles.cardArrow} aria-hidden="true">↗</span>
-    </a>
-  );
-}
-
 function DailyList({items, locale, label, rootBase}: {items: CuratedItem[]; locale: string; label: string; rootBase: string}) {
   return (
     <div className={styles.dailyGroup}>
@@ -110,7 +123,7 @@ function DailyList({items, locale, label, rootBase}: {items: CuratedItem[]; loca
             <a href={rootBase + item.url.slice(1)}>
               <span className={styles.dailyTitle}>{item.title}</span>
               <ItemMeta item={item} locale={locale} label={label} />
-              <span className={styles.dailyArrow} aria-hidden="true">↗</span>
+              <span className={styles.arrow} aria-hidden="true">↗</span>
             </a>
           </li>
         ))}
@@ -139,53 +152,120 @@ export default function Home(): ReactNode {
     return () => window.clearInterval(timer);
   }, []);
 
+  const featuredBlog = CATALOG.featured[locale].find((item) => item.kind === 'blog');
+  const featuredWiki = CATALOG.featured[locale].find((item) => item.kind === 'wiki');
   const daily = CATALOG.daily[locale];
   const blogPicks = day ? pickForDay(daily.blog, CATALOG.counts.blog, day, 'blog') : [];
   const wikiPicks = day ? pickForDay(daily.wiki, CATALOG.counts.wiki, day, 'wiki') : [];
 
   return (
-    <Layout title={copy.title} description={copy.introduction}>
+    <Layout title={copy.title} description={copy.description}>
       <header className={styles.hero}>
-        <div className="container">
+        <div className={`container ${styles.heroInner}`}>
           <div>
-            <p className={styles.eyebrow}>{copy.eyebrow}</p>
+            <p className={styles.kicker}>{copy.identity}</p>
             <h1>{copy.headline}</h1>
             <p className={styles.introduction}>{copy.introduction}</p>
-            <Link to="/about" className={styles.aboutLink}>{copy.about} <span aria-hidden="true">↗</span></Link>
+            <nav className={styles.heroLinks} aria-label={locale === 'ko' ? '빠른 탐색' : 'Quick navigation'}>
+              <div className={styles.heroLinkGroup}>
+                <Link to="/blog" className={styles.primaryLink}>{copy.blog} <span aria-hidden="true">↗</span></Link>
+                <Link to="/tags/careers">{copy.experience}</Link>
+                <Link to="/tags/achievements">{copy.achievements}</Link>
+              </div>
+              <div className={styles.heroLinkGroup}>
+                <Link to="/wiki" className={styles.primaryLink}>{copy.wiki} <span aria-hidden="true">↗</span></Link>
+              </div>
+              <div className={styles.heroLinkGroup}>
+                <Link to="/about" className={styles.primaryLink}>{copy.about} <span aria-hidden="true">↗</span></Link>
+                <Link to="/resume">{copy.resume}</Link>
+              </div>
+            </nav>
           </div>
         </div>
       </header>
+
       <main className={`container ${styles.main}`}>
-        <section className={styles.featured}>
+        {featuredBlog && (
+          <section className={styles.featured} aria-labelledby="home-featured">
+            <div className={styles.sectionHeading}>
+              <div>
+                <p className={styles.kicker}>01 / Featured</p>
+                <h2 id="home-featured">{copy.featured}</h2>
+                <p>{copy.featuredIntro}</p>
+              </div>
+              <Link to="/blog" className={styles.sectionLink}>{copy.allBlog} <span aria-hidden="true">↗</span></Link>
+            </div>
+            <a className={styles.featuredStory} href={rootBase + featuredBlog.url.slice(1)}>
+              <div className={styles.featuredText}>
+                <ItemMeta item={featuredBlog} locale={locale} label={copy.blog} />
+                <h3>{featuredBlog.title}</h3>
+                <p>{featuredBlog.description}</p>
+                <span className={styles.storyAction}>{copy.readPost} <span aria-hidden="true">↗</span></span>
+              </div>
+              <div className={styles.featuredPattern} aria-hidden="true">
+                <span>AI</span><span>ML</span><span>OPS</span>
+              </div>
+            </a>
+          </section>
+        )}
+
+        <section className={styles.reading} aria-labelledby="home-reading">
           <div className={styles.sectionHeading}>
             <div>
-              <p className={styles.kicker}>Selected</p>
-              <h2>{copy.featuredTitle}</h2>
-              <p>{copy.featuredIntro}</p>
+              <p className={styles.kicker}>02 / Editorial</p>
+              <h2 id="home-reading">{copy.reading}</h2>
+              <p>{copy.readingIntro}</p>
             </div>
           </div>
-          <div className={styles.featuredGrid}>
-            {CATALOG.featured[locale].map((item) => <FeaturedCard key={item.kind + item.id} item={item} locale={locale} rootBase={rootBase} />)}
-          </div>
+          <ol className={styles.readingList}>
+            {CATALOG.reading[locale].map((item, index) => (
+              <li key={item.id}>
+                <a href={rootBase + item.url.slice(1)}>
+                  <span className={styles.readingNumber}>{String(index + 1).padStart(2, '0')}</span>
+                  <span className={styles.readingBody}>
+                    <ItemMeta item={item} locale={locale} label={copy.blog} />
+                    <strong>{item.title}</strong>
+                    <span className={styles.readingDescription}>{item.description}</span>
+                  </span>
+                  <span className={styles.arrow} aria-hidden="true">↗</span>
+                </a>
+              </li>
+            ))}
+          </ol>
+          <Link to="/blog" className={styles.bottomLink}>{copy.allBlog} <span aria-hidden="true">↗</span></Link>
         </section>
-        <section className={styles.daily}>
-          <div className={styles.dateRail}>
-            <p className={styles.kicker}>Daily / Seoul</p>
-            <h2>{copy.dailyTitle}</h2>
+
+        {featuredWiki && (
+          <section className={styles.wikiFeature} aria-labelledby="home-wiki">
+            <div>
+              <p className={styles.kicker}>03 / Wiki</p>
+              <h2 id="home-wiki">{copy.wiki}</h2>
+              <p>{copy.wikiIntro}</p>
+              <Link to="/wiki" className={styles.sectionLink}>{copy.allWiki} <span aria-hidden="true">↗</span></Link>
+            </div>
+            <a href={rootBase + featuredWiki.url.slice(1)} className={styles.wikiStory}>
+              <ItemMeta item={featuredWiki} locale={locale} label={copy.wiki} />
+              <strong>{featuredWiki.title}</strong>
+              <span>{featuredWiki.description}</span>
+              <span className={styles.storyAction}>{copy.openWiki} <span aria-hidden="true">↗</span></span>
+            </a>
+          </section>
+        )}
+
+        <section className={styles.daily} aria-labelledby="home-daily">
+          <div className={styles.dailyHeading}>
+            <p className={styles.kicker}>04 / Daily · KST</p>
+            <h2 id="home-daily">{copy.daily}</h2>
             <p>{copy.dailyIntro}</p>
-            <strong className={styles.today}>{day ? formatDate(day, locale) : '···'}</strong>
+            <strong>{day ? formatDate(day, locale) : '···'}</strong>
           </div>
-          <div className={styles.dailyContent} aria-live="polite">
-            {day ? (
+          <div className={styles.dailyContent}>
+            {day && (
               <>
                 <DailyList items={blogPicks} locale={locale} label={copy.blog} rootBase={rootBase} />
                 <DailyList items={wikiPicks} locale={locale} label={copy.wiki} rootBase={rootBase} />
               </>
-            ) : <p className={styles.loading}>{copy.loading}</p>}
-            <div className={styles.moreLinks}>
-              <Link to="/blog">{copy.allBlog} <span aria-hidden="true">↗</span></Link>
-              <Link to="/wiki">{copy.allWiki} <span aria-hidden="true">↗</span></Link>
-            </div>
+            )}
           </div>
         </section>
       </main>
