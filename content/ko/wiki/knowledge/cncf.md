@@ -14,3 +14,8 @@ sources:
 
 ## Definition
 - [리눅스 재단](./linux-foundation.md) 소속의 비영리 단체로, 클라우드 환경에 기여하는 오픈소스 그룹 관리 재단
+
+## 관련 블로그 글
+
+- [KCSA: Kubernetes and Cloud Native Security Associate](../../blog/kcsa-kubernetes-and-cloud-native-security-associate)
+- [KCNA: Kubernetes and Cloud Native Associate](../../blog/kcna-kubernetes-and-cloud-native-associate)

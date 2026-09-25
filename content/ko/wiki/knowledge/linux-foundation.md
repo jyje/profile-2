@@ -33,3 +33,8 @@ sources:
 ## References
 - [공식 웹사이트](https://www.linuxfoundation.org)
 - [위키백과](https://en.wikipedia.org/wiki/Linux_Foundation)
+
+## 관련 블로그 글
+
+- [KCSA: Kubernetes and Cloud Native Security Associate](../../blog/kcsa-kubernetes-and-cloud-native-security-associate)
+- [KCNA: Kubernetes and Cloud Native Associate](../../blog/kcna-kubernetes-and-cloud-native-associate)

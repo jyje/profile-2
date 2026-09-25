@@ -75,3 +75,14 @@ KCNA의 특징을 정리하면:
 클라우드 네이티브 분야에서 기본기를 다지고 싶거나, 이미 알고 있는 내용을 체계적으로 정리하고 싶다면 KCNA를 고려해보세요.
 
 이 자격증은 [LinkedIn 게시물](https://www.linkedin.com/posts/jyje_the-linux-foundation-%EC%9E%90%EA%B2%A9%EC%88%98%EB%A3%8C%EC%A6%9Dkcna-kubernetes-activity-7388695644942684160-Nw_Y)에서 공유했습니다.
+
+## 관련 위키
+
+- [쿠버네티스](../wiki/knowledge/k8s)
+- [컨테이너](../wiki/knowledge/container)
+- [CNCF](../wiki/knowledge/cncf)
+- [리눅스 재단](../wiki/knowledge/linux-foundation)
+
+## 함께 읽기
+
+- [KCSA: Kubernetes and Cloud Native Security Associate](./kcsa-kubernetes-and-cloud-native-security-associate)

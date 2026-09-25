@@ -11,9 +11,10 @@ This wiki is the **knowledge base** of the profile site. The blog is a chronolog
 
 ## Contents
 
-- [Obsidian authoring guide](./guide/obsidian-authoring.md): vault settings, links, images, callouts, translation pairs
-- [Resume page design](./design/resume.md): card hierarchy, spacing, print rules
-- [Portfolio page design](./design/portfolio.md): what differs from the resume
+- [Guides](./guide/index.md): how to write and maintain the wiki and blog
+- [Design](./design/index.md): design notes for the resume and portfolio pages
+- [Knowledge](./knowledge/index.md): technical topics and project knowledge
+- [Document graph](./graph.mdx): explore connections between notes and tags
 
 ## Related posts
 

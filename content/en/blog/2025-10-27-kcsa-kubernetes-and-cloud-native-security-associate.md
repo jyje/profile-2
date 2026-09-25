@@ -77,3 +77,14 @@ Key characteristics of KCSA:
 - **Complementary**: Pairs well with hands-on certifications like CKS or practical security experience
 
 The KCSA certification validates a solid foundation in cloud native security technologies and serves as a stepping stone for more advanced security certifications or as a way to systematize existing security knowledge in the cloud native context.
+
+## Related wiki pages
+
+- [Kubernetes](../wiki/knowledge/k8s)
+- [Containers](../wiki/knowledge/container)
+- [CNCF](../wiki/knowledge/cncf)
+- [Linux Foundation](../wiki/knowledge/linux-foundation)
+
+## Related article
+
+- [KCNA: Kubernetes and Cloud Native Associate](./kcna-kubernetes-and-cloud-native-associate)

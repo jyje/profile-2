@@ -7,6 +7,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import * as yaml from 'js-yaml';
 import {buildCuration} from './build-curation.mjs';
+import {mergeKoreanFallbackDocs} from './build-wiki-graph.mjs';
 
 const ROOT = path.resolve(import.meta.dirname, '..');
 const MIRRORS = [
@@ -24,6 +25,7 @@ function mirror() {
     fs.mkdirSync(path.dirname(dest), {recursive: true});
     fs.cpSync(src, dest, {recursive: true, filter: skip});
   }
+  mergeKoreanFallbackDocs();
 }
 
 function convertData() {

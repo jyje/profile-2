@@ -11,9 +11,10 @@ sidebar_position: 1
 
 ## 목차
 
-- [Obsidian 작성 가이드](./guide/obsidian-authoring.md): vault 설정, 링크, 이미지, 콜아웃, 번역 짝 규칙
-- [이력서 페이지 설계](./design/resume.md): 카드 계층, 간격, 인쇄 규칙
-- [포트폴리오 페이지 설계](./design/portfolio.md): 이력서와 다른 부분
+- [가이드](./guide/index.md): 위키와 블로그를 작성하고 관리하는 방법
+- [설계](./design/index.md): 이력서와 포트폴리오 페이지의 설계 기록
+- [문서](./knowledge/index.md): 기술 주제와 프로젝트 지식
+- [문서 그래프](./graph.mdx): 위키 문서와 태그의 연결을 직접 탐색
 
 ## 관련 글
 

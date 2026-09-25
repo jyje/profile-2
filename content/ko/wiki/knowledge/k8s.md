@@ -37,3 +37,8 @@ sources:
 	- 예시: AWS EKS, GCP GKE, Azure AKS, NCloud NKS, KakaoCloud Kubernetes Engine
 - 자동 구성: CNI, CSI 등을 튜딩하여 메모리 사용량을 줄이거나 성능을 향상시키는 것을 의미한다.
 	- 예시: [MicroK8s](./microk8s.md), k3s는 경량 튜닝 쿠버네티스의 일종이다.
+
+## 관련 블로그 글
+
+- [KCSA: Kubernetes and Cloud Native Security Associate](../../blog/kcsa-kubernetes-and-cloud-native-security-associate)
+- [KCNA: Kubernetes and Cloud Native Associate](../../blog/kcna-kubernetes-and-cloud-native-associate)

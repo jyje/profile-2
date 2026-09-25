@@ -77,3 +77,14 @@ KCSA의 특징을 정리하면:
 - **보완적 성격**: CKS 같은 핸즈온 자격증이나 실무 보안 경험과 함께 갖추면 시너지가 남
 
 클라우드 네이티브 보안 분야에서 기본기를 다지고 싶거나, 이미 알고 있는 보안 지식을 체계적으로 정리하고 싶다면 KCSA를 고려해보세요.
+
+## 관련 위키
+
+- [쿠버네티스](../wiki/knowledge/k8s)
+- [컨테이너](../wiki/knowledge/container)
+- [CNCF](../wiki/knowledge/cncf)
+- [리눅스 재단](../wiki/knowledge/linux-foundation)
+
+## 함께 읽기
+
+- [KCNA: Kubernetes and Cloud Native Associate](./kcna-kubernetes-and-cloud-native-associate)

@@ -75,3 +75,14 @@ Key characteristics of KCNA:
 The KCNA certification validates a solid foundation in cloud native technologies and serves as a stepping stone for more advanced certifications or as a way to systematize existing knowledge.
 
 I shared my certification on LinkedIn with [this post](https://www.linkedin.com/posts/jyje_the-linux-foundation-%EC%9E%90%EA%B2%A9%EC%88%98%EB%A3%8C%EC%A6%9Dkcna-kubernetes-activity-7388695644942684160-Nw_Y).
+
+## Related wiki pages
+
+- [Kubernetes](../wiki/knowledge/k8s)
+- [Containers](../wiki/knowledge/container)
+- [CNCF](../wiki/knowledge/cncf)
+- [Linux Foundation](../wiki/knowledge/linux-foundation)
+
+## Related article
+
+- [KCSA: Kubernetes and Cloud Native Security Associate](./kcsa-kubernetes-and-cloud-native-security-associate)
