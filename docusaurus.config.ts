@@ -85,6 +85,17 @@ const config: Config = {
 
   plugins: [
     './plugins/color-cookie.cjs',
+    './plugins/locale-preference.cjs',
+    './plugins/global-tags',
+    [
+      './plugins/document-graph',
+      {
+        defaultDocsPath: 'content/ko/wiki',
+        englishDocsPath: 'content/en/wiki',
+        translatedDocsPath: 'docusaurus-plugin-content-docs/current',
+        koreanDocsPath: 'content/ko/wiki',
+      },
+    ],
     [
       '@docusaurus/plugin-client-redirects',
       {
