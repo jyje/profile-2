@@ -1,7 +1,7 @@
 ---
 title: MicroK8s
 tags:
-  - k8s
+  - kubernetes
 type: Reference
 status: draft
 sources:

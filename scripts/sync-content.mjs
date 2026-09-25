@@ -37,7 +37,30 @@ function convertData() {
   }
 }
 
+function syncTagDefinitions() {
+  const sourcePath = path.join(ROOT, 'data/tags.yml');
+  const {tags = {}} = yaml.load(fs.readFileSync(sourcePath, 'utf8')) ?? {};
+  for (const locale of ['ko', 'en']) {
+    const output = Object.fromEntries(Object.entries(tags).map(([slug, tag]) => {
+      const definition = {
+        label: tag.label?.[locale] ?? slug,
+        permalink: `/${slug}`,
+      };
+      const description = tag.description?.[locale];
+      if (description) definition.description = description;
+      return [slug, definition];
+    }));
+    const serialized = yaml.dump(output, {lineWidth: 120, noRefs: true, sortKeys: false});
+    for (const kind of ['blog', 'wiki']) {
+      const destination = path.join(ROOT, `content/${locale}/${kind}/tags.yml`);
+      if (fs.existsSync(destination) && fs.readFileSync(destination, 'utf8') === serialized) continue;
+      fs.writeFileSync(destination, serialized);
+    }
+  }
+}
+
 function syncAll() {
+  syncTagDefinitions();
   mirror();
   convertData();
   buildCuration();

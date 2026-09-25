@@ -7,7 +7,7 @@ tags:
   - devops
   - kubernetes
   - ai
-  - digital-twin
+  - digital-twins
   - ar
   - aws
   - hybrid-cloud

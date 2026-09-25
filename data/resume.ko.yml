@@ -60,6 +60,7 @@ work:
     company: 현대오토에버
     headerIcon: "🧑‍💻"
     position: "리드 AI 플랫폼 엔지니어"
+    tags: [careers, ai, kubernetes, llmops]
     website: https://www.hyundai-autoever.com
     startDate: "2025-02-24"
     endDate: {}
@@ -75,6 +76,7 @@ work:
     company: 맥스트
     headerIcon: "🧑‍🔬"
     position: "리드 MLOps & DevOps 엔지니어"
+    tags: [careers, mlops, devops, kubernetes, digital-twins]
     website: https://www.linkedin.com/company/maxst
     startDate: "2021-01-16"
     endDate: "2024-10-31"
@@ -107,6 +109,7 @@ projects:
   -
     headerIcon: "🚙"
     position: "차량SW 검증을 위한 Agentic AI 플랫폼"
+    tags: [agentic-ai, ai, kubernetes, llm]
     company: 현대오토에버
     startDate: "2026-04-01"
     endDate: {}
@@ -121,6 +124,7 @@ projects:
   -
     headerIcon: "🤖"
     position: "Codebeamer AI Assistant"
+    tags: [agentic-ai, ai, llm]
     company: 현대오토에버
     startDate: "2025-02-24"
     endDate: "2025-11-30"
@@ -135,6 +139,7 @@ projects:
   -
     headerIcon: "🧑‍🔬"
     position: "온프레미스 MLOps 플랫폼 구축"
+    tags: [mlops, devops, kubernetes, digital-twins, aws]
     company: 맥스트
     startDate: "2024-01-01"
     endDate: "2024-06-30"
@@ -152,6 +157,7 @@ projects:
 education:
   -
     institution: "포항공과대학교 (POSTECH)"
+    tags: [postech, computer-vision, digital-twins, slam, adas]
     website: "https://eee.postech.ac.kr/"
     area: "전기전자공학 · 컴퓨터비전·신호처리"
     headerIcon: "🎓"
@@ -171,6 +177,7 @@ education:
     #   - Computer Vision Algorithms
   -
     institution: "금오공과대학교 (kit)"
+    tags: [kit, fpga]
     website: "https://eng.kumoh.ac.kr/eng"
     area: "전자공학부, 전자 및 정보통신"
     headerIcon: "🎓"
@@ -193,6 +200,7 @@ education:
 skills:
   -
     name: AI Tooling & Workflow
+    tags: [ai, agentic-ai]
     keywords:
       - Claude Code
       - Hermes Agent
@@ -200,6 +208,7 @@ skills:
       - GitHub Copilot
   -
     name: Agentic AI Systems
+    tags: [agentic-ai, ai, llm]
     keywords:
       - Python/FastAPI
       - LangGraph/Deep Agents
@@ -208,6 +217,7 @@ skills:
       - Agent Evaluation
   -
     name: AI Platform & AIOps
+    tags: [ai, aiops, llmops, observability, kubernetes, mlops]
     keywords:
       - Public/Private LLM
       - AIOps/LLMOps
@@ -220,6 +230,7 @@ skills:
       - Milvus/Qdrant/pgvector
   -
     name: Cloud-Native Infrastructure
+    tags: [devops, kubernetes, aws, gitops]
     keywords:
       - Kubernetes
       - Hybrid Clusters
@@ -228,6 +239,7 @@ skills:
       - IaC
   -
     name: SecOps
+    tags: [security]
     keywords:
       - Istio
       - OIDC/RBAC
@@ -236,6 +248,7 @@ skills:
       - Vulnerability Response
   -
     name: FinOps
+    tags: [finops, aws]
     keywords:
       - LiteLLM
       - Karpenter
@@ -243,6 +256,7 @@ skills:
       - Cost Optimization
   -
     name: AI Research Foundation
+    tags: [ai, computer-vision, digital-twins]
     keywords:
       - Computer Vision/SLAM
       - PyTorch/OpenCV

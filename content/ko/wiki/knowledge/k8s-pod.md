@@ -2,7 +2,7 @@
 title: 'Kubernetes: Pod'
 tags:
   - devops
-  - k8s
+  - kubernetes
 type: Reference
 status: draft
 sources:

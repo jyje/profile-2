@@ -1,0 +1,98 @@
+.page {
+  max-width: 58rem;
+  min-height: 65vh;
+  padding-top: 3rem;
+  padding-bottom: 5rem;
+}
+
+.heading {
+  margin-bottom: 2rem;
+}
+
+.heading h1 {
+  margin-bottom: 0.4rem;
+}
+
+.heading p {
+  color: var(--ifm-color-emphasis-700);
+  margin: 0;
+}
+
+.tagGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(13rem, 1fr));
+  gap: 0.8rem;
+}
+
+.tagCard {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 0.25rem 0.75rem;
+  padding: 0.9rem 1rem;
+  border: 1px solid var(--ifm-color-emphasis-300);
+  border-radius: 0.6rem;
+  background: var(--ifm-background-surface-color);
+  color: var(--ifm-font-color-base);
+}
+
+.tagCard:hover {
+  border-color: var(--ifm-color-primary);
+  color: var(--ifm-color-primary);
+  text-decoration: none;
+}
+
+.tagLabel {
+  font-weight: 700;
+}
+
+.tagCount {
+  color: var(--ifm-color-emphasis-600);
+  font-variant-numeric: tabular-nums;
+}
+
+.tagDescription {
+  grid-column: 1 / -1;
+  color: var(--ifm-color-emphasis-700);
+  font-size: 0.9rem;
+  line-height: 1.45;
+}
+
+.breadcrumb {
+  margin-bottom: 1.25rem;
+  font-size: 0.9rem;
+}
+
+.itemList {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.item {
+  padding: 1.1rem 0;
+  border-top: 1px solid var(--ifm-color-emphasis-300);
+}
+
+.itemMeta {
+  display: flex;
+  gap: 0.7rem;
+  align-items: center;
+  margin-bottom: 0.35rem;
+  color: var(--ifm-color-emphasis-600);
+  font-size: 0.85rem;
+}
+
+.type {
+  color: var(--ifm-color-primary);
+  font-weight: 700;
+}
+
+.item h2 {
+  margin: 0;
+  font-size: 1.2rem;
+}
+
+.item p {
+  margin: 0.35rem 0 0;
+  color: var(--ifm-color-emphasis-700);
+}

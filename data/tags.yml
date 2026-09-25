@@ -1,0 +1,435 @@
+tags:
+  achievements:
+    label:
+      ko: 성취
+      en: Achievements
+    description:
+      ko: 프로젝트와 실무 성취를 기록한 글
+      en: Selected curations of my professional achievements and works
+  adas:
+    label:
+      ko: ADAS
+      en: ADAS
+    description:
+      ko: ''
+      en: ''
+  agentic-ai:
+    label:
+      ko: 에이전틱 AI
+      en: Agentic AI
+    description:
+      ko: ''
+      en: ''
+  ai:
+    label:
+      ko: AI
+      en: AI
+    description:
+      ko: AI and related topics 🧑‍💻
+      en: AI and related topics 🧑‍💻
+  aiops:
+    label:
+      ko: AIOps
+      en: AIOps
+    description:
+      ko: ''
+      en: ''
+  ar:
+    label:
+      ko: AR
+      en: AR
+    description:
+      ko: ''
+      en: ''
+  argo-events:
+    label:
+      ko: Argo Events
+      en: Argo Events
+    description:
+      ko: ''
+      en: ''
+  argo-proj:
+    label:
+      ko: Argo Project
+      en: Argo Project
+    description:
+      ko: ''
+      en: ''
+  argo-workflows:
+    label:
+      ko: Argo Workflows
+      en: Argo Workflows
+    description:
+      ko: ''
+      en: ''
+  argocd:
+    label:
+      ko: Argo CD
+      en: Argo CD
+    description:
+      ko: ''
+      en: ''
+  argoproj-labs:
+    label:
+      ko: Argo Project
+      en: Argo Project
+    description:
+      ko: ''
+      en: ''
+  author:
+    label:
+      ko: 작성자
+      en: Author
+    description:
+      ko: ''
+      en: ''
+  awards:
+    label:
+      ko: Awards
+      en: Awards
+    description:
+      ko: Awards and achievements 🎉
+      en: Awards and achievements 🎉
+  aws:
+    label:
+      ko: AWS
+      en: AWS
+    description:
+      ko: >-
+        For an in-depth understanding, this is my detailed article related to Amazon Web Services (AWS), covering its
+        features, practical applications. I focus on AWS services including EKS, EC2, S3, and more.
+      en: >-
+        For an in-depth understanding, this is my detailed article related to Amazon Web Services (AWS), covering its
+        features, practical applications. I focus on AWS services including EKS, EC2, S3, and more.
+  careers:
+    label:
+      ko: 경험
+      en: Careers
+    description:
+      ko: 경력의 전환점과 경험을 기록한 글
+      en: My career journey and experiences 🧑‍💻
+  certifications:
+    label:
+      ko: Certifications
+      en: Certifications
+    description:
+      ko: Professional certifications and licenses I have earned
+      en: Professional certifications and licenses I have earned
+  cncf:
+    label:
+      ko: CNCF
+      en: CNCF
+    description:
+      ko: ''
+      en: ''
+  computer-vision:
+    label:
+      ko: 컴퓨터 비전
+      en: Computer Vision
+    description:
+      ko: ''
+      en: ''
+  cv:
+    label:
+      ko: CV
+      en: CV
+    description:
+      ko: ''
+      en: ''
+  devops:
+    label:
+      ko: DevOps
+      en: DevOps
+    description:
+      ko: >-
+        Posts related to DevOps. DevOps is a set of practices that combines software development (Dev) and IT operations
+        (Ops). It aims to shorten the systems development life cycle and provide continuous delivery with high software
+        quality.
+      en: >-
+        Posts related to DevOps. DevOps is a set of practices that combines software development (Dev) and IT operations
+        (Ops). It aims to shorten the systems development life cycle and provide continuous delivery with high software
+        quality.
+  digital-twin:
+    label:
+      ko: 디지털 트윈
+      en: Digital Twin
+    description:
+      ko: ''
+      en: ''
+  digital-twins:
+    label:
+      ko: Digital Twins
+      en: Digital Twins
+    description:
+      ko: Works on Digital Twins.
+      en: Works on Digital Twins.
+  finops:
+    label:
+      ko: FinOps
+      en: FinOps
+    description:
+      ko: ''
+      en: ''
+  fpga:
+    label:
+      ko: FPGA
+      en: FPGA
+    description:
+      ko: ''
+      en: ''
+  github:
+    label:
+      ko: Github
+      en: Github
+    description:
+      ko: Github related posts
+      en: Github related posts
+  gitops:
+    label:
+      ko: GitOps
+      en: GitOps
+    description:
+      ko: ''
+      en: ''
+  guide:
+    label:
+      ko: 가이드
+      en: Guide
+    description:
+      ko: ''
+      en: ''
+  helm:
+    label:
+      ko: Helm
+      en: Helm
+    description:
+      ko: ''
+      en: ''
+  hybrid-cloud:
+    label:
+      ko: 하이브리드 클라우드
+      en: Hybrid Cloud
+    description:
+      ko: ''
+      en: ''
+  hyundai-autoever:
+    label:
+      ko: Hyundai AutoEver
+      en: Hyundai AutoEver
+    description:
+      ko: Works at [Hyundai AutoEver](https://www.linkedin.com/company/hyundai-autoever).
+      en: Works at [Hyundai AutoEver](https://www.linkedin.com/company/hyundai-autoever).
+  infra-base:
+    label:
+      ko: 기반 인프라
+      en: Infrastructure Base
+    description:
+      ko: ''
+      en: ''
+  k8s:
+    label:
+      ko: Kubernetes
+      en: Kubernetes
+    description:
+      ko: ''
+      en: ''
+  kit:
+    label:
+      ko: kit
+      en: kit
+    description:
+      ko: Study in kit
+      en: Study in kit
+  kubernetes:
+    label:
+      ko: Kubernetes
+      en: Kubernetes
+    description:
+      ko: Kubernetes related posts
+      en: Kubernetes related posts
+  linkedin:
+    label:
+      ko: LinkedIn
+      en: LinkedIn
+    description:
+      ko: Articles and updates shared on LinkedIn 🔗
+      en: Articles and updates shared on LinkedIn 🔗
+  linux-foundation:
+    label:
+      ko: Linux Foundation
+      en: Linux Foundation
+    description:
+      ko: Linux Foundation related posts. The cover image is from the Linux Foundation.
+      en: Linux Foundation related posts. The cover image is from the Linux Foundation.
+  llm:
+    label:
+      ko: LLM
+      en: LLM
+    description:
+      ko: Large Language Models and Generative AI 🤖
+      en: Large Language Models and Generative AI 🤖
+  llmops:
+    label:
+      ko: LLMOps
+      en: LLMOps
+    description:
+      ko: ''
+      en: ''
+  math:
+    label:
+      ko: Math
+      en: Math
+    description:
+      ko: My math note
+      en: My math note
+  maxst:
+    label:
+      ko: MAXST
+      en: MAXST
+    description:
+      ko: Works at [MAXST](https://www.linkedin.com/company/maxst).
+      en: Works at [MAXST](https://www.linkedin.com/company/maxst).
+  mlops:
+    label:
+      ko: MLOps
+      en: MLOps
+    description:
+      ko: >-
+        MLOps is a practice for collaboration and communication between data scientists and operations professionals to
+        help manage production ML (Machine Learning) lifecycles. It focuses on automation and monitoring at all steps of
+        ML system construction, including integration, testing, releasing, deployment, and infrastructure management.
+      en: >-
+        MLOps is a practice for collaboration and communication between data scientists and operations professionals to
+        help manage production ML (Machine Learning) lifecycles. It focuses on automation and monitoring at all steps of
+        ML system construction, including integration, testing, releasing, deployment, and infrastructure management.
+  observability:
+    label:
+      ko: 관측성
+      en: Observability
+    description:
+      ko: ''
+      en: ''
+  obsidian:
+    label:
+      ko: Obsidian
+      en: Obsidian
+    description:
+      ko: ''
+      en: ''
+  onpremise:
+    label:
+      ko: On-Premise
+      en: On-Premise
+    description:
+      ko: >-
+        As growing public cloud services, on-premise is still a good alternative and backup plan for companies. This tag
+        covers the on-premise infrastructure, including Kubernetes, DevOps, and more. I focus on the on-premise
+        infrastructure, including bare-metal Kubernetes, Hybrid Architectures, and more.
+      en: >-
+        As growing public cloud services, on-premise is still a good alternative and backup plan for companies. This tag
+        covers the on-premise infrastructure, including Kubernetes, DevOps, and more. I focus on the on-premise
+        infrastructure, including bare-metal Kubernetes, Hybrid Architectures, and more.
+  org:
+    label:
+      ko: 조직
+      en: Organization
+    description:
+      ko: ''
+      en: ''
+  paper:
+    label:
+      ko: Paper
+      en: Paper
+    description:
+      ko: Paper Works
+      en: Paper Works
+  portfolio:
+    label:
+      ko: 포트폴리오
+      en: Portfolio
+    description:
+      ko: ''
+      en: ''
+  postech:
+    label:
+      ko: POSTECH
+      en: POSTECH
+    description:
+      ko: Study in POSTECH
+      en: Study in POSTECH
+  posts:
+    label:
+      ko: 게시글
+      en: Posts
+    description:
+      ko: ''
+      en: ''
+  python:
+    label:
+      ko: Python
+      en: Python
+    description:
+      ko: ''
+      en: ''
+  raspberrypi:
+    label:
+      ko: Raspberry Pi
+      en: Raspberry Pi
+    description:
+      ko: >-
+        Raspberry Pi is a arm based single board computer that is popular among hobbyists and educators. It is used in a
+        wide range of projects from home automation to robotics. I use pies for various projects and will be sharing my
+        experiences here.
+      en: >-
+        Raspberry Pi is a arm based single board computer that is popular among hobbyists and educators. It is used in a
+        wide range of projects from home automation to robotics. I use pies for various projects and will be sharing my
+        experiences here.
+  rating:
+    label:
+      ko: Rating Systems
+      en: Rating Systems
+    description:
+      ko: Research on Rating Systems
+      en: Research on Rating Systems
+  recap:
+    label:
+      ko: Recap
+      en: Recap
+    description:
+      ko: Posts looking back on the period's achievements, experiences, and lessons learned.
+      en: Posts looking back on the period's achievements, experiences, and lessons learned.
+  sdk:
+    label:
+      ko: SDK
+      en: SDK
+    description:
+      ko: ''
+      en: ''
+  security:
+    label:
+      ko: Security
+      en: Security
+    description:
+      ko: Security related posts
+      en: Security related posts
+  slam:
+    label:
+      ko: SLAM
+      en: SLAM
+    description:
+      ko: ''
+      en: ''
+  tech-note:
+    label:
+      ko: Technical Notes
+      en: Technical Notes
+    description:
+      ko: Technical notes
+      en: Technical notes
+  thesis:
+    label:
+      ko: Thesis
+      en: Thesis
+    description:
+      ko: Thesis for degree
+      en: Thesis for degree

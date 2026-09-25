@@ -1,6 +1,8 @@
 import type {ReactNode} from 'react';
 import {marked} from 'marked';
+import InternalLink from '@docusaurus/Link';
 
+import tagRegistry from '@site/src/generated/tags.json';
 import styles from './styles.module.css';
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
@@ -48,9 +50,9 @@ function Link({href, children}: {href?: string; children: ReactNode}) {
   );
 }
 
-function Card({icon, title, sub, date, children}: {icon?: string; title: ReactNode; sub?: ReactNode; date?: string; children?: ReactNode}) {
+function Card({id, icon, title, sub, date, children}: {id?: string; icon?: string; title: ReactNode; sub?: ReactNode; date?: string; children?: ReactNode}) {
   return (
-    <article className={styles.card}>
+    <article id={id} className={styles.card}>
       <header className={styles.cardHeader}>
         <div>
           <h3 className={styles.cardTitle}>
@@ -63,6 +65,20 @@ function Card({icon, title, sub, date, children}: {icon?: string; title: ReactNo
       </header>
       {children}
     </article>
+  );
+}
+
+function TaxonomyTags({tags, locale}: {tags?: string[]; locale: string}): ReactNode {
+  if (!tags?.length) return null;
+  const registry = (tagRegistry as {tags: Record<string, {label?: Record<string, string>}>}).tags;
+  return (
+    <div className={styles.taxonomyTags}>
+      {tags.map((slug) => (
+        <InternalLink className={styles.taxonomyTag} key={slug} to={`/tags/${slug}`}>
+          {registry[slug]?.label?.[locale] ?? slug}
+        </InternalLink>
+      ))}
+    </div>
   );
 }
 
@@ -120,9 +136,10 @@ export default function Resume({data, locale}: {data: Data; locale: string}): Re
 
       {data.work?.length > 0 && (
         <Section title={t.work}>
-          {data.work.map((w: Data) => (
-            <Card key={w.company + w.startDate} icon={w.headerIcon} title={<Link href={w.website}>{w.company}</Link>} sub={w.position} date={period(w.startDate, w.endDate, t.present)}>
+          {data.work.map((w: Data, i: number) => (
+            <Card id={`work-${i}`} key={w.company + w.startDate} icon={w.headerIcon} title={<Link href={w.website}>{w.company}</Link>} sub={w.position} date={period(w.startDate, w.endDate, t.present)}>
               <Items items={w.roles?.items} />
+              <TaxonomyTags tags={w.tags} locale={locale} />
             </Card>
           ))}
         </Section>
@@ -130,9 +147,10 @@ export default function Resume({data, locale}: {data: Data; locale: string}): Re
 
       {data.projects?.length > 0 && (
         <Section title={t.projects}>
-          {data.projects.map((p: Data) => (
-            <Card key={p.position + p.startDate} icon={p.headerIcon} title={p.position} sub={[p.company, p.roles?.description].filter(Boolean).join(' · ')} date={period(p.startDate, p.endDate, t.present)}>
+          {data.projects.map((p: Data, i: number) => (
+            <Card id={`projects-${i}`} key={p.position + p.startDate} icon={p.headerIcon} title={p.position} sub={[p.company, p.roles?.description].filter(Boolean).join(' · ')} date={period(p.startDate, p.endDate, t.present)}>
               <Items items={p.results?.items} />
+              <TaxonomyTags tags={p.tags} locale={locale} />
             </Card>
           ))}
         </Section>
@@ -140,10 +158,11 @@ export default function Resume({data, locale}: {data: Data; locale: string}): Re
 
       {data.education?.length > 0 && (
         <Section title={t.education}>
-          {data.education.map((e: Data) => (
-            <Card key={e.institution + e.startDate} icon={e.headerIcon} title={<Link href={e.website}>{e.institution}</Link>} sub={[e.studyType, e.area, e.gpa].filter(Boolean).join(' · ')} date={period(e.startDate, e.endDate, t.present)}>
+          {data.education.map((e: Data, i: number) => (
+            <Card id={`education-${i}`} key={e.institution + e.startDate} icon={e.headerIcon} title={<Link href={e.website}>{e.institution}</Link>} sub={[e.studyType, e.area, e.gpa].filter(Boolean).join(' · ')} date={period(e.startDate, e.endDate, t.present)}>
               {e.keywords?.length > 0 && <p className={styles.tags}>{e.keywords.join(' · ')}</p>}
               {e.thesis && <p className={styles.note}>{e.thesis}</p>}
+              <TaxonomyTags tags={e.tags} locale={locale} />
             </Card>
           ))}
         </Section>
@@ -152,8 +171,8 @@ export default function Resume({data, locale}: {data: Data; locale: string}): Re
       {data.skills?.length > 0 && (
         <Section title={t.skills}>
           <dl className={styles.skills}>
-            {data.skills.map((s: Data) => (
-              <div key={s.name}>
+            {data.skills.map((s: Data, i: number) => (
+              <div id={`skills-${i}`} key={s.name}>
                 <dt>{s.name}</dt>
                 <dd>
                   {(s.keywords ?? []).map((k: string) => {
@@ -166,6 +185,7 @@ export default function Resume({data, locale}: {data: Data; locale: string}): Re
                     );
                   })}
                 </dd>
+                <dd><TaxonomyTags tags={s.tags} locale={locale} /></dd>
               </div>
             ))}
           </dl>

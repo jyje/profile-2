@@ -2,7 +2,7 @@
 title: 📚 Documents
 tags:
   - cncf
-  - k8s
+  - kubernetes
   - ai
   - cv
 ---

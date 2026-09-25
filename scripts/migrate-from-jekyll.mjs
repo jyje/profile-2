@@ -32,7 +32,7 @@ function mapLink(url, lang) {
   const p = routePrefix(lang);
   let m;
   if ((m = url.match(/^\/(?:ko|en)\/posts\/([^/#?]+)\/?(.*)$/))) return `${p}/blog/${m[1]}${m[2] ? '/' + m[2] : ''}`;
-  if ((m = url.match(/^\/tags\/([^/#?]+)\/?(?:#.*)?$/))) return `${p}/blog/tags/${m[1]}`;
+  if ((m = url.match(/^\/tags\/([^/#?]+)\/?(?:#.*)?$/))) return `/tags/${m[1]}`;
   if ((m = url.match(/^\/(?:ko|en)\/(resume|portfolio)\/?$/))) return `${p}/${m[1]}`;
   return url;
 }

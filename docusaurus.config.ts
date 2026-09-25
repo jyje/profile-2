@@ -50,6 +50,7 @@ const config: Config = {
         docs: {
           path: 'content/ko/wiki',
           routeBasePath: 'wiki',
+          tagsBasePath: '_tag-archives',
           sidebarPath: './sidebars.ts',
           beforeDefaultRemarkPlugins: [obsidianCallouts],
         },
@@ -57,6 +58,7 @@ const config: Config = {
           path: 'content/ko/blog',
           routeBasePath: 'blog',
           blogListComponent: '@site/src/components/BlogListPage',
+          tagsBasePath: '_tag-archives',
           blogSidebarCount: 'ALL',
           blogSidebarTitle: 'Posts',
           postsPerPage: 'ALL',
@@ -88,6 +90,20 @@ const config: Config = {
         createRedirects(existingPath: string) {
           const isEn = process.env.DOCUSAURUS_CURRENT_LOCALE === 'en';
           const legacy = isEn ? '' : '/ko';
+          const globalTag = existingPath.match(/^\/tags(?:\/([^/]+))?$/);
+          if (globalTag) {
+            const suffix = globalTag[1] ? `/${globalTag[1]}` : '';
+            const aliases = globalTag[1] === 'kubernetes'
+              ? ['k8s']
+              : globalTag[1] === 'digital-twins'
+                ? ['digital-twin']
+                : [];
+            return [
+              `/blog/tags${suffix}`,
+              `/wiki/tags${suffix}`,
+              ...aliases.flatMap((alias) => [`/tags/${alias}`, `/blog/tags/${alias}`, `/wiki/tags/${alias}`]),
+            ];
+          }
           if (existingPath === '/') return isEn ? undefined : ['/ko'];
           if (existingPath === '/blog') return [`${legacy}/posts`];
           const post = existingPath.match(/^\/blog\/(?!tags\/|page\/|archive|authors)([^/]+)$/);
@@ -95,8 +111,6 @@ const config: Config = {
           if (isEn) return undefined;
           if (existingPath === '/resume') return ['/ko/resume'];
           if (existingPath === '/portfolio') return ['/ko/portfolio'];
-          const tag = existingPath.match(/^\/blog\/tags\/([^/]+)$/);
-          if (tag) return [`/tags/${tag[1]}`];
           return undefined;
         },
       },
