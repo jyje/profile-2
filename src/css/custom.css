@@ -87,8 +87,8 @@
     position: static;
   }
 
-  .navbar__search-input:not(:focus) {
-    width: 2rem;
+  .navbar__search-input {
+    width: clamp(9rem, calc(19vw + 11px), 12.5rem);
   }
 }
 
