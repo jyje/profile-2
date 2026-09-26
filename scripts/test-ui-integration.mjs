@@ -34,6 +34,14 @@ test('prefixed utilities merge without consuming existing CSS-module classes', (
   assert.equal(cn('button', 'button--secondary'), 'button button--secondary');
 });
 
+test('mobile dropdown layout and caret styling remain owned by the theme', async () => {
+  const source = await fs.readFile(path.join(root, 'src/css/custom.css'), 'utf8');
+  postcss.parse(source).walkRules(rule => {
+    assert.doesNotMatch(rule.selector, /\.menu__(?:link|caret|list-item-collapsible)\b/,
+      `Do not override upstream menu layout in custom.css: ${rule.selector}`);
+  });
+});
+
 test('the public PostCSS hook preserves existing plugins and options', () => {
   const existing = {postcssPlugin: 'existing'};
   const options = {plugins: [existing], sourceMap: true};
