@@ -78,6 +78,14 @@ Keep ordinary prose, tables, and lists as Markdown. Each visual template has one
 
 ## Writing rules
 
+### Connections and graph
+
+Blog posts and wiki documents share the same tag registry. The connections section below a document shows incoming links, outgoing links and related entries with shared tags. Its graph link opens the document's neighborhood. Blog listing previews do not repeat these sections.
+
+Use relative Markdown links within a collection. Between blog and wiki collections, use the real site path, such as `/wiki/knowledge/k8s`. Equal titles do not merge different routes. Code examples are not indexed as links. Computed JSX navigation is not indexed, so author important relationships as Markdown links.
+
+Missing English `.md` and `.mdx` wiki pages use the Korean original with a browser translation notice. Authored English translations are preserved. Pages marked `draft: true` or `unlisted: true` are excluded from the public graph and shared tag listings.
+
 - Use the `.md` extension. Use `.mdx` only when a React component is needed.
 - Blog files are named `YYYY-MM-DD-slug.md`, and the `slug` in the front matter becomes the URL.
 - Use the shared taxonomy for blog and wiki content. Register each kebab-case slug and its Korean and English display names in `data/tags.yml`, then run `npm run sync`.
