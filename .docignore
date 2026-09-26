@@ -1,0 +1,5 @@
+# Root-relative content paths excluded from public builds, in both locales.
+# Local development includes these sections without the leading underscore in URLs.
+content/*/wiki/_guide/
+content/*/wiki/_design/
+content/*/blog/_internal/

@@ -10,11 +10,13 @@ import {withBuildLock} from './build-lock.mjs';
 import * as yaml from 'js-yaml';
 import {buildCuration} from './build-curation.mjs';
 import {mergeKoreanFallbackDocs} from './build-wiki-graph.mjs';
+import {prepareContent} from './prepare-content.mjs';
+import {shouldRebuild} from './source-watch.mjs';
 
 const ROOT = path.resolve(import.meta.dirname, '..');
 const MIRRORS = [
-  ['content/en/blog', 'i18n/en/docusaurus-plugin-content-blog'],
-  ['content/en/wiki', 'i18n/en/docusaurus-plugin-content-docs/current'],
+  ['.content-build/en/blog', 'i18n/en/docusaurus-plugin-content-blog'],
+  ['.content-build/en/wiki', 'i18n/en/docusaurus-plugin-content-docs/current'],
 ];
 const skip = (p) => !path.basename(p).startsWith('.');
 
@@ -27,7 +29,7 @@ function mirror() {
     fs.mkdirSync(path.dirname(dest), {recursive: true});
     fs.cpSync(src, dest, {recursive: true, filter: skip});
   }
-  mergeKoreanFallbackDocs();
+  mergeKoreanFallbackDocs(path.join(ROOT, '.content-build/ko/wiki'));
 }
 
 function convertData() {
@@ -65,6 +67,7 @@ function syncTagDefinitions() {
 
 export function syncAll() {
   syncTagDefinitions();
+  prepareContent(ROOT);
   mirror();
   convertData();
   buildCuration();
@@ -80,7 +83,7 @@ if (isDirect && process.argv.includes('--watch')) {
   let timer;
   const watched = new Set();
   const onChange = (_evt, name) => {
-    if (name && name.split(path.sep).some((s) => s.startsWith('.'))) return;
+    if (name && !shouldRebuild('content', name)) return;
     clearTimeout(timer);
     timer = setTimeout(async () => {
       try {
@@ -94,7 +97,7 @@ if (isDirect && process.argv.includes('--watch')) {
   function walk(dir, paths) {
     paths.add(dir);
     for (const entry of fs.readdirSync(dir, {withFileTypes: true})) {
-      if (!skip(entry.name)) continue;
+      if (!shouldRebuild('content', path.relative(path.join(ROOT, 'content'), path.join(dir, entry.name)))) continue;
       const entryPath = path.join(dir, entry.name);
       paths.add(entryPath);
       if (entry.isDirectory()) walk(entryPath, paths);
@@ -102,7 +105,7 @@ if (isDirect && process.argv.includes('--watch')) {
   }
 
   function refreshWatchers() {
-    const paths = new Set();
+    const paths = new Set([path.join(ROOT, '.docignore')]);
     for (const dir of ['content/ko', 'content/en', 'data']) {
       const source = path.join(ROOT, dir);
       if (fs.existsSync(source)) walk(source, paths);

@@ -9,6 +9,9 @@
 
 ## Markdown and MDX pages
 
+- Publication exclusions belong in root `.docignore`. Keep authoring guides in `content/{ko,en}/wiki/_guide/` and site design notes in `_design/`. Local staging exposes them at `/wiki/guide/` and `/wiki/design/`; public builds must exclude their pages and colocated assets before Docusaurus metadata, search and graph generation.
+- `npm run build` is public by default; local development entrypoints explicitly opt in with `SITE_CONTENT_MODE=development`. Do not use browser hostname checks to conceal already-published content. Never put secrets in development notes or the public repository.
+- Do not edit `.content-build/` or generated locale mirrors. Treat canonical routes and initial HTTP status separately from client-side recovery. Preserve directory-index output and run `npm run test:publication` after routing or publication changes.
 - The About section has an overview at `/about`, a one-page resume at `/about/resume`, a detailed CV at `/about/cv`, and a portfolio at `/about/portfolio`; the site home remains `/`.
 - Author the Korean overview page in `src/pages/about.mdx` and its English translation in `i18n/en/docusaurus-plugin-content-pages/about.mdx`.
 - Keep prose and locale-specific labels in those MDX files. Do not add overview copy or repeated content arrays to a TSX page.

@@ -31,7 +31,7 @@ Wiki의 [문서 그래프](../graph.mdx)에서 위키 문서와 태그의 연결
 ## 링크와 이미지
 
 ```md
-[다른 노트](../design/resume.md)
+[다른 노트](./publication.md)
 ![설명](./assets/diagram.png)
 ```
 

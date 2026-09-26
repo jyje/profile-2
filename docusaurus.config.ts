@@ -3,8 +3,10 @@ import type {Config} from '@docusaurus/types';
 import type * as Preset from '@docusaurus/preset-classic';
 import obsidianCallouts from './src/remark/obsidian-callouts.mjs';
 import contentTemplateBlocks from './plugins/content-templates/remark-plugin.cjs';
+import {assertPreparedContent} from './plugins/content-visibility.cjs';
 
 // This runs in Node.js - Don't use client-side code here (browser APIs, JSX...)
+assertPreparedContent();
 
 const config: Config = {
   title: 'jyje',
@@ -27,7 +29,9 @@ const config: Config = {
   organizationName: 'jyje',
   projectName: 'profile-2',
   deploymentBranch: 'gh-pages',
-  trailingSlash: false,
+  // Keep Docusaurus' default directory/index.html output. Static hosts can
+  // serve /route/ directly and redirect /route to it, without a JS 404 recovery.
+  trailingSlash: undefined,
 
   onBrokenLinks: 'throw',
 
@@ -55,14 +59,14 @@ const config: Config = {
       'classic',
       {
         docs: {
-          path: 'content/ko/wiki',
+          path: '.content-build/ko/wiki',
           routeBasePath: 'wiki',
           tagsBasePath: '_tag-archives',
           sidebarPath: './sidebars.ts',
           beforeDefaultRemarkPlugins: [obsidianCallouts, contentTemplateBlocks],
         },
         blog: {
-          path: 'content/ko/blog',
+          path: '.content-build/ko/blog',
           routeBasePath: 'blog',
           blogListComponent: '@site/src/components/BlogListPage',
           tagsBasePath: '_tag-archives',
@@ -143,9 +147,9 @@ const config: Config = {
         hashed: 'filename',
         language: ['en', 'ko'],
         docsRouteBasePath: 'wiki',
-        docsDir: ['content/ko/wiki', 'content/en/wiki'],
+        docsDir: ['.content-build/ko/wiki', '.content-build/en/wiki'],
         blogRouteBasePath: 'blog',
-        blogDir: ['content/ko/blog', 'content/en/blog'],
+        blogDir: ['.content-build/ko/blog', '.content-build/en/blog'],
         indexPages: true,
         searchBarPosition: 'right',
       },

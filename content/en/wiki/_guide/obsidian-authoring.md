@@ -31,7 +31,7 @@ Open [Document graph](../graph.mdx) from the Wiki sidebar to explore connections
 ## Links and images
 
 ```md
-[another note](../design/resume.md)
+[another note](./publication.md)
 ![caption](./assets/diagram.png)
 ```
 

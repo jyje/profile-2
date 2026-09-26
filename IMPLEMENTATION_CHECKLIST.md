@@ -4,7 +4,7 @@ Local implementation and commits only. No push, PR, merge or deployment.
 Use the house emoji for Wiki Home. Preserve the existing theme and graph physics.
 
 - [x] Create this root checklist and initial plan commit.
-- [ ] Verify and commit existing publication boundaries and static routing.
+- [x] Verify and commit existing publication boundaries and static routing.
 - [ ] Verify and commit authored last-update dates.
 - [ ] Embed automatic local graphs in wiki and blog detail footers.
 - [ ] Move the knowledge subtree to `/wiki/d/` with compatible old URLs.
@@ -26,4 +26,5 @@ New dates come from authored Git history, not build time. Existing manual dates 
 
 ## Verification record
 
-Pending execution. Mark steps complete only after passing their checks.
+Baseline: 19 content tests, 6 UI tests, typecheck and 525 public static routes passed.
+Earlier bilingual public build and browser verification remain recorded in the task.

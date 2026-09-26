@@ -9,6 +9,9 @@ on:
 permissions:
   contents: read
 
+env:
+  SITE_CONTENT_MODE: public
+
 concurrency:
   group: ci-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
@@ -47,6 +50,9 @@ jobs:
 
       - name: Install browser for career exports
         run: npx playwright install --with-deps chromium
+
+      - name: Verify static routes and publication boundaries
+        run: npm run test:publication
 
       - name: Verify browser navigation and bilingual PDFs
         run: node scripts/verify-built-site.mjs

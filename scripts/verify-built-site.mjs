@@ -22,7 +22,7 @@ try {
     await context.addCookies([{name: 'jyje_locale', value: locale, url: origin}]);
     const page = await context.newPage();
     const root = base + (locale === 'en' ? 'en/' : '');
-    const response = await page.goto(root + 'wiki/guide/obsidian-authoring');
+    const response = await page.goto(root + 'wiki/knowledge/');
     assert.ok(response.ok());
     const connections = page.getByRole('complementary', {name: locale === 'ko' ? '문서 연결' : 'Content connections'});
     await connections.waitFor();
