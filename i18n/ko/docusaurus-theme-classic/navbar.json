@@ -1,0 +1,6 @@
+{
+  "item.label.Blog": {"message": "블로그"},
+  "item.label.Wiki": {"message": "위키"},
+  "item.label.Labs": {"message": "실험실"},
+  "item.label.About": {"message": "소개"}
+}

@@ -9,6 +9,25 @@ import {cn} from '../src/lib/utils.ts';
 
 const root = path.resolve(import.meta.dirname, '..');
 
+test('theme behavior stays upstream, with only site-specific label and link wrappers', async () => {
+  for (const relative of [
+    'src/theme/NavbarItem/DropdownNavbarItem/Desktop/index.tsx',
+    'src/theme/NavbarItem/DropdownNavbarItem/Mobile/index.tsx',
+    'src/theme/NavbarItem/DefaultNavbarItem/index.tsx',
+    'src/theme/NavbarItem/LocaleDropdownNavbarItem/index.tsx',
+    'src/theme/Tag/styles.module.css',
+  ]) {
+    await assert.rejects(fs.access(path.join(root, relative)), {code: 'ENOENT'});
+  }
+  const files = await fs.readdir(path.join(root, 'src/theme'), {recursive: true});
+  for (const file of files.filter(file => /\.tsx?$/.test(file))) {
+    const source = await fs.readFile(path.join(root, 'src/theme', file), 'utf8');
+    assert.doesNotMatch(source, /@docusaurus\/theme-classic\/lib|@docusaurus\/theme-common\/internal/);
+  }
+  const translations = JSON.parse(await fs.readFile(path.join(root, 'i18n/ko/docusaurus-theme-classic/navbar.json'), 'utf8'));
+  assert.deepEqual(Object.values(translations).map(value => value.message), ['블로그', '위키', '실험실', '소개']);
+});
+
 test('prefixed utilities merge without consuming existing CSS-module classes', () => {
   assert.equal(cn('tw:px-4', 'tw:px-8', false, 'documentLayout'), 'tw:px-8 documentLayout');
   assert.equal(cn('tw:hover:bg-primary', 'tw:hover:bg-accent'), 'tw:hover:bg-accent');

@@ -245,36 +245,6 @@
   }
 }
 
-.site-about-split {
-  align-items: center;
-}
-
-.site-about-split__toggle {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 1.35rem;
-  min-height: 1.6rem;
-  margin-left: 0.1rem;
-  padding: 0.15rem;
-  border: 0;
-  background: transparent;
-  color: var(--ifm-navbar-link-color);
-  cursor: pointer;
-}
-
-.site-about-split__toggle:hover {
-  color: var(--ifm-navbar-link-hover-color);
-}
-
-.site-about-split__caret {
-  width: 0;
-  height: 0;
-  border: 0.4em solid transparent;
-  border-top-color: currentColor;
-  transform: translateY(0.2em);
-}
-
 .navbar-sidebar .menu__list-item:not(.theme-doc-sidebar-item-category) > .menu__list-item-collapsible {
   align-items: center;
 }

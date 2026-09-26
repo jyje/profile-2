@@ -16,6 +16,9 @@
 ## UI integration boundaries
 
 - Keep profile-2 on Docusaurus public APIs: standard routing, MDX, i18n, search and color mode remain authoritative. Do not eject or replace the theme to add a UI library.
+- Prefer theme configuration and standard i18n JSON before swizzling. Navbar labels belong in `i18n/<locale>/docusaurus-theme-classic/navbar.json`, not locale branches in React components.
+- Delegate dropdown interactions to the original theme on desktop and mobile. When site-specific labels or destinations require a wrapper, use `@theme-original` and retain only that customization; do not copy upstream state, event handlers or CSS. Avoid direct `@docusaurus/theme-classic/lib` imports and new `theme-common/internal` dependencies.
+- Keep required custom sidebar breakpoints and shared tag destinations. On Docusaurus upgrades, regression-test hover, keyboard and touch navigation, locale query/hash preservation, and project-base-path links in both locales. Wrapping reduces maintenance but does not guarantee compatibility across major versions.
 - Add shadcn/ui primitives selectively under `src/components/ui/`. Use `components.json`, the existing `@site` alias, and the public `configurePostCss` hook. Components are owned source, not an automatically updated theme.
 - Tailwind uses the `tw:` prefix and no Preflight. Do not introduce global element resets or unprefixed utility classes. Map colors to existing Infima/site tokens and use `[data-theme='dark']`; do not add a second theme provider.
 - Review generated component diffs before accepting CLI changes. Keep existing content-template entrypoints and CSS modules; do not migrate working document layouts to Tailwind merely for consistency.
