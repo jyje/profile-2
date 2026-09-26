@@ -76,7 +76,10 @@ export default function FederatedLabs({copy}: {copy: Copy}) {
   useEffect(() => {handle.current?.update(options.current);}, [i18n.currentLocale, colorMode]);
 
   return <div className={styles.frame}>
-    {state === 'loading' && <div className={styles.placeholder} role="status"><p>{copy.loading}</p><div className={styles.skeleton} /></div>}
+    {state === 'loading' && <div className={styles.loading} role="status" aria-live="polite">
+      <span className={styles.spinner} aria-hidden="true" />
+      <p>{copy.loading}</p>
+    </div>}
     {(state === 'error' || state === 'missing') && <div className={styles.placeholder} role="alert">
       <h2>{copy.unavailable}</h2><p>{state === 'missing' ? copy.missing : copy.explanation}</p>
       {state === 'error' && <Button type="button" variant="outline" onClick={() => setAttempt(value => value + 1)}>{copy.retry}</Button>}
