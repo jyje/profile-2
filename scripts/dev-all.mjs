@@ -67,7 +67,7 @@ function buildInto(slot) {
     const relative = path.relative(root, destination);
     buildProcess = spawn('npm', ['run', 'build', '--', '--out-dir', relative], {
       cwd: root,
-      env: process.env,
+      env: {...process.env, LABS_REMOTE_ENTRY: process.env.LABS_REMOTE_ENTRY ?? 'local'},
       stdio: 'inherit',
     });
     buildProcess.once('error', (error) => {

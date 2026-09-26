@@ -1,8 +1,17 @@
 ---
 title: Labs
-description: A home for ongoing technical experiments and prototypes.
+description: A standalone Vue playground loaded through Module Federation.
+wrapperClassName: site-labs-page
+hide_table_of_contents: true
 ---
 
-# Labs
+import FederatedLabs from '@site/src/components/FederatedLabs';
 
-Experiments and prototypes in progress are collected here.
+<FederatedLabs copy={{
+  loading: 'Loading the Vue playground.',
+  unavailable: 'The playground could not be loaded.',
+  explanation: 'Check that the Vue development server is running, then try again. The rest of the site is still available.',
+  retry: 'Reconnect',
+  missing: 'A Labs remote module URL has not been configured for this deployment.',
+  connected: 'Module Federation connected · Independent Vue app',
+}} />

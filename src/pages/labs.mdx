@@ -1,8 +1,17 @@
 ---
-title: 실험실
-description: 진행 중인 기술 실험과 프로토타입을 기록합니다.
+title: Labs
+description: 독립 Vue 앱을 Module Federation으로 연결한 실험실 샘플입니다.
+wrapperClassName: site-labs-page
+hide_table_of_contents: true
 ---
 
-# 실험실
+import FederatedLabs from '@site/src/components/FederatedLabs';
 
-기술과 아이디어를 직접 검증하는 실험 기록을 모읍니다.
+<FederatedLabs copy={{
+  loading: 'Vue 실험실을 불러오고 있습니다.',
+  unavailable: '실험실을 불러올 수 없습니다.',
+  explanation: 'Vue 개발서버가 실행 중인지 확인한 뒤 다시 시도해주세요. 다른 페이지는 계속 이용할 수 있습니다.',
+  retry: '다시 연결',
+  missing: '이 배포에는 실험실 원격 모듈 주소가 아직 설정되지 않았습니다.',
+  connected: 'Module Federation 연결 완료 · 독립 Vue 앱',
+}} />
