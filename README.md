@@ -2,7 +2,7 @@
 
 # jyje/profile-2
 
-Personal site of Jeayoung Jeon (Home, Wiki, Blog, About, Resume). Docusaurus, Korean (default) and English.
+Personal site of Jeayoung Jeon (Home, Wiki, Blog, and About with Overview, Resume, and Portfolio). Docusaurus, Korean (default) and English.
 Replaces the Jekyll/Hydejack site in `jyje/profile`.
 
 [![CI](https://github.com/jyje/profile-2/actions/workflows/ci.yaml/badge.svg)](https://github.com/jyje/profile-2/actions/workflows/ci.yaml)
@@ -22,12 +22,12 @@ content/             Obsidian vault (open this folder in Obsidian)
 └─ en/{blog,wiki}/   English, same path and file name as the ko pair, served at /en/
 data/                Resume data and home-curation.yml
 scripts/             sync-content.mjs, migrate-from-jekyll.mjs
-src/                 React pages (home, about, resume), remark plugin for Obsidian callouts
+src/                 React pages (home, about, about/resume, about/portfolio), remark plugin for Obsidian callouts
 ```
 
 Docusaurus expects translations under `i18n/en/...`, so `scripts/sync-content.mjs` mirrors
-`content/en/{blog,wiki}` into `i18n/en/` (git-ignored) before `start` and `build`.
-Do not edit files under `i18n/en/docusaurus-plugin-content-*`.
+`content/en/{blog,wiki}` into `i18n/en/` before `start` and `build`. Page translations are
+authored under `i18n/en/docusaurus-plugin-content-pages/` beside their matching page routes.
 
 ## Home curation and color mode
 

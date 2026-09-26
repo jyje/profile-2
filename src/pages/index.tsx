@@ -5,6 +5,15 @@ import Layout from '@theme/Layout';
 
 import curation from '@site/src/generated/curation.json';
 import {pickForDay, seoulDate, type CuratedItem} from '@site/src/utils/daily-curation';
+import HomeQuickLinks from '@site/src/components/HomeQuickLinks';
+import {
+  IconArticle,
+  IconBooks,
+  IconBriefcase,
+  IconFileCv,
+  IconTrophy,
+  IconUserCircle,
+} from '@tabler/icons-react';
 import styles from './index.module.css';
 
 type Catalog = {
@@ -166,20 +175,17 @@ export default function Home(): ReactNode {
             <p className={styles.kicker}>{copy.identity}</p>
             <h1>{copy.headline}</h1>
             <p className={styles.introduction}>{copy.introduction}</p>
-            <nav className={styles.heroLinks} aria-label={locale === 'ko' ? '빠른 탐색' : 'Quick navigation'}>
-              <div className={styles.heroLinkGroup}>
-                <Link to="/blog" className={styles.primaryLink}>{copy.blog} <span aria-hidden="true">↗</span></Link>
-                <Link to="/tags/careers">{copy.experience}</Link>
-                <Link to="/tags/achievements">{copy.achievements}</Link>
-              </div>
-              <div className={styles.heroLinkGroup}>
-                <Link to="/wiki" className={styles.primaryLink}>{copy.wiki} <span aria-hidden="true">↗</span></Link>
-              </div>
-              <div className={styles.heroLinkGroup}>
-                <Link to="/about" className={styles.primaryLink}>{copy.about} <span aria-hidden="true">↗</span></Link>
-                <Link to="/resume">{copy.resume}</Link>
-              </div>
-            </nav>
+            <HomeQuickLinks
+              ariaLabel={locale === 'ko' ? '빠른 탐색' : 'Quick navigation'}
+              items={[
+                {to: '/blog', label: copy.blog, icon: <IconArticle size={22} stroke={1.75} />, emphasis: true},
+                {to: '/tags/careers', label: copy.experience, icon: <IconBriefcase size={22} stroke={1.75} />},
+                {to: '/tags/achievements', label: copy.achievements, icon: <IconTrophy size={22} stroke={1.75} />, groupEnd: true},
+                {to: '/wiki', label: copy.wiki, icon: <IconBooks size={22} stroke={1.75} />, emphasis: true, groupEnd: true},
+                {to: '/about', label: copy.about, icon: <IconUserCircle size={22} stroke={1.75} />, emphasis: true},
+                {to: '/about/resume', label: copy.resume, icon: <IconFileCv size={22} stroke={1.75} />},
+              ]}
+            />
           </div>
         </div>
       </header>
