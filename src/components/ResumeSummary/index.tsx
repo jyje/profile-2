@@ -7,7 +7,7 @@ type Data = Record<string, any>;
 const text = (value: unknown) => <span dangerouslySetInnerHTML={{__html: marked.parseInline(String(value ?? ''), {async: false}) as string}} />;
 const date = (value?: string) => value?.slice(0, 7) ?? '';
 const range = (item: Data, ko: boolean) => `${date(item.startDate)} - ${typeof item.endDate === 'string' ? date(item.endDate) : ko ? '현재' : 'present'}`;
-const label = {ko: {work: '경력', projects: '주요 프로젝트', education: '학력', skills: '기술', certificates: '자격증', languages: '언어'}, en: {work: 'Experience', projects: 'Selected projects', education: 'Education', skills: 'Skills', certificates: 'Certifications', languages: 'Languages'}};
+const label = {ko: {work: '경력', projects: '주요 프로젝트', education: '학력', skills: '기술', certificates: '자격 취득 이력', languages: '언어'}, en: {work: 'Experience', projects: 'Selected projects', education: 'Education', skills: 'Skills', certificates: 'Certification history', languages: 'Languages'}};
 
 export default function ResumeSummary({data, locale}: {data: Data; locale: 'ko' | 'en'}): ReactNode {
   const ko = locale === 'ko'; const t = label[locale]; const basics = data.basics;
@@ -42,7 +42,7 @@ export default function ResumeSummary({data, locale}: {data: Data; locale: 'ko' 
         {section(t.skills, layout.skills.map(selection => {const item = data.skills[selection.index]; return <section className={styles.entry} key={selection.index} id={`skills-${selection.index}`}>
           <h3>{item.name}</h3><p>{selection.keywords.map(index => item.keywords[index].replace(/\*$/, '')).join(' · ')}</p>
         </section>;}))}
-        {section(t.certificates, <ul className={styles.plain}>{layout.certificates.map(index => {const item = data.certificates[index]; return <li key={index}><a href={item.website}><strong>{item.title}</strong></a><span>{date(item.verified)}{item.expired ? ` - ${date(item.expired)}` : ''}</span></li>;})}</ul>)}
+        {section(t.certificates, <><p className={styles.meta}>{ko ? '취득 - 만료' : 'Issued - expiry'}</p><ul className={styles.plain}>{layout.certificates.map(index => {const item = data.certificates[index]; return <li key={index}><a href={item.website}><strong>{item.title}</strong></a><span>{date(item.verified)}{item.expired ? ` - ${date(item.expired)}` : ''}</span></li>;})}</ul></>)}
         {section(t.languages, <p>{layout.languages.map(index => `${data.languages[index].language}: ${data.languages[index].fluency}`).join(' · ')}</p>)}
       </aside>
     </div>

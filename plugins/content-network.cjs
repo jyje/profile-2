@@ -30,7 +30,16 @@ function authorSource(source) {
     .replace('i18n/en/docusaurus-plugin-content-blog/', 'content/en/blog/');
 }
 
-async function buildNetwork(context, allContent) {
+const networks = new WeakMap();
+function buildNetwork(context, allContent) {
+  let cached = networks.get(allContent);
+  if (!cached) { cached = new Map(); networks.set(allContent, cached); }
+  const key = JSON.stringify([context.siteDir, context.i18n.currentLocale, context.siteConfig.url, context.siteConfig.baseUrl]);
+  if (!cached.has(key)) cached.set(key, computeNetwork(context, allContent).catch(error => { cached.delete(key); throw error; }));
+  return cached.get(key);
+}
+
+async function computeNetwork(context, allContent) {
   const {marked} = await import('marked');
   const {siteDir, siteConfig, i18n} = context;
   const locale = i18n.currentLocale;
@@ -46,7 +55,7 @@ async function buildNetwork(context, allContent) {
     }
     return {
       id: `${kind}:${m.permalink}`, kind, title: m.title, description: m.description ?? '',
-      path: m.permalink, source, authored, tags, date: String(m.date ?? '').slice(0, 10),
+      path: m.permalink, source, authored, tags, date: m.date instanceof Date ? m.date.toISOString().slice(0, 10) : String(m.date ?? '').slice(0, 10),
       group: kind === 'blog' ? 'blog' : (m.sourceDirName === '.' ? 'home' : m.sourceDirName?.split('/')[0]) || 'home',
       koreanFallback: fallback,
       koreanPath: fallback ? m.permalink.replace(base, base.replace(/en\/$/, '')) : undefined,
@@ -113,7 +122,7 @@ async function buildNetwork(context, allContent) {
     }
   }
   // No document bodies or filesystem paths enter global browser data.
-  const publicNodes = nodes.map(({source, authored, ...node}) => node);
+  const publicNodes = nodes.map(({source, authored, description, date, ...node}) => node);
   return {nodes: publicNodes, edges, unresolved, entries};
 }
 

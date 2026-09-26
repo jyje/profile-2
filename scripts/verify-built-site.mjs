@@ -41,9 +41,11 @@ try {
     assert.ok(await page.locator(`[id="${href.split('#')[1]}"]`).count());
     for (const width of [390, 864, 1222]) {
       await page.setViewportSize({width, height: 900});
-      await page.goto(root + 'about/resume');
-      await page.locator('[data-career-document="resume"]').waitFor();
-      assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth + 1), `horizontal overflow at ${locale}/${width}`);
+      for (const variant of ['resume', 'cv']) {
+        await page.goto(root + `about/${variant}`);
+        await page.locator(`[data-career-document="${variant}"]`).waitFor();
+        assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth + 1), `horizontal overflow at ${locale}/${variant}/${width}`);
+      }
     }
     await context.close();
     // Static/API access is served as addressed, without language redirection.

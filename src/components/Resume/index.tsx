@@ -15,7 +15,7 @@ const TITLES: Record<string, Record<string, string>> = {
     projects: '프로젝트',
     education: '학력',
     skills: '기술',
-    certificates: '자격증',
+    certificates: '자격 취득 이력',
     publications: '논문',
     volunteer: '기타 활동',
     languages: '언어',
@@ -26,7 +26,7 @@ const TITLES: Record<string, Record<string, string>> = {
     projects: 'Projects',
     education: 'Education',
     skills: 'Skills',
-    certificates: 'Certificates',
+    certificates: 'Certification history',
     publications: 'Publications',
     volunteer: 'Other Activities',
     languages: 'Languages',
@@ -52,6 +52,7 @@ function Link({href, children}: {href?: string; children: ReactNode}) {
 }
 
 function Card({id, icon, title, sub, date, children}: {id?: string; icon?: string; title: ReactNode; sub?: ReactNode; date?: string; children?: ReactNode}) {
+  useBrokenLinks().collectAnchor(id);
   return (
     <article id={id} className={styles.card}>
       <header className={styles.cardHeader}>
@@ -67,6 +68,11 @@ function Card({id, icon, title, sub, date, children}: {id?: string; icon?: strin
       {children}
     </article>
   );
+}
+
+function SkillGroup({id, children}: {id: string; children: ReactNode}) {
+  useBrokenLinks().collectAnchor(id);
+  return <div id={id}>{children}</div>;
 }
 
 function TaxonomyTags({tags, locale}: {tags?: string[]; locale: string}): ReactNode {
@@ -108,10 +114,6 @@ function Section({title, children}: {title: string; children: ReactNode}) {
 }
 
 export default function Resume({data, locale}: {data: Data; locale: string}): ReactNode {
-  const {collectAnchor} = useBrokenLinks();
-  for (const section of ['work', 'projects', 'education', 'skills']) {
-    (data[section] ?? []).forEach((_: Data, index: number) => collectAnchor(`${section}-${index}`));
-  }
   const t = TITLES[locale] ?? TITLES.en;
   const b = data.basics ?? {};
   const abstract = String(b.contents?.[`resume-${locale}`]?.abstract ?? '').replace(/<span[^>]*>(.*?)<\/span>/g, '$1');
@@ -180,7 +182,7 @@ export default function Resume({data, locale}: {data: Data; locale: string}): Re
         <Section title={t.skills}>
           <dl className={styles.skills}>
             {data.skills.map((s: Data, i: number) => (
-              <div id={`skills-${i}`} key={s.name}>
+              <SkillGroup id={`skills-${i}`} key={s.name}>
                 <dt>{s.name}</dt>
                 <dd>
                   {(s.keywords ?? []).map((k: string) => {
@@ -194,7 +196,7 @@ export default function Resume({data, locale}: {data: Data; locale: string}): Re
                   })}
                 </dd>
                 <dd><TaxonomyTags tags={s.tags} locale={locale} /></dd>
-              </div>
+              </SkillGroup>
             ))}
           </dl>
         </Section>
@@ -202,6 +204,7 @@ export default function Resume({data, locale}: {data: Data; locale: string}): Re
 
       {data.certificates?.length > 0 && (
         <Section title={t.certificates}>
+          <p className={styles.note}>{locale === 'ko' ? '취득 - 만료' : 'Issued - expiry'}</p>
           <ul className={styles.plain}>
             {data.certificates.map((c: Data) => (
               <li key={c.title}>
@@ -210,7 +213,7 @@ export default function Resume({data, locale}: {data: Data; locale: string}): Re
                 </Link>{' '}
                 <span className={styles.note}>
                   {c.organization_short ?? c.organization} · {ym(c.verified)}
-                  {c.expired ? ` → ${ym(c.expired)}` : ''}
+                  {c.expired ? ` - ${ym(c.expired)}` : ''}
                 </span>
               </li>
             ))}

@@ -7,7 +7,20 @@ import {createRequire} from 'node:module';
 import {mergeKoreanFallbackDocs} from './build-wiki-graph.mjs';
 import {shouldRebuild} from './source-watch.mjs';
 import {withBuildLock} from './build-lock.mjs';
+import {prepareBuildContext} from './build-context.mjs';
 const {buildNetwork} = createRequire(import.meta.url)('../plugins/content-network.cjs');
+
+test('base-path switches invalidate only generated caches', t => {
+  const f = fixture(t);
+  f.write('.docusaurus/stale', 'cached'); f.write('node_modules/.cache/stale', 'cached'); f.write('build/keep', 'published');
+  assert.equal(prepareBuildContext(f.context.siteDir, {base: '/'}), true);
+  assert.equal(fs.existsSync(path.join(f.context.siteDir, '.docusaurus/stale')), false);
+  assert.equal(fs.existsSync(path.join(f.context.siteDir, 'build/keep')), true);
+  f.write('.docusaurus/new', 'cached');
+  assert.equal(prepareBuildContext(f.context.siteDir, {base: '/'}), false);
+  assert.equal(fs.existsSync(path.join(f.context.siteDir, '.docusaurus/new')), true);
+  assert.equal(prepareBuildContext(f.context.siteDir, {base: '/profile-2/'}), true);
+});
 
 test('authored locale changes rebuild without generated mirror loops', () => {
   for (const file of ['en/docusaurus-plugin-content-pages/about.mdx', 'ko/docusaurus-theme-classic/navbar.json', 'en/code.json']) assert.ok(shouldRebuild('i18n', file));
@@ -42,7 +55,10 @@ test('official permalinks join MDX, reference links, tags, backlinks and duplica
   const f = fixture(t);
   f.write('content/ko/wiki/a.mdx', '[Post][p]\n\n[p]: ../blog/post.md#results\n\n```md\n[ignored](missing.md)\n```\n[again](../blog/post.md)');
   f.write('content/ko/blog/post.md', '[Wiki](/wiki/custom?x=1#heading)\n[external](https://elsewhere.test/wiki/custom)');
-  const result = await buildNetwork(f.context, f.content([f.metadata('content/ko/wiki/a.mdx', '/wiki/custom')], [f.metadata('content/ko/blog/post.md', '/blog/actual')]));
+  const metadata = f.content([f.metadata('content/ko/wiki/a.mdx', '/wiki/custom')], [f.metadata('content/ko/blog/post.md', '/blog/actual', {date: new Date('2024-06-30T00:00:00Z')})]);
+  const result = await buildNetwork(f.context, metadata);
+  assert.equal(await buildNetwork(f.context, metadata), result);
+  assert.equal(result.entries.find(node => node.kind === 'blog').date, '2024-06-30');
   assert.equal(result.nodes.length, 3);
   assert.equal(result.edges.filter(e => e.kind === 'link').length, 2);
   assert.equal(result.edges.filter(e => e.kind === 'tag').length, 2);
@@ -59,6 +75,7 @@ test('project base, English fallback, unlisted and draft exclusions', async t =>
   const result = await buildNetwork(f.context, f.content(docs, posts));
   assert.equal(result.entries.length, 2);
   assert.equal(result.entries[0].koreanFallback, false);
+  assert.equal(result.entries.find(n => n.kind === 'wiki').koreanFallback, true);
   assert.equal(result.entries.find(n => n.kind === 'wiki').koreanPath, '/profile-2/wiki/a');
   assert.equal(result.edges.filter(e => e.kind === 'link').length, 2);
   assert.equal(result.nodes.find(n => n.isTag).path, '/profile-2/en/tags/ai');

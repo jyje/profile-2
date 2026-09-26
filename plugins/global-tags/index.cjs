@@ -58,7 +58,7 @@ async function buildTagData(context, allContent) {
   const entries = [
     ...network.entries.filter(entry => entry.tags.length).map(entry => ({
       ...entry, route: entry.path,
-      kind: entry.kind === 'wiki' && /(?:^|\/)portfolio(?:\/|\.)/.test(entry.source) ? 'portfolio' : entry.kind,
+      kind: entry.kind === 'wiki' && /(?:^|\/)portfolio\//.test(entry.source) ? 'portfolio' : entry.kind,
     })),
     ...resumeEntries(siteDir, locale),
   ];

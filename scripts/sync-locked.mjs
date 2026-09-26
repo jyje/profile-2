@@ -1,2 +1,4 @@
 import {withBuildLock} from './build-lock.mjs';
-await withBuildLock(() => import('./sync-content.mjs'));
+import {syncAll} from './sync-content.mjs';
+await withBuildLock(syncAll);
+console.log('[sync-content] synced');

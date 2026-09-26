@@ -5,6 +5,8 @@
 // Usage: node scripts/sync-content.mjs [--watch]
 import fs from 'node:fs';
 import path from 'node:path';
+import {pathToFileURL} from 'node:url';
+import {withBuildLock} from './build-lock.mjs';
 import * as yaml from 'js-yaml';
 import {buildCuration} from './build-curation.mjs';
 import {mergeKoreanFallbackDocs} from './build-wiki-graph.mjs';
@@ -61,26 +63,31 @@ function syncTagDefinitions() {
   }
 }
 
-function syncAll() {
+export function syncAll() {
   syncTagDefinitions();
   mirror();
   convertData();
   buildCuration();
 }
 
-syncAll();
-console.log('[sync-content] synced');
+const isDirect = process.argv[1] && import.meta.url === pathToFileURL(path.resolve(process.argv[1])).href;
+if (isDirect) {
+  await withBuildLock(syncAll);
+  console.log('[sync-content] synced');
+}
 
-if (process.argv.includes('--watch')) {
+if (isDirect && process.argv.includes('--watch')) {
   let timer;
   const watched = new Set();
   const onChange = (_evt, name) => {
     if (name && name.split(path.sep).some((s) => s.startsWith('.'))) return;
     clearTimeout(timer);
-    timer = setTimeout(() => {
-      syncAll();
-      refreshWatchers();
-      console.log('[sync-content] resynced');
+    timer = setTimeout(async () => {
+      try {
+        await withBuildLock(syncAll);
+        refreshWatchers();
+        console.log('[sync-content] resynced');
+      } catch (error) { console.error('[sync-content] failed:', error); }
     }, 150);
   };
 

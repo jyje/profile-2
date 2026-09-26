@@ -17,18 +17,24 @@ try {
     const context = await browser.newContext({locale: locale === 'ko' ? 'ko-KR' : 'en-US', viewport: {width: 1200, height: 900}});
     await context.addCookies([{name: 'jyje_locale', value: locale, url: base.origin}]);
     const page = await context.newPage();
-    page.on('response', response => { if (response.status() >= 400) console.error(`HTTP ${response.status()}: ${response.url()}`); });
-    page.on('requestfailed', request => console.error(`Failed request: ${request.url()} (${request.failure()?.errorText})`));
+    const failedAssets = [];
+    page.on('response', response => { if (new URL(response.url()).origin === base.origin && response.status() >= 400) failedAssets.push(`HTTP ${response.status()}: ${response.url()}`); });
+    page.on('requestfailed', request => { if (new URL(request.url()).origin === base.origin && request.failure()?.errorText !== 'net::ERR_ABORTED') failedAssets.push(`${request.url()}: ${request.failure()?.errorText}`); });
     for (const variant of ['resume', 'cv']) {
+      failedAssets.length = 0;
       const url = new URL(`${locale === 'en' ? 'en/' : ''}about/${variant}`, base);
       const response = await page.goto(url.href, {waitUntil: 'networkidle'});
       if (!response?.ok()) throw new Error(`Career route failed: ${url} (${response?.status()})`);
       await page.locator(`[data-career-document="${variant}"]`).waitFor();
       await page.emulateMedia({media: 'print', colorScheme: 'light'});
-      await page.evaluate(() => Promise.all([document.fonts.load('12px "Noto Sans KR"', '한글 ABC'), document.fonts.load('700 12px "Noto Sans KR"', '한글 ABC')]));
+      const loadedFonts = await page.evaluate(async () => {
+        const weights = await Promise.all([document.fonts.load('12px "Noto Sans KR"', '한글 ABC'), document.fonts.load('700 12px "Noto Sans KR"', '한글 ABC')]);
+        return weights.every((faces, index) => faces.length > 0 && faces.every(face => face.family.replaceAll('"', '') === 'Noto Sans KR' && face.status === 'loaded' && face.weight === (index ? '700' : '400')));
+      });
       await page.evaluate(() => document.fonts.ready);
-      if (!await page.evaluate(() => document.fonts.check('12px "Noto Sans KR"', '한글 ABC'))) throw new Error('Career font did not load');
+      if (!loadedFonts) throw new Error('Career font faces are missing or not loaded');
       await page.evaluate(async () => Promise.all([...document.images].map(image => image.decode().catch(() => {}))));
+      if (failedAssets.length) throw new Error(`Career assets failed:\n${failedAssets.join('\n')}`);
       const file = path.join(output, `jeayoung-jeon-${variant}-${locale}.pdf`);
       await page.pdf({path: file, format: 'A4', preferCSSPageSize: true, printBackground: true,
         displayHeaderFooter: variant === 'cv', headerTemplate: '<span></span>',
