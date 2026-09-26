@@ -2,6 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import {contentMode, ignorePatterns, isDocIgnored, publicationContext} from '../plugins/content-visibility.cjs';
 import {createLastUpdateReader, withLastUpdate} from './content-last-update.mjs';
+import {withDevelopmentNotice} from './development-notice.mjs';
 
 // Stage authored content without mutating it. Underscored development sections get
 // their old public-shaped paths only in the local development build.
@@ -28,7 +29,8 @@ export function prepareContent(root, mode = contentMode()) {
           if (entry.isDirectory()) copy(path.join(from, entry.name), destination);
           else if (/\.mdx?$/.test(entry.name)) {
             const authored = path.join(from, entry.name);
-            fs.writeFileSync(destination, withLastUpdate(fs.readFileSync(authored, 'utf8'), authored, readDate));
+            const markdown = withLastUpdate(fs.readFileSync(authored, 'utf8'), authored, readDate);
+            fs.writeFileSync(destination, mode === 'development' && ignored ? withDevelopmentNotice(markdown, locale) : markdown);
           } else fs.copyFileSync(path.join(from, entry.name), destination);
         }
       }

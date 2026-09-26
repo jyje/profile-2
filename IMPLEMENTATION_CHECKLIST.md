@@ -10,7 +10,7 @@ Use the house emoji for Wiki Home. Preserve the existing theme and graph physics
 - [x] Move the knowledge subtree to `/wiki/d/` with compatible old URLs.
 - [x] Integrate the global graph at the bottom of Wiki Home; retire the standalone page.
 - [x] Unify localized wiki headings and emoji, including excluded sources.
-- [ ] Add automatic development-only callouts based on `.docignore`.
+- [x] Add automatic development-only callouts based on `.docignore`.
 - [ ] Verify both locales, public and development builds, responsive graph interactions and existing features.
 - [ ] Preserve final decisions and verification in maintenance documentation.
 - [ ] Delete this checklist and this task's temporary plan in a separate final cleanup commit.
@@ -35,3 +35,5 @@ passed. The live old graph URL preserves node selection and opens exactly one gl
 graph on the wiki home. Development-only links to the retired source were repaired.
 Titles: all authored wiki pages and categories pass emoji validation, including
 local-only sources. Translation parity and missing/duplicate/brain emoji fixtures pass.
+Publication notices: 22 content tests and typecheck passed. Live Korean and English
+development guides display the localized warning as the first admonition.

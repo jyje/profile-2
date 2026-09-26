@@ -5,6 +5,25 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import {titleEmoji, validateWikiTitles} from './validate-wiki-titles.mjs';
+import {withDevelopmentNotice} from './development-notice.mjs';
+import {mergeKoreanFallbackDocs} from './build-wiki-graph.mjs';
+
+test('development notice is idempotent and precedes translated fallback notices', t => {
+  const source = '---\ntitle: 📄 Note\nlast_update:\n  date: 2020-01-01\n---\n# Note\n';
+  const ko = withDevelopmentNotice(source, 'ko');
+  assert.equal(withDevelopmentNotice(ko, 'ko'), ko);
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'wiki-notice-'));
+  t.after(() => fs.rmSync(root, {recursive: true, force: true}));
+  fs.mkdirSync(path.join(root, 'ko'));
+  fs.writeFileSync(path.join(root, 'ko/note.md'), ko);
+  mergeKoreanFallbackDocs(path.join(root, 'ko'), path.join(root, 'en'));
+  const english = fs.readFileSync(path.join(root, 'en/note.md'), 'utf8');
+  assert.ok(english.indexOf('Development-only document') < english.indexOf('English version unavailable'));
+  assert.ok(!english.includes('개발 전용 문서'));
+  assert.equal(english.match(/\.docignore/g).length, 1);
+  assert.match(english, /date: 2020-01-01/);
+  assert.ok(english.endsWith('# Note\n'));
+});
 
 test('wiki title policy includes excluded documents and translation parity', t => {
   assert.equal(titleEmoji('🛠️ Design', 'test'), '🛠️');

@@ -52,7 +52,10 @@ test('development stages aliases and assets; subsequent public build removes the
   const f = fixture(t);
   prepareContent(f.root, 'development');
   for (const locale of ['ko', 'en']) {
-    assert.equal(fs.readFileSync(f.staged(`${locale}/wiki/guide/authoring.mdx`), 'utf8'), 'development only');
+    const page = fs.readFileSync(f.staged(`${locale}/wiki/guide/authoring.mdx`), 'utf8');
+    assert.match(page, /\[!warning\]/);
+    assert.match(page, /\.docignore/);
+    assert.ok(page.endsWith('development only'));
     assert.ok(fs.existsSync(f.staged(`${locale}/wiki/guide/assets/example.txt`)));
     assert.ok(fs.existsSync(f.staged(`${locale}/blog/internal/test.md`)));
   }
