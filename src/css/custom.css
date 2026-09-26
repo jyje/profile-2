@@ -1,5 +1,34 @@
 @import './about-page.css';
 
+/* App pages use the complete host surface; document pages keep their reading width.
+ * wrapperClassName is Docusaurus MDX front matter, so no theme fork is needed.
+ */
+.site-labs-page main.container {
+  width: 100%;
+  max-width: none;
+  padding: 0;
+}
+
+/* Infima spacing utilities are important declarations in this cascade layer.
+ * Override in the same layer so v4's layered CSS does not retain vertical gaps.
+ */
+@layer docusaurus.infima {
+  .site-labs-page main.container.margin-vert--lg {
+    margin: 0 !important;
+  }
+}
+
+.site-labs-page main.container > .row {
+  margin: 0;
+}
+
+.site-labs-page main.container > .row > .col {
+  width: 100%;
+  max-width: none;
+  flex-basis: 100%;
+  padding: 0;
+}
+
 /**
  * Global styles. Infima variables are overridden here.
  */

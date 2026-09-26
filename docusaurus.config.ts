@@ -19,6 +19,10 @@ const config: Config = {
   // Local and jyje.online builds keep their existing root URL by default.
   url: process.env.SITE_URL ?? 'https://jyje.online',
   baseUrl: process.env.SITE_BASE_URL ?? '/',
+  customFields: {
+    // Deployment-controlled remote only. Never accept a remote URL from visitors.
+    labsRemoteEntry: process.env.LABS_REMOTE_ENTRY ?? '',
+  },
 
   organizationName: 'jyje',
   projectName: 'profile-2',
@@ -79,13 +83,14 @@ const config: Config = {
           beforeDefaultRemarkPlugins: [contentTemplateBlocks],
         },
         theme: {
-          customCss: './src/css/custom.css',
+          customCss: ['./src/css/custom.css', './src/css/shadcn.css'],
         },
       } satisfies Preset.Options,
     ],
   ],
 
   plugins: [
+    './plugins/tailwind.cjs',
     './plugins/color-cookie.cjs',
     './plugins/locale-preference.cjs',
     './plugins/global-tags',

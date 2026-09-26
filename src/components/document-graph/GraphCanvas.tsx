@@ -1,4 +1,5 @@
 import {useEffect, useRef, useState, type ReactElement} from 'react';
+import {Button} from '@site/src/components/ui/button';
 import styles from '../../pages/wiki/graph.module.css';
 
 export type GraphCanvasNode = {
@@ -569,10 +570,13 @@ export default function GraphCanvas({
     <div className={styles.graph} role="group" aria-label={label}>
       <div ref={mountRef} className={styles.graphMount} />
       <div className={styles.canvasTools}>
-        <button type="button" onClick={() => zoom(1.18)} aria-label={zoomInLabel}>+</button>
-        <button type="button" onClick={() => zoom(0.85)} aria-label={zoomOutLabel}>−</button>
-        <button
+        <Button type="button" variant="ghost" size="icon" shape="square" onClick={() => zoom(1.18)} aria-label={zoomInLabel}>+</Button>
+        <Button type="button" variant="ghost" size="icon" shape="square" onClick={() => zoom(0.85)} aria-label={zoomOutLabel}>−</Button>
+        <Button
           type="button"
+          variant="ghost"
+          size="icon"
+          shape="square"
           onClick={() => {
             const canvas = mountRef.current?.querySelector('canvas');
             if (canvas && (window as any).d3 && zoomRef.current) {
@@ -580,7 +584,7 @@ export default function GraphCanvas({
             }
           }}
           aria-label={resetLabel}
-        >↺</button>
+        >↺</Button>
       </div>
       {loadError && <p className={styles.rendererError} role="status">{loadErrorLabel}</p>}
     </div>

@@ -13,6 +13,7 @@ import BlogLayout from '@theme/BlogLayout';
 import BlogPostItems from '@theme/BlogPostItems';
 import SearchMetadata from '@theme/SearchMetadata';
 import BlogListPageStructuredData from '@theme/BlogListPage/StructuredData';
+import {Button} from '@site/src/components/ui/button';
 import styles from './styles.module.css';
 
 type ViewMode = 'list' | 'grid';
@@ -185,22 +186,26 @@ export default function BlogListPage(props: Props): ReactNode {
       <BlogLayout sidebar={sidebar}>
         <div className={styles.controls}>
           <div className={styles.toggle} role="group" aria-label={labels.group}>
-            <button
+            <Button
+              variant={viewMode === 'list' ? 'default' : 'ghost'}
+              shape="pill"
               className={styles.toggleButton}
               type="button"
               aria-pressed={viewMode === 'list'}
               onClick={() => selectViewMode('list')}>
               <ViewModeIcon mode="list" />
               <span>{labels.list}</span>
-            </button>
-            <button
+            </Button>
+            <Button
+              variant={viewMode === 'grid' ? 'default' : 'ghost'}
+              shape="pill"
               className={styles.toggleButton}
               type="button"
               aria-pressed={viewMode === 'grid'}
               onClick={() => selectViewMode('grid')}>
               <ViewModeIcon mode="grid" />
               <span>{labels.grid}</span>
-            </button>
+            </Button>
           </div>
         </div>
         {Array.from(postsByYear, ([year, yearItems]) => (
@@ -222,7 +227,9 @@ export default function BlogListPage(props: Props): ReactNode {
         ))}
         {hasMorePosts && (
           <div className={styles.loadMore}>
-            <button
+            <Button
+              shape="pill"
+              size="lg"
               className={styles.loadMoreButton}
               type="button"
               onClick={() =>
@@ -231,7 +238,7 @@ export default function BlogListPage(props: Props): ReactNode {
                 )
               }>
               {isKorean ? '더 불러오기' : 'Load more'}
-            </button>
+            </Button>
           </div>
         )}
       </BlogLayout>

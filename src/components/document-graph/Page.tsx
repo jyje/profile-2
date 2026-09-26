@@ -1,6 +1,8 @@
 import {useMemo, useState, type ReactElement} from 'react';
 import Link from '@docusaurus/Link';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
+import {Button} from '@site/src/components/ui/button';
+import {Input} from '@site/src/components/ui/input';
 
 import GraphCanvas, {type GraphCanvasEdge, type GraphCanvasNode} from './GraphCanvas';
 import styles from '../../pages/wiki/graph.module.css';
@@ -155,22 +157,24 @@ export default function WikiGraphPage({graphData}: PageProps): ReactElement {
           <div className={styles.graphColumn}>
             <div className={styles.toolbar}>
               <div className={styles.modeSwitch} role="group" aria-label={locale === 'ko' ? '그래프 범위' : 'Graph scope'}>
-                <button type="button" className={mode === 'global' ? styles.activeMode : ''} aria-pressed={mode === 'global'} onClick={() => setMode('global')}>{copy.all}</button>
-                <button
+                <Button type="button" shape="pill" size="sm" variant={mode === 'global' ? 'default' : 'ghost'} aria-pressed={mode === 'global'} onClick={() => setMode('global')}>{copy.all}</Button>
+                <Button
                   type="button"
-                  className={mode === 'local' ? styles.activeMode : ''}
+                  shape="pill"
+                  size="sm"
+                  variant={mode === 'local' ? 'default' : 'ghost'}
                   aria-pressed={mode === 'local'}
                   onClick={() => {
                     if (!selectedId && highestDegreeNode) setSelectedId(highestDegreeNode.id);
                     setMode('local');
                   }}
-                >{copy.local}</button>
+                >{copy.local}</Button>
               </div>
               <label className={styles.search}>
                 <span className={styles.visuallyHidden}>{copy.search}</span>
                 <span aria-hidden="true" className={styles.searchIcon}>⌕</span>
-                <input value={search} onChange={(event) => handleSearchChange(event.target.value)} placeholder={copy.searchPlaceholder} type="search" />
-                {search && <button type="button" onClick={() => setSearch('')} aria-label={locale === 'ko' ? '검색 지우기' : 'Clear search'}>×</button>}
+                <Input aria-label={copy.search} value={search} onChange={(event) => handleSearchChange(event.target.value)} placeholder={copy.searchPlaceholder} type="search" />
+                {search && <Button type="button" variant="ghost" size="icon" onClick={() => setSearch('')} aria-label={locale === 'ko' ? '검색 지우기' : 'Clear search'}>×</Button>}
               </label>
             </div>
 
@@ -214,11 +218,11 @@ export default function WikiGraphPage({graphData}: PageProps): ReactElement {
                   <div><strong>{selectedNode.incoming}</strong><span>{copy.incoming}</span></div>
                   <div><strong>{selectedNode.outgoing}</strong><span>{copy.outgoing}</span></div>
                 </div>
-                {selectedNode.path && <Link className={styles.openLink} to={selectedNode.path}>{copy.open}<span aria-hidden="true">↗</span></Link>}
+                {selectedNode.path && <Button asChild className={styles.openLink}><Link to={selectedNode.path}>{copy.open}<span aria-hidden="true">↗</span></Link></Button>}
                 {locale === 'en' && selectedNode.koreanFallback && selectedNode.koreanPath && (
-                  <a className={styles.originalLink} href={`${rootBase}${selectedNode.koreanPath.slice(1)}`}>
+                  <Button asChild variant="outline" className={styles.originalLink}><a href={`${rootBase}${selectedNode.koreanPath.slice(1)}`}>
                     {copy.openKorean}<span aria-hidden="true">↗</span>
-                  </a>
+                  </a></Button>
                 )}
                 {selectedNeighbors.length > 0 && (
                   <div className={styles.neighborList}>
@@ -226,7 +230,7 @@ export default function WikiGraphPage({graphData}: PageProps): ReactElement {
                     <ul>
                       {selectedNeighbors.slice(0, 7).map((node) => (
                         <li key={node.id}>
-                          <button type="button" onClick={() => setSelectedId(node.id)}>{node.title}</button>
+                          <Button type="button" variant="link" size="text" onClick={() => setSelectedId(node.id)}>{node.title}</Button>
                           {node.koreanFallback && <span>{copy.koreanOriginal}</span>}
                         </li>
                       ))}
