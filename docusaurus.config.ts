@@ -167,9 +167,9 @@ const config: Config = {
         src: 'img/logo-128.png',
       },
       items: [
-        {to: '/labs', label: 'Labs', className: 'site-labs-link', position: 'left'},
         {to: '/blog', label: 'Blog', className: 'site-blog-link', position: 'left'},
         {type: 'docSidebar', sidebarId: 'wikiSidebar', position: 'left', label: 'Wiki', className: 'site-wiki-link'},
+        {to: '/labs', label: 'Labs', className: 'site-labs-link', position: 'left'},
         {
           to: '/about',
           label: 'About',
