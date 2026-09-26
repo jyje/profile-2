@@ -4,6 +4,7 @@ import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import {usePluginData} from '@docusaurus/useGlobalData';
 import styles from './styles.module.css';
 import InlineGraph from '@site/src/components/document-graph/InlineGraph';
+import GlobalGraph from '@site/src/components/document-graph/Page';
 import type {Network} from '@site/src/components/document-graph/neighborhood';
 
 export default function ContentConnections({permalink}: {permalink: string}): ReactNode {
@@ -11,7 +12,10 @@ export default function ContentConnections({permalink}: {permalink: string}): Re
   const {i18n: {currentLocale}} = useDocusaurusContext();
   const ko = currentLocale === 'ko';
   const current = data.nodes.find(node => node.path === permalink && !node.isTag);
-  if (!current || /\/wiki\/graph\/?$/.test(permalink)) return null;
+  if (!current) return null;
+  if (/\/wiki\/?$/.test(permalink)) return <section data-document-graph="global" aria-label={ko ? '전체 문서 그래프' : 'Full document graph'}>
+    <GlobalGraph graphData={data} />
+  </section>;
   const incoming = new Set(data.edges.filter(edge => edge.kind === 'link' && edge.target === current.id).map(edge => edge.source));
   const outgoing = new Set(data.edges.filter(edge => edge.kind === 'link' && edge.source === current.id).map(edge => edge.target));
   const linked = new Set([...incoming, ...outgoing, current.id]);
@@ -27,7 +31,7 @@ export default function ContentConnections({permalink}: {permalink: string}): Re
   ].filter(group => group.nodes.length);
   return <aside className={styles.connections} aria-label={ko ? '문서 연결' : 'Content connections'}>
     <InlineGraph key={current.id} graph={data} currentId={current.id} ko={ko} />
-    <Link to={`/wiki/graph?node=${encodeURIComponent(current.id)}`}>{ko ? '그래프에서 보기' : 'Explore in graph'}</Link>
+    <Link to={`/wiki/?node=${encodeURIComponent(current.id)}#document-graph`}>{ko ? '전체 그래프에서 보기' : 'Explore in the full graph'}</Link>
     {groups.map(group => <section key={group.title}>
       <h2>{group.title}</h2>
       <ul>{group.nodes.map(node => <li key={node.id}><Link to={node.path}>{node.title}</Link>

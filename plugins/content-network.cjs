@@ -58,7 +58,7 @@ async function computeNetwork(context, allContent) {
     return {
       id: `${kind}:${m.permalink}`, kind, title: m.title, description: m.description ?? '',
       path: m.permalink, source, authored, tags, date: m.date instanceof Date ? m.date.toISOString().slice(0, 10) : String(m.date ?? '').slice(0, 10),
-      group: kind === 'blog' ? 'blog' : (m.sourceDirName === '.' ? 'home' : m.sourceDirName?.split('/')[0]) || 'home',
+      group: kind === 'blog' ? 'blog' : m.sourceDirName?.split('/')[0] === 'd' ? 'knowledge' : (m.sourceDirName === '.' ? 'home' : m.sourceDirName?.split('/')[0]) || 'home',
       koreanFallback: fallback,
       koreanPath: fallback ? m.permalink.replace(base, base.replace(/en\/$/, '')) : undefined,
     };

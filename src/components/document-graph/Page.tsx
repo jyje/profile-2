@@ -6,12 +6,12 @@ import {Button} from '@site/src/components/ui/button';
 import {Input} from '@site/src/components/ui/input';
 
 import GraphCanvas, {type GraphCanvasEdge, type GraphCanvasNode} from './GraphCanvas';
-import styles from '../../pages/wiki/graph.module.css';
+import styles from './styles.module.css';
 
 type GraphNode = GraphCanvasNode & {
   path?: string;
   koreanPath?: string;
-  koreanFallback: boolean;
+  koreanFallback?: boolean;
 };
 
 type Graph = {nodes: GraphNode[]; edges: GraphCanvasEdge[]};
@@ -100,10 +100,11 @@ export default function WikiGraphPage({graphData}: PageProps): ReactElement {
   const [search, setSearch] = useState('');
   const location = useLocation();
   useEffect(() => {
-    const nodeId = new URLSearchParams(location.search).get('node');
+    const nodeId = new URLSearchParams(location.search).get('node')?.replace('/wiki/knowledge', '/wiki/d');
     if (nodeId && graph.nodes.some(node => node.id === nodeId)) {
       setSelectedId(nodeId);
       setMode('local');
+      document.getElementById('document-graph')?.scrollIntoView();
     }
   }, [location.search, graph]);
 
@@ -203,6 +204,7 @@ export default function WikiGraphPage({graphData}: PageProps): ReactElement {
                 resetLabel={copy.reset}
                 onSelect={setSelectedId}
                 loadErrorLabel={copy.rendererError}
+                retryLabel={locale === 'ko' ? '다시 시도' : 'Retry'}
               />
               {!graphHasMatches && <p className={styles.emptySearch}>{copy.noResults}</p>}
             </div>

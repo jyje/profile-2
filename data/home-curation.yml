@@ -5,7 +5,7 @@ featured:
   - kind: blog
     id: 2024-06-30-mlops-onpremise-mlops-with-open-source-projects
   - kind: wiki
-    id: knowledge/portfolio/widearth-digital-twins-platforms-at-maxst
+    id: d/portfolio/widearth-digital-twins-platforms-at-maxst
 
 # Editorial reading order on the homepage. Keep this separate from the daily pool.
 reading:
@@ -29,13 +29,13 @@ daily:
   wiki:
     count: 2
     ids:
-      - knowledge/argo-cd
-      - knowledge/argo-workflows
-      - knowledge/cncf
-      - knowledge/container
-      - knowledge/devops
-      - knowledge/docker
-      - knowledge/istio
-      - knowledge/k8s
-      - knowledge/microk8s
-      - knowledge/service-mesh
+      - d/argo-cd
+      - d/argo-workflows
+      - d/cncf
+      - d/container
+      - d/devops
+      - d/docker
+      - d/istio
+      - d/k8s
+      - d/microk8s
+      - d/service-mesh

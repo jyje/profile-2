@@ -8,9 +8,11 @@ This wiki is the **knowledge base** of the profile site. The blog is a chronolog
 
 ## Contents
 
-- [Knowledge](./knowledge/index.md): technical topics and project knowledge
-- [Document graph](./graph.mdx): explore connections between notes and tags
+- [Documents](./d/index.md): technical topics and project knowledge
+- [Document graph](#document-graph): explore connections between wiki notes, blog posts and tags
 
 ## Related posts
 
 - [Blog posts](/blog)
+
+## Document graph {#document-graph}

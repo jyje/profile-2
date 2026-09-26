@@ -8,9 +8,11 @@ sidebar_position: 1
 
 ## 목차
 
-- [문서](./knowledge/index.md): 기술 주제와 프로젝트 지식
-- [문서 그래프](./graph.mdx): 위키 문서와 태그의 연결을 직접 탐색
+- [문서](./d/index.md): 기술 주제와 프로젝트 지식
+- [문서 그래프](#document-graph): 위키와 블로그, 태그 사이의 연결을 탐색
 
 ## 관련 글
 
 - [블로그 글 목록](/blog)
+
+## 문서 그래프 {#document-graph}

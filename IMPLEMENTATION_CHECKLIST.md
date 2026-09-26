@@ -7,8 +7,8 @@ Use the house emoji for Wiki Home. Preserve the existing theme and graph physics
 - [x] Verify and commit existing publication boundaries and static routing.
 - [x] Verify and commit authored last-update dates.
 - [x] Embed automatic local graphs in wiki and blog detail footers.
-- [ ] Move the knowledge subtree to `/wiki/d/` with compatible old URLs.
-- [ ] Integrate the global graph at the bottom of Wiki Home; retire the standalone page.
+- [x] Move the knowledge subtree to `/wiki/d/` with compatible old URLs.
+- [x] Integrate the global graph at the bottom of Wiki Home; retire the standalone page.
 - [ ] Unify localized wiki headings and emoji, including excluded sources.
 - [ ] Add automatic development-only callouts based on `.docignore`.
 - [ ] Verify both locales, public and development builds, responsive graph interactions and existing features.
@@ -30,3 +30,6 @@ Baseline: 19 content tests, 6 UI tests, typecheck and 525 public static routes p
 Earlier bilingual public build and browser verification remain recorded in the task.
 Inline graph: 20 content tests and typecheck passed; the live Argo CD page renders
 one active canvas with incoming/outgoing documents and its Argo Project tag.
+Migration: bilingual public and development builds passed; 581 public static routes
+passed. The live old graph URL preserves node selection and opens exactly one global
+graph on the wiki home. Development-only links to the retired source were repaired.

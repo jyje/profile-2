@@ -78,10 +78,10 @@ I shared my certification on LinkedIn with [this post](https://www.linkedin.com/
 
 ## Related wiki pages
 
-- [Kubernetes](../wiki/knowledge/k8s)
-- [Containers](../wiki/knowledge/container)
-- [CNCF](../wiki/knowledge/cncf)
-- [Linux Foundation](../wiki/knowledge/linux-foundation)
+- [Kubernetes](../wiki/d/k8s)
+- [Containers](../wiki/d/container)
+- [CNCF](../wiki/d/cncf)
+- [Linux Foundation](../wiki/d/linux-foundation)
 
 ## Related article
 

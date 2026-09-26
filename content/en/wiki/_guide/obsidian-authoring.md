@@ -26,7 +26,7 @@ content/
 
 When a wiki page has no English counterpart, the build preparation step copies the Korean original and its assets to the same path on the English site. The generated page starts with an English callout explaining that no English version is available and recommending browser translation. The source under `content/ko/` is not modified.
 
-Open [Document graph](../graph.mdx) from the Wiki sidebar to explore connections between notes and tags. The local Docusaurus `document-graph` plugin reads Markdown links and tags at build time. Grab and shake a node to move its neighbors, or drag the background and use the wheel to pan and zoom. Select a node to inspect its neighbors, open the fallback page, or go directly to the Korean original.
+Open [Document graph](../index.md#document-graph) from the Wiki sidebar to explore connections between notes and tags. The local Docusaurus `document-graph` plugin reads Markdown links and tags at build time. Grab and shake a node to move its neighbors, or drag the background and use the wheel to pan and zoom. Select a node to inspect its neighbors, open the fallback page, or go directly to the Korean original.
 
 ## Links and images
 
@@ -82,7 +82,7 @@ Keep ordinary prose, tables, and lists as Markdown. Each visual template has one
 
 Blog posts and wiki documents share the same tag registry. The connections section below a document shows incoming links, outgoing links and related entries with shared tags. Its graph link opens the document's neighborhood. Blog listing previews do not repeat these sections.
 
-Use relative Markdown links within a collection. Between blog and wiki collections, use the real site path, such as `/wiki/knowledge/k8s`. Equal titles do not merge different routes. Code examples are not indexed as links. Computed JSX navigation is not indexed, so author important relationships as Markdown links.
+Use relative Markdown links within a collection. Between blog and wiki collections, use the real site path, such as `/wiki/d/k8s`. Equal titles do not merge different routes. Code examples are not indexed as links. Computed JSX navigation is not indexed, so author important relationships as Markdown links.
 
 Missing English `.md` and `.mdx` wiki pages use the Korean original with a browser translation notice. Authored English translations are preserved. Pages marked `draft: true` or `unlisted: true` are excluded from the public graph and shared tag listings.
 

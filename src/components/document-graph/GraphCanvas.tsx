@@ -1,6 +1,6 @@
 import {useEffect, useRef, useState, type ReactElement} from 'react';
 import {Button} from '@site/src/components/ui/button';
-import styles from '../../pages/wiki/graph.module.css';
+import styles from './styles.module.css';
 
 export type GraphCanvasNode = {
   id: string;

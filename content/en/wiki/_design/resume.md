@@ -38,4 +38,4 @@ The exporter requires one A4 page for each resume and multiple A4 pages for each
 
 ## Content connections
 
-Career tags connect to blog posts and wiki documents through [shared tags](/tags). Career links target detailed CV anchors so they do not depend on summary selection. Explore document relationships in the [document graph](../graph.mdx).
+Career tags connect to blog posts and wiki documents through [shared tags](/tags). Career links target detailed CV anchors so they do not depend on summary selection. Explore document relationships in the [document graph](../index.md#document-graph).

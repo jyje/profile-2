@@ -103,6 +103,7 @@ const config: Config = {
     './plugins/locale-preference.cjs',
     './plugins/global-tags',
     './plugins/document-graph',
+    './plugins/wiki-graph-redirect.cjs',
     [
       '@docusaurus/plugin-client-redirects',
       {
@@ -110,6 +111,8 @@ const config: Config = {
         // Each locale is built separately and paths are relative to that locale's baseUrl:
         // ko -> /ko/posts/x (old) ; en -> /posts/x (written under /en/), matching the old /en/posts/x.
         createRedirects(existingPath: string) {
+          const document = existingPath.match(/^\/wiki\/d(\/.*)?$/);
+          if (document) return [`/wiki/knowledge${document[1] ?? ''}`];
           const isEn = process.env.DOCUSAURUS_CURRENT_LOCALE === 'en';
           const legacy = isEn ? '' : '/ko';
           const globalTag = existingPath.match(/^\/tags(?:\/([^/]+))?$/);
