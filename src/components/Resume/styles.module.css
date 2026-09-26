@@ -4,6 +4,22 @@
   padding: 2rem 1rem 4rem;
 }
 
+@media print {
+  .resume { max-width: none; padding: 0; margin: 0; font-size: 10.5pt; line-height: 1.45; }
+  .resume .name { font-size: 25pt; }
+  .resume .section { margin-top: 6mm; }
+  .resume .sectionTitle { font-size: 14pt; break-after: avoid; }
+  .resume .card { padding: 3mm 4mm; margin-bottom: 3mm; border-radius: 2mm; break-inside: avoid; }
+  .resume .cardHeader { flex-direction: row; }
+  .resume .cardTitle { font-size: 11pt; }
+  .resume .items, .resume .cardSub, .resume .skills dt { font-size: 10pt; }
+  .resume .date, .resume .note, .resume .tags, .resume .chip, .resume .chipStrong { font-size: 9pt; }
+  .resume .plain li, .resume .skills > div { break-inside: avoid; }
+  .resume .plain { break-inside: avoid; }
+  .resume .keepTogether { break-inside: avoid; }
+  .resume .taxonomyTags, .resume .icon { display: none; }
+}
+
 .top {
   margin-bottom: 1.5rem;
   padding-bottom: 1.2rem;

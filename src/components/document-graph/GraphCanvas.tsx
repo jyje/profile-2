@@ -112,6 +112,7 @@ function palette(): {groups: Record<string, number>; tag: number; muted: number;
       knowledge: colorNumber(get('--graph-knowledge', '#680c2c')),
       design: colorNumber(get('--graph-design', '#246276')),
       guide: colorNumber(get('--graph-guide', '#a06a1d')),
+      blog: colorNumber(get('--graph-blog', '#477349')),
       home: colorNumber(get('--graph-home', '#526a75')),
     },
     tag: colorNumber(get('--graph-tag', '#dce8eb')),

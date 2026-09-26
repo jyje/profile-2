@@ -1,0 +1,31 @@
+/* Only career documents opt in. The rest of the Docusaurus theme stays intact. */
+[data-career-document] { font-family: 'Noto Sans KR', sans-serif; word-break: keep-all; overflow-wrap: anywhere; }
+@page career { size: A4; margin: 12mm; }
+@media print {
+  html:has([data-career-document]) { color-scheme: light; page: career; height: auto; }
+  body:has([data-career-document]),
+  body:has([data-career-document]) #__docusaurus,
+  body:has([data-career-document]) .main-wrapper {
+    display: block !important;
+    min-height: 0 !important;
+    height: auto !important;
+    width: auto !important;
+    flex: none !important;
+  }
+  body:has([data-career-document]) {
+    --ifm-background-color: #fff;
+    --ifm-font-color-base: #173746;
+    --ifm-color-primary: #680c2c;
+    --ifm-color-emphasis-700: #405863;
+    --ifm-color-emphasis-600: #405863;
+    --ifm-color-emphasis-300: #bdcdd4;
+    --ifm-color-emphasis-200: #dce5e8;
+    --ifm-color-primary-contrast-background: #f5eef0;
+    color: #173746;
+    background: white;
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+  body:has([data-career-document]) :is(.navbar, .footer, .theme-back-to-top-button, .theme-skip-to-content) { display: none !important; }
+  [data-career-document] a { text-decoration: none; }
+}
