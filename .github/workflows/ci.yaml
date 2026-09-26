@@ -33,6 +33,9 @@ jobs:
       - name: Typecheck
         run: npm run typecheck
 
+      - name: Verify UI compatibility boundaries
+        run: npm run test:ui
+
       - name: Build all locales for GitHub Pages
         run: npm run build
         env:

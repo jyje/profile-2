@@ -83,13 +83,14 @@ const config: Config = {
           beforeDefaultRemarkPlugins: [contentTemplateBlocks],
         },
         theme: {
-          customCss: './src/css/custom.css',
+          customCss: ['./src/css/custom.css', './src/css/shadcn.css'],
         },
       } satisfies Preset.Options,
     ],
   ],
 
   plugins: [
+    './plugins/tailwind.cjs',
     './plugins/color-cookie.cjs',
     './plugins/locale-preference.cjs',
     './plugins/global-tags',

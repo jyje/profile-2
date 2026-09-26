@@ -1,0 +1,29 @@
+/* Opt-in utilities only: no Preflight, no body reset, no Infima class collisions.
+ * Scan owned primitives, not prose or fenced examples in the content corpus.
+ */
+@layer theme, base, components, utilities;
+@import 'tailwindcss/theme.css' layer(theme) prefix(tw);
+@import 'tailwindcss/utilities.css' layer(utilities) prefix(tw) source(none);
+@source '../components/ui';
+
+@custom-variant dark (&:where([data-theme='dark'], [data-theme='dark'] *));
+
+@theme inline {
+  --color-background: var(--ifm-background-color);
+  --color-foreground: var(--ifm-font-color-base);
+  --color-muted-foreground: var(--site-muted);
+  --color-primary: var(--ifm-color-primary);
+  --color-primary-foreground: var(--site-ui-primary-foreground);
+  --color-secondary: var(--site-surface);
+  --color-secondary-foreground: var(--ifm-font-color-base);
+  --color-accent: var(--site-surface);
+  --color-accent-foreground: var(--ifm-color-primary);
+  --color-destructive: var(--ifm-color-danger-dark);
+  --color-destructive-foreground: #fff;
+  --color-input: var(--site-border);
+  --color-ring: var(--ifm-color-primary);
+  --radius-md: var(--ifm-global-radius);
+}
+
+:root { --site-ui-primary-foreground: #fff; }
+[data-theme='dark'] { --site-ui-primary-foreground: #13242e; }

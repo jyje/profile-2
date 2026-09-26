@@ -92,36 +92,6 @@
   background: var(--ifm-background-color);
 }
 
-.modeSwitch button,
-.canvasTools button,
-.search button {
-  border: 0;
-  color: var(--site-muted);
-  cursor: pointer;
-}
-
-.modeSwitch button {
-  padding: 0.42rem 0.82rem;
-  border-radius: 999px;
-  background: transparent;
-  font-size: 0.82rem;
-  font-weight: 650;
-}
-
-.modeSwitch button:hover,
-.modeSwitch button:focus-visible {
-  color: var(--ifm-font-color-base);
-}
-
-.modeSwitch .activeMode {
-  background: var(--site-accent);
-  color: #fff;
-}
-
-[data-theme='dark'] .modeSwitch .activeMode {
-  color: #13242e;
-}
-
 .search {
   display: flex;
   align-items: center;
@@ -145,25 +115,26 @@
 }
 
 .search input {
-  min-width: 0;
-  width: 100%;
+  height: 1.75rem;
+  padding: 0;
   border: 0;
+  /* The enclosing search field provides the focus-within ring. */
   outline: 0;
   background: transparent;
-  color: var(--ifm-font-color-base);
-  font-size: 0.85rem;
 }
 
-.search input::placeholder {
-  color: var(--site-muted);
-  opacity: 0.8;
+/* The localized clear Button already supplies this action. */
+.search input::-webkit-search-cancel-button {
+  -webkit-appearance: none;
+  appearance: none;
 }
 
 .search button {
-  padding: 0 0.15rem;
-  background: transparent;
+  flex-shrink: 0;
+  width: 1.75rem;
+  height: 1.75rem;
+  padding: 0;
   font-size: 1.15rem;
-  line-height: 1;
 }
 
 .canvasFrame {
@@ -223,18 +194,14 @@
 .canvasTools button {
   width: 2.1rem;
   height: 2.1rem;
-  background: transparent;
+  padding: 0;
   font-size: 1.05rem;
-  line-height: 1;
+  /* Keep the keyboard indicator visible inside the clipped tool group. */
+  outline-offset: -3px;
 }
 
 .canvasTools button + button {
   border-top: 1px solid var(--site-border);
-}
-
-.canvasTools button:hover {
-  background: var(--site-surface);
-  color: var(--ifm-font-color-base);
 }
 
 .graph {
@@ -350,45 +317,20 @@
 }
 
 .openLink {
-  display: flex;
   justify-content: space-between;
-  align-items: center;
   width: 100%;
-  padding: 0.65rem 0.75rem;
-  border: 1px solid var(--site-accent);
-  background: var(--site-accent);
-  color: #fff;
+  height: auto;
+  min-height: 2.5rem;
   font-size: 0.83rem;
-  font-weight: 700;
-  text-decoration: none;
-}
-
-.openLink:hover {
-  color: #fff;
-  filter: brightness(1.08);
-  text-decoration: none;
 }
 
 .originalLink {
-  display: flex;
   justify-content: space-between;
-  align-items: center;
+  width: 100%;
+  height: auto;
+  min-height: 2.5rem;
   margin-top: 0.45rem;
-  padding: 0.52rem 0.75rem;
-  border: 1px solid var(--site-border);
-  color: var(--ifm-font-color-base);
   font-size: 0.76rem;
-  text-decoration: none;
-}
-
-.originalLink:hover {
-  border-color: var(--site-accent);
-  color: var(--site-accent);
-  text-decoration: none;
-}
-
-[data-theme='dark'] .openLink {
-  color: #13242e;
 }
 
 .neighborList {
@@ -420,21 +362,12 @@
 }
 
 .neighborList li button {
+  display: block;
+  min-width: 0;
   overflow: hidden;
-  padding: 0;
-  border: 0;
-  background: transparent;
-  color: var(--ifm-font-color-base);
-  cursor: pointer;
   font-size: 0.77rem;
   text-align: left;
   text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.neighborList li button:hover {
-  color: var(--site-accent);
-  text-decoration: underline;
 }
 
 .neighborList li span,

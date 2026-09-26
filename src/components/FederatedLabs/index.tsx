@@ -1,6 +1,7 @@
 import React, {useEffect, useRef, useState} from 'react';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import {useColorMode} from '@docusaurus/theme-common';
+import {Button} from '@site/src/components/ui/button';
 import styles from './styles.module.css';
 
 type Options = {locale: 'ko' | 'en'; theme: 'light' | 'dark'};
@@ -78,7 +79,7 @@ export default function FederatedLabs({copy}: {copy: Copy}) {
     {state === 'loading' && <div className={styles.placeholder} role="status"><p>{copy.loading}</p><div className={styles.skeleton} /></div>}
     {(state === 'error' || state === 'missing') && <div className={styles.placeholder} role="alert">
       <h2>{copy.unavailable}</h2><p>{state === 'missing' ? copy.missing : copy.explanation}</p>
-      {state === 'error' && <button type="button" className="button button--secondary" onClick={() => setAttempt(value => value + 1)}>{copy.retry}</button>}
+      {state === 'error' && <Button type="button" variant="outline" onClick={() => setAttempt(value => value + 1)}>{copy.retry}</Button>}
     </div>}
     {state === 'ready' && <p className={styles.connection} role="status">{copy.connected}</p>}
     <div ref={container} hidden={state !== 'ready'} />
