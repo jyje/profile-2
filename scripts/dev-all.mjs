@@ -7,6 +7,7 @@ import http from 'node:http';
 import path from 'node:path';
 import {spawn} from 'node:child_process';
 import handler from 'serve-handler';
+import {shouldRebuild} from './source-watch.mjs';
 
 const root = path.resolve(import.meta.dirname, '..');
 const ownedRoot = path.join(root, '.dev-all');
@@ -136,14 +137,11 @@ function scheduleBuild() {
 }
 
 function watchSources() {
-  for (const name of ['content', 'data', 'src', 'plugins', 'static', 'scripts']) {
+  for (const name of ['content', 'data', 'src', 'plugins', 'static', 'scripts', 'i18n']) {
     const directory = path.join(root, name);
     if (!fs.existsSync(directory)) continue;
     const watcher = fs.watch(directory, {recursive: true}, (_event, filename) => {
-      if (!filename) return;
-      const relative = String(filename).replaceAll('\\', '/');
-      if (relative.split('/').some((segment) => segment.startsWith('.'))) return;
-      if (name === 'src' && relative.startsWith('generated/')) return;
+      if (!shouldRebuild(name, filename)) return;
       scheduleBuild();
     });
     watchers.push(watcher);

@@ -36,8 +36,23 @@ jobs:
       - name: Verify UI compatibility boundaries
         run: npm run test:ui
 
+      - name: Verify content network and career selections
+        run: npm run test:content
+
       - name: Build all locales for GitHub Pages
         run: npm run build
         env:
           SITE_URL: https://jyje.github.io
           SITE_BASE_URL: /profile-2/
+
+      - name: Install browser for career exports
+        run: npx playwright install --with-deps chromium
+
+      - name: Verify browser navigation and bilingual PDFs
+        run: node scripts/verify-built-site.mjs
+
+      - name: Upload career document review artifacts
+        uses: actions/upload-artifact@v6
+        with:
+          name: career-documents
+          path: output/pdf/

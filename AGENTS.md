@@ -2,7 +2,7 @@
 
 ## Markdown and MDX pages
 
-- The About section has an overview page at `/about`, a resume page at `/about/resume`, and a portfolio page at `/about/portfolio`; the site home remains `/`.
+- The About section has an overview at `/about`, a one-page resume at `/about/resume`, a detailed CV at `/about/cv`, and a portfolio at `/about/portfolio`; the site home remains `/`.
 - Author the Korean overview page in `src/pages/about.mdx` and its English translation in `i18n/en/docusaurus-plugin-content-pages/about.mdx`.
 - Keep prose and locale-specific labels in those MDX files. Do not add overview copy or repeated content arrays to a TSX page.
 - Structured content can use supported YAML fences such as `list-type-2x2` and `list-type-image-header` in localized profile pages, wiki documents, blog posts, and other Docusaurus pages. The shared Remark plugin validates their item fields at build time.
@@ -11,7 +11,9 @@
 - Template CSS modules own the layout and visual classes. MDX authors provide data, not presentation classes or inline styles.
 - When adding a template, register its fence schema in `plugins/content-templates/remark-plugin.cjs`, document a localized example in the authoring guide, and keep the component, styles, labels, and validation aligned.
 - Use `useBaseUrl` for static assets referenced from template data so GitHub Pages project paths continue to work.
-- Blog listing cards remain data-driven by Docusaurus blog front matter and `src/components/BlogListPage`; do not duplicate that list in Markdown. Resume remains data-driven by `data/resume.{ko,en}.yml` and `src/components/Resume`.
+- Blog listing cards remain data-driven by Docusaurus blog front matter and `src/components/BlogListPage`; do not duplicate that list in Markdown. Career facts remain in `data/resume.{ko,en}.yml`. The detailed CV uses `src/components/Resume`; the one-page layout uses `src/components/ResumeSummary` and explicit selection in `data/career-layout.yml`. Do not silently truncate content, invent facts, or shrink print text to force a page count.
+- Graph nodes, global tag entries and related content must use the shared `plugins/content-network.cjs` index built from Docusaurus metadata. Canonical permalinks, not source filenames or guessed slugs, define navigation. Exclude draft/unlisted metadata and do not publish source paths or document bodies in global data.
+- Validate career exports in both locales with `npm run export:pdf`: the summary must be exactly one A4 page and the CV multiple A4 pages. Render and inspect every page after layout changes. Keep generated PDFs ignored; upload only intended review artifacts.
 
 ## UI integration boundaries
 
