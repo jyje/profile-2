@@ -13,6 +13,7 @@ import {mergeKoreanFallbackDocs} from './build-wiki-graph.mjs';
 import {prepareContent} from './prepare-content.mjs';
 import {shouldRebuild} from './source-watch.mjs';
 import {validateWikiTitles} from './validate-wiki-titles.mjs';
+import {syncWikiNavigation} from './sync-wiki-navigation.mjs';
 
 const ROOT = path.resolve(import.meta.dirname, '..');
 const MIRRORS = [
@@ -71,6 +72,7 @@ export function syncAll() {
   syncTagDefinitions();
   prepareContent(ROOT);
   mirror();
+  syncWikiNavigation(ROOT);
   convertData();
   buildCuration();
 }

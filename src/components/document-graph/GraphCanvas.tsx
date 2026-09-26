@@ -110,8 +110,8 @@ function blendColor(current: number, target: number, amount: number): number {
   return (blendChannel(16) << 16) | (blendChannel(8) << 8) | blendChannel(0);
 }
 
-function palette(): {groups: Record<string, number>; tag: number; muted: number; border: number; accent: number; text: string; font: string} {
-  const root = getComputedStyle(document.documentElement);
+function palette(element: HTMLElement): {groups: Record<string, number>; tag: number; muted: number; border: number; accent: number; text: string; font: string} {
+  const root = getComputedStyle(element);
   const get = (name: string, fallback: string) => resolveColor(root.getPropertyValue(name).trim(), fallback);
   return {
     groups: {
@@ -212,7 +212,7 @@ export default function GraphCanvas({
         const bounds = graphMount.getBoundingClientRect();
         width = Math.max(1, bounds.width);
         height = Math.max(1, bounds.height);
-        const colors = palette();
+        const colors = palette(graphMount);
         const visitedKey = 'document-graph-visited';
         let visited: Set<string>;
         try {
@@ -329,12 +329,12 @@ export default function GraphCanvas({
 
         simulation = d3
           .forceSimulation(simulationNodes)
-          .force('charge', d3.forceManyBody().strength(-100 * 0.5))
+          .force('charge', d3.forceManyBody().strength(compact ? -110 : -50))
           .force('center', d3.forceCenter().strength(0.3))
-          .force('link', d3.forceLink(simulationLinks).distance(30))
+          .force('link', d3.forceLink(simulationLinks).distance(compact ? 70 : 30))
           .force(
             'collide',
-            d3.forceCollide().radius((node: any) => 2 + Math.sqrt(degree.get(node.id) ?? 0)).iterations(3),
+            d3.forceCollide().radius((node: any) => (compact ? 16 : 2) + Math.sqrt(degree.get(node.id) ?? 0)).iterations(3),
           );
         if (enableRadial) {
           simulation.force('radial', d3.forceRadial((Math.min(width, height) / 2) * 0.8).strength(0.2));
@@ -562,7 +562,7 @@ export default function GraphCanvas({
         resizeObserver.observe(graphMount);
 
         themeObserver = new MutationObserver(() => {
-          const nextColors = palette();
+          const nextColors = palette(graphMount);
           Object.assign(colors, nextColors);
           for (const item of nodeRenderData) {
             item.color = item.simulationData.isTag
@@ -594,13 +594,13 @@ export default function GraphCanvas({
         // Pixi may throw after a WebGL context is lost.
       }
     };
-  }, [edges, enableRadial, nodes, ready, attempt]);
+  }, [edges, enableRadial, nodes, ready, attempt, compact]);
 
   function zoom(factor: number) {
     const canvas = mountRef.current?.querySelector('canvas');
     if (!canvas || !(window as any).d3 || !zoomRef.current) return;
     const d3 = (window as any).d3;
-    d3.select(canvas).transition().duration(180).call(zoomRef.current.scaleBy, factor);
+    d3.select(canvas).transition().duration(window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 180).call(zoomRef.current.scaleBy, factor);
   }
 
   return (
@@ -618,7 +618,7 @@ export default function GraphCanvas({
           onClick={() => {
             const canvas = mountRef.current?.querySelector('canvas');
             if (canvas && (window as any).d3 && zoomRef.current) {
-              (window as any).d3.select(canvas).transition().duration(180).call(zoomRef.current.transform, (window as any).d3.zoomIdentity);
+              (window as any).d3.select(canvas).transition().duration(window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 180).call(zoomRef.current.transform, (window as any).d3.zoomIdentity);
             }
           }}
           aria-label={resetLabel}

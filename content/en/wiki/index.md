@@ -4,7 +4,7 @@ slug: /
 sidebar_position: 1
 ---
 
-This wiki is the **knowledge base** of the profile site. The blog is a chronological stream of posts, while the wiki collects notes that keep being revised.
+This wiki is my **personal knowledge base**, collecting what I learn and refer to. The blog is a chronological stream of posts, while the wiki collects notes that keep being revised.
 
 ## Contents
 

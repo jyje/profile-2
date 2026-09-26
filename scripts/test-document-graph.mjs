@@ -7,6 +7,23 @@ import path from 'node:path';
 import {titleEmoji, validateWikiTitles} from './validate-wiki-titles.mjs';
 import {withDevelopmentNotice} from './development-notice.mjs';
 import {mergeKoreanFallbackDocs} from './build-wiki-graph.mjs';
+import {syncWikiNavigation} from './sync-wiki-navigation.mjs';
+
+test('localized category labels use standard Docusaurus translations without stale private categories', t => {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'wiki-navigation-'));
+  t.after(() => fs.rmSync(root, {recursive: true, force: true}));
+  for (const locale of ['ko', 'en']) {
+    const dir = path.join(root, `.content-build/${locale}/wiki/d`);
+    fs.mkdirSync(dir, {recursive: true});
+    fs.writeFileSync(path.join(dir, '_category_.json'), JSON.stringify({label: locale === 'ko' ? '📚 문서' : '📚 Documents'}));
+  }
+  syncWikiNavigation(root);
+  const output = path.join(root, 'i18n/en/docusaurus-plugin-content-docs/current.json');
+  assert.deepEqual(JSON.parse(fs.readFileSync(output)), {'sidebar.wikiSidebar.category.📚 문서': {message: '📚 Documents'}});
+  fs.unlinkSync(path.join(root, '.content-build/ko/wiki/d/_category_.json'));
+  syncWikiNavigation(root);
+  assert.deepEqual(JSON.parse(fs.readFileSync(output)), {});
+});
 
 test('development notice is idempotent and precedes translated fallback notices', t => {
   const source = '---\ntitle: 📄 Note\nlast_update:\n  date: 2020-01-01\n---\n# Note\n';

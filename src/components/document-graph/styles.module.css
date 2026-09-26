@@ -1,15 +1,20 @@
-.page {
+.page,
+.graph {
   --graph-knowledge: #680c2c;
   --graph-design: #246276;
   --graph-guide: #a06a1d;
   --graph-blog: #477349;
   --graph-home: #526a75;
   --graph-tag: #dce8eb;
+}
+
+.page {
   width: 100%;
   padding: 0 0 2.5rem;
 }
 
-[data-theme='dark'] .page {
+[data-theme='dark'] .page,
+[data-theme='dark'] .graph {
   --graph-knowledge: #f0a6bf;
   --graph-design: #77c3d2;
   --graph-guide: #e4b766;
