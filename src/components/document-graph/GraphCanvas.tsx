@@ -26,6 +26,8 @@ type Props = {
   resetLabel: string;
   onSelect: (nodeId: string) => void;
   loadErrorLabel: string;
+  retryLabel?: string;
+  compact?: boolean;
 };
 
 type Libraries = {d3: any; PIXI: any};
@@ -44,19 +46,23 @@ type RenderNode = {
 type RenderLink = {simulationData: any; gfx: any; alpha: number; width: number; color: number};
 
 let librariesPromise: Promise<Libraries> | undefined;
+const scriptPromises = new Map<string, Promise<void>>();
 
 function loadScript(src: string): Promise<void> {
-  const existing = [...document.scripts].find((script) => script.src === src);
-  if (existing) return Promise.resolve();
-
-  return new Promise((resolve, reject) => {
+  const cached = scriptPromises.get(src);
+  if (cached) return cached;
+  const promise = new Promise<void>((resolve, reject) => {
     const script = document.createElement('script');
+    const fail = () => { clearTimeout(timer); script.remove(); scriptPromises.delete(src); reject(new Error(`Could not load ${src}`)); };
+    const timer = window.setTimeout(fail, 20000);
     script.src = src;
     script.crossOrigin = 'anonymous';
-    script.onload = () => resolve();
-    script.onerror = () => reject(new Error(`Could not load ${src}`));
+    script.onload = () => { clearTimeout(timer); resolve(); };
+    script.onerror = fail;
     document.head.appendChild(script);
   });
+  scriptPromises.set(src, promise);
+  return promise;
 }
 
 function loadGraphLibraries(): Promise<Libraries> {
@@ -67,7 +73,7 @@ function loadGraphLibraries(): Promise<Libraries> {
     ]).then(() => ({
       d3: (window as any).d3,
       PIXI: (window as any).PIXI,
-    }));
+    })).catch(error => { librariesPromise = undefined; throw error; });
   }
   return librariesPromise;
 }
@@ -137,6 +143,8 @@ export default function GraphCanvas({
   resetLabel,
   onSelect,
   loadErrorLabel,
+  retryLabel = 'Retry',
+  compact = false,
 }: Props): ReactElement {
   const mountRef = useRef<HTMLDivElement>(null);
   const zoomRef = useRef<any>(null);
@@ -145,6 +153,24 @@ export default function GraphCanvas({
   const searchActiveRef = useRef(searchActive);
   const onSelectRef = useRef(onSelect);
   const [loadError, setLoadError] = useState(false);
+  const [ready, setReady] = useState(false);
+  const [loaded, setLoaded] = useState(false);
+  const [attempt, setAttempt] = useState(0);
+  const [visible, setVisible] = useState(false);
+  const activeRef = useRef(false);
+  const pauseRef = useRef<(paused: boolean) => void>(() => {});
+
+  useEffect(() => {
+    const mount = mountRef.current;
+    if (!mount) return;
+    let intersecting = false;
+    const update = () => { const active = intersecting && !document.hidden; activeRef.current = active; setVisible(active); pauseRef.current(!active); };
+    const near = new IntersectionObserver(entries => { if (entries[0].isIntersecting) { setReady(true); near.disconnect(); } }, {rootMargin: '240px'});
+    const viewport = new IntersectionObserver(entries => { intersecting = entries[0].isIntersecting; update(); });
+    near.observe(mount); viewport.observe(mount);
+    document.addEventListener('visibilitychange', update);
+    return () => { near.disconnect(); viewport.disconnect(); document.removeEventListener('visibilitychange', update); };
+  }, []);
 
   selectedIdRef.current = selectedId;
   matchingIdsRef.current = matchingIds;
@@ -153,7 +179,7 @@ export default function GraphCanvas({
 
   useEffect(() => {
     const mount = mountRef.current;
-    if (!mount) return undefined;
+    if (!mount || !ready) return undefined;
     const graphMount = mount as HTMLDivElement;
 
     let cancelled = false;
@@ -175,6 +201,7 @@ export default function GraphCanvas({
     const neighborIds = new Map<string, Set<string>>();
 
     setLoadError(false);
+    setLoaded(false);
 
     async function start() {
       try {
@@ -183,8 +210,8 @@ export default function GraphCanvas({
         if (!d3 || !PIXI) throw new Error('Graph rendering libraries were not available.');
 
         const bounds = graphMount.getBoundingClientRect();
-        width = Math.max(320, bounds.width);
-        height = Math.max(360, bounds.height);
+        width = Math.max(1, bounds.width);
+        height = Math.max(1, bounds.height);
         const colors = palette();
         const visitedKey = 'document-graph-visited';
         let visited: Set<string>;
@@ -197,8 +224,8 @@ export default function GraphCanvas({
         const simulationNodes = nodes.map((node) => ({
           ...node,
           text: node.title,
-          x: Math.random() * width - width / 2,
-          y: Math.random() * height - height / 2,
+          x: node.id === selectedIdRef.current ? 0 : Math.random() * width - width / 2,
+          y: node.id === selectedIdRef.current ? 0 : Math.random() * height - height / 2,
           vx: 0,
           vy: 0,
         }));
@@ -414,7 +441,7 @@ export default function GraphCanvas({
             if (Math.hypot(point[0] - dragStart.x, point[1] - dragStart.y) < 6) {
               onSelectRef.current(event.subject.id);
               visited.add(event.subject.id);
-              localStorage.setItem(visitedKey, JSON.stringify([...visited]));
+              try { localStorage.setItem(visitedKey, JSON.stringify([...visited])); } catch { /* Storage may be disabled. */ }
             }
           });
         d3.select(graphCanvas).call(drag);
@@ -441,7 +468,7 @@ export default function GraphCanvas({
 
         let lastDrawAt = performance.now();
         const draw = () => {
-          if (cancelled) return;
+          if (cancelled || !activeRef.current) return;
           const now = performance.now();
           const elapsed = Math.min(64, now - lastDrawAt);
           lastDrawAt = now;
@@ -506,12 +533,19 @@ export default function GraphCanvas({
         simulation.on('tick', () => {});
         if (!reducedMotion) simulation.restart();
         draw();
+        pauseRef.current = paused => {
+          window.cancelAnimationFrame(frame);
+          if (paused) { simulation.stop(); app.stop(); }
+          else { app.start(); if (!reducedMotion) simulation.restart(); lastDrawAt = performance.now(); draw(); }
+        };
+        pauseRef.current(!activeRef.current);
+        setLoaded(true);
 
         resizeObserver = new ResizeObserver(() => {
           if (!app || !mount) return;
           const next = graphMount.getBoundingClientRect();
-          const nextWidth = Math.max(320, next.width);
-          const nextHeight = Math.max(360, next.height);
+          const nextWidth = Math.max(1, next.width);
+          const nextHeight = Math.max(1, next.height);
           if (Math.abs(nextWidth - width) < 1 && Math.abs(nextHeight - height) < 1) return;
           width = nextWidth;
           height = nextHeight;
@@ -521,7 +555,7 @@ export default function GraphCanvas({
           }
           if (reducedMotion) {
             simulation.stop().alpha(0.35).tick(300);
-          } else {
+          } else if (activeRef.current) {
             simulation.alpha(0.35).restart();
           }
         });
@@ -529,6 +563,7 @@ export default function GraphCanvas({
 
         themeObserver = new MutationObserver(() => {
           const nextColors = palette();
+          Object.assign(colors, nextColors);
           for (const item of nodeRenderData) {
             item.color = item.simulationData.isTag
               ? nextColors.tag
@@ -552,13 +587,14 @@ export default function GraphCanvas({
       themeObserver?.disconnect();
       zoomRef.current = null;
       simulation?.stop();
+      pauseRef.current = () => {};
       try {
         app?.destroy(true);
       } catch {
         // Pixi may throw after a WebGL context is lost.
       }
     };
-  }, [edges, enableRadial, nodes]);
+  }, [edges, enableRadial, nodes, ready, attempt]);
 
   function zoom(factor: number) {
     const canvas = mountRef.current?.querySelector('canvas');
@@ -568,7 +604,8 @@ export default function GraphCanvas({
   }
 
   return (
-    <div className={styles.graph} role="group" aria-label={label}>
+    <div className={`${styles.graph} ${compact ? styles.compact : ''}`} role="group" aria-label={label}
+      data-graph-state={loadError ? 'error' : loaded ? visible ? 'active' : 'paused' : 'loading'}>
       <div ref={mountRef} className={styles.graphMount} />
       <div className={styles.canvasTools}>
         <Button type="button" variant="ghost" size="icon" shape="square" onClick={() => zoom(1.18)} aria-label={zoomInLabel}>+</Button>
@@ -587,7 +624,7 @@ export default function GraphCanvas({
           aria-label={resetLabel}
         >↺</Button>
       </div>
-      {loadError && <p className={styles.rendererError} role="status">{loadErrorLabel}</p>}
+      {loadError && <div className={styles.rendererError} role="status">{loadErrorLabel} <Button type="button" variant="outline" size="sm" onClick={() => setAttempt(value => value + 1)}>{retryLabel}</Button></div>}
     </div>
   );
 }

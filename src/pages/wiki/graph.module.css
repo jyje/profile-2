@@ -517,3 +517,5 @@
 @media (prefers-reduced-motion: reduce) {
   .graph { scroll-behavior: auto; }
 }
+
+.graph.compact { height: clamp(300px, 45vh, 420px); }

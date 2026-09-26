@@ -3,9 +3,8 @@ import Link from '@docusaurus/Link';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import {usePluginData} from '@docusaurus/useGlobalData';
 import styles from './styles.module.css';
-
-type Node = {id: string; title: string; path?: string; isTag?: boolean; tags?: string[]; kind?: string};
-type Network = {nodes: Node[]; edges: {source: string; target: string; kind: string}[]};
+import InlineGraph from '@site/src/components/document-graph/InlineGraph';
+import type {Network} from '@site/src/components/document-graph/neighborhood';
 
 export default function ContentConnections({permalink}: {permalink: string}): ReactNode {
   const data = usePluginData('docusaurus-plugin-document-graph') as Network;
@@ -27,6 +26,7 @@ export default function ContentConnections({permalink}: {permalink: string}): Re
     {title: ko ? '같은 태그의 글' : 'Related by shared tags', nodes: related},
   ].filter(group => group.nodes.length);
   return <aside className={styles.connections} aria-label={ko ? '문서 연결' : 'Content connections'}>
+    <InlineGraph key={current.id} graph={data} currentId={current.id} ko={ko} />
     <Link to={`/wiki/graph?node=${encodeURIComponent(current.id)}`}>{ko ? '그래프에서 보기' : 'Explore in graph'}</Link>
     {groups.map(group => <section key={group.title}>
       <h2>{group.title}</h2>
