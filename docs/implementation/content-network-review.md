@@ -8,6 +8,12 @@ safe mode, no MCP servers, no session persistence. First review completed on
 Verdict: conditional approval, no merge-blocking defect identified. The reviewer
 explicitly did not execute checks; implementation-agent and CI evidence is separate.
 
+Follow-up review completed on 2026-09-27 KST against `dd71058`, using the same
+exact model and read-only tools. Verdict: ready to merge after final CI, with no
+unresolved actionable or blocking correctness findings. F1 through F5 and the
+additional date/build-context fixes were confirmed. No model substitution or
+usage-limit wait was required.
+
 ## Findings and disposition
 
 | Finding | Disposition |
@@ -38,16 +44,24 @@ explicitly did not execute checks; implementation-agent and CI evidence is separ
 ## Evidence
 
 - Initial remote CI: https://github.com/jyje/profile-2/actions/runs/36258722330
-- TypeScript and content/UI tests passed before the review.
+- Post-review remote CI: https://github.com/jyje/profile-2/actions/runs/36259334688
+- TypeScript, 10 content tests and 6 UI tests passed.
 - Both locale builds at `/profile-2/` passed broken-link checks.
 - Browser checks cover a wiki-to-graph entry, mixed blog/wiki tag results, a CV
   anchor and career document viewport overflow. These are targeted regression
   checks, not a claim that every route was manually clicked.
 - Four A4 PDFs: both resumes are one page; both CVs are three pages. Searchable
   names, page bounds, sparse pages and local font assets are checked automatically.
-- Every page was rendered and visually inspected. Final review fixes are subject
-  to another build, export, visual pass and remote CI before PR readiness.
+- Every page was rendered and visually inspected after the review fixes. A final
+  print-only adjustment keeps the certification heading and history together;
+  both locale exports still produce one-page resumes and three-page CVs.
+- The root-path bilingual live server is available separately from project-path
+  CI builds. Switching deployment contexts no longer retains stale font URLs.
 
-## Remaining gate
+## Handoff gate and limits
 
-Follow-up Opus review and final post-fix CI are pending. Do not merge automatically.
+The [PR checks](https://github.com/jyje/profile-2/pull/17/checks) must pass for the
+final pushed head before removing draft status. Do not merge automatically.
+Computed JSX navigation is not indexed as a document link. The CV preserves the
+current structured YAML facts, not every page of the old portfolio PDF. Future
+summary-anchor links should register their actual rendered IDs, as the CV does.

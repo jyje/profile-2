@@ -104,9 +104,9 @@ function Items({items}: {items?: {header?: string; content?: string}[]}) {
   );
 }
 
-function Section({title, children}: {title: string; children: ReactNode}) {
+function Section({title, children, keepTogether = false}: {title: string; children: ReactNode; keepTogether?: boolean}) {
   return (
-    <section className={styles.section}>
+    <section className={`${styles.section} ${keepTogether ? styles.keepTogether : ''}`}>
       <h2 className={styles.sectionTitle}>{title}</h2>
       {children}
     </section>
@@ -203,7 +203,7 @@ export default function Resume({data, locale}: {data: Data; locale: string}): Re
       )}
 
       {data.certificates?.length > 0 && (
-        <Section title={t.certificates}>
+        <Section title={t.certificates} keepTogether>
           <p className={styles.note}>{locale === 'ko' ? '취득 - 만료' : 'Issued - expiry'}</p>
           <ul className={styles.plain}>
             {data.certificates.map((c: Data) => (

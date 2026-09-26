@@ -16,6 +16,7 @@
   .resume .date, .resume .note, .resume .tags, .resume .chip, .resume .chipStrong { font-size: 9pt; }
   .resume .plain li, .resume .skills > div { break-inside: avoid; }
   .resume .plain { break-inside: avoid; }
+  .resume .keepTogether { break-inside: avoid; }
   .resume .taxonomyTags, .resume .icon { display: none; }
 }
 

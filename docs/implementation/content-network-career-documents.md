@@ -40,8 +40,12 @@ silently substitute a different review model.
 
 - [x] Repository and open GitHub work audited; issues #10 through #16 created.
 - [x] Requested Claude Code model availability verified.
-- [ ] Content network implemented and tested.
-- [ ] Resume/CV implemented and visually verified.
-- [ ] CI and project-path build verified.
-- [ ] Independent review findings resolved.
-- [ ] PR ready for merge, with evidence recorded.
+- [x] Content network implemented and tested.
+- [x] Resume/CV implemented and visually verified.
+- [x] CI and project-path build verified.
+- [x] Independent review findings resolved.
+
+Delivery is tracked in [PR #17](https://github.com/jyje/profile-2/pull/17).
+The final-head CI check is the readiness gate. Issues remain open until merge;
+this implementation task does not authorize merging the PR.
+See [the review record](content-network-review.md) for evidence and boundaries.
