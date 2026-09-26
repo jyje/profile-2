@@ -1,5 +1,5 @@
 ---
-title: CNCF
+title: "📄 CNCF"
 tags:
   - org
 type: Reference

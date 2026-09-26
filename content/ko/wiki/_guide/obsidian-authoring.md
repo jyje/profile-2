@@ -1,5 +1,5 @@
 ---
-title: Obsidian 작성 가이드
+title: "📄 Obsidian 작성 가이드"
 sidebar_position: 1
 tags: [guide, obsidian]
 ---

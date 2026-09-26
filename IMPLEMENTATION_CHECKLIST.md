@@ -9,7 +9,7 @@ Use the house emoji for Wiki Home. Preserve the existing theme and graph physics
 - [x] Embed automatic local graphs in wiki and blog detail footers.
 - [x] Move the knowledge subtree to `/wiki/d/` with compatible old URLs.
 - [x] Integrate the global graph at the bottom of Wiki Home; retire the standalone page.
-- [ ] Unify localized wiki headings and emoji, including excluded sources.
+- [x] Unify localized wiki headings and emoji, including excluded sources.
 - [ ] Add automatic development-only callouts based on `.docignore`.
 - [ ] Verify both locales, public and development builds, responsive graph interactions and existing features.
 - [ ] Preserve final decisions and verification in maintenance documentation.
@@ -33,3 +33,5 @@ one active canvas with incoming/outgoing documents and its Argo Project tag.
 Migration: bilingual public and development builds passed; 581 public static routes
 passed. The live old graph URL preserves node selection and opens exactly one global
 graph on the wiki home. Development-only links to the retired source were repaired.
+Titles: all authored wiki pages and categories pass emoji validation, including
+local-only sources. Translation parity and missing/duplicate/brain emoji fixtures pass.

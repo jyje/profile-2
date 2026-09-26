@@ -1,5 +1,5 @@
 ---
-title: 🖼️ Portfolio
+title: "🖼️ 포트폴리오"
 description: MLOps/DevOps Engineer 전제영의 포트폴리오 - AI 서비스와 인프라 전문
 tags:
   - portfolio

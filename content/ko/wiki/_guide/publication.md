@@ -1,5 +1,5 @@
 ---
-title: 개발 문서와 공개 배포
+title: "📄 개발 문서와 공개 배포"
 sidebar_position: 2
 tags: [guide]
 ---

@@ -1,5 +1,5 @@
 ---
-title: '🌏 Widearth: AR & 디지털트윈 플랫폼'
+title: "🌏 Widearth: AR & 디지털트윈 플랫폼"
 description: 실공간 기반 AR 및 디지털트윈 서비스를 위한 완전 관리형 플랫폼
 tags:
   - portfolio

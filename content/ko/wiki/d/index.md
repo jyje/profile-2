@@ -1,5 +1,5 @@
 ---
-title: 📚 Documents
+title: "📚 문서"
 tags:
   - cncf
   - kubernetes
@@ -12,5 +12,5 @@ tags:
 - 컴퓨터 비전 관련 정보, 지식
 
 
-## Authors
+## 작성자
 - [Jeayoung Jeon](./author-jyje.md)

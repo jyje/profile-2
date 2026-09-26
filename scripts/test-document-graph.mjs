@@ -1,6 +1,27 @@
 import assert from 'node:assert/strict';
 import {test} from 'node:test';
 import {neighborhood} from '../src/components/document-graph/neighborhood.ts';
+import fs from 'node:fs';
+import os from 'node:os';
+import path from 'node:path';
+import {titleEmoji, validateWikiTitles} from './validate-wiki-titles.mjs';
+
+test('wiki title policy includes excluded documents and translation parity', t => {
+  assert.equal(titleEmoji('🛠️ Design', 'test'), '🛠️');
+  for (const title of ['Title', '🧠 Home', '📄 📚 Title']) assert.throws(() => titleEmoji(title, 'test'), /emoji/);
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'wiki-titles-'));
+  t.after(() => fs.rmSync(root, {recursive: true, force: true}));
+  for (const locale of ['ko', 'en']) fs.mkdirSync(path.join(root, `content/${locale}/wiki/_guide`), {recursive: true});
+  const ko = path.join(root, 'content/ko/wiki/_guide/test.md');
+  const en = path.join(root, 'content/en/wiki/_guide/test.mdx');
+  fs.writeFileSync(ko, '---\ntitle: Missing emoji\n---\n');
+  assert.throws(() => validateWikiTitles(root), /emoji/);
+  fs.writeFileSync(ko, '---\ntitle: 📄 Guide\n---\n');
+  fs.writeFileSync(en, '---\ntitle: 🧭 Guide\n---\n');
+  assert.throws(() => validateWikiTitles(root), /differs/);
+  fs.writeFileSync(en, '---\ntitle: 📄 Guide\n---\n');
+  assert.doesNotThrow(() => validateWikiTitles(root));
+});
 
 test('local graphs include direct links, backlinks and own tags, not tag siblings', () => {
   const graph = {nodes: ['current', 'out', 'in', 'tag', 'sibling', 'isolated'].map(id => ({id})), edges: [

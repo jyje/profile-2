@@ -2,7 +2,7 @@
 sidebar_position: 1
 ---
 
-# Resume and detailed CV
+# 📄 Resume and detailed CV
 
 ## Document roles
 

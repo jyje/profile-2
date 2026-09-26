@@ -1,5 +1,5 @@
 ---
-title: Argo CD
+title: "📄 Argo CD"
 tags:
   - argo-proj
 type: Reference

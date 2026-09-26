@@ -1,5 +1,5 @@
 ---
-title: 📚 Knowledge
+title: "📚 Documents"
 description: Technical notes and project knowledge.
 tags:
   - cncf

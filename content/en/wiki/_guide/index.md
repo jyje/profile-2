@@ -1,5 +1,5 @@
 ---
-title: Guides
+title: "🧭 Guides"
 description: Guidance for writing and maintaining the wiki and blog.
 ---
 

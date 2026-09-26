@@ -1,5 +1,5 @@
 ---
-title: 'Kubernetes: Pod'
+title: "📄 Kubernetes: Pod"
 tags:
   - devops
   - kubernetes

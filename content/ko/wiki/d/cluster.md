@@ -1,5 +1,5 @@
 ---
-title: Cluster
+title: "📄 클러스터"
 tags:
   - devops
   - infra-base

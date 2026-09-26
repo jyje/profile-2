@@ -1,5 +1,5 @@
 ---
-title: Kubespray
+title: "📄 Kubespray"
 tags:
   - devops
   - kubernetes

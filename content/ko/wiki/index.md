@@ -1,5 +1,5 @@
 ---
-title: 위키
+title: "🏠 위키 홈"
 slug: /
 sidebar_position: 1
 ---

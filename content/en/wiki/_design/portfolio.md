@@ -1,8 +1,9 @@
 ---
 sidebar_position: 2
+title: 🛠️ Portfolio design
 ---
 
-# Portfolio Page — Design Document
+# 🛠️ Portfolio design
 
 ## Context and scope
 

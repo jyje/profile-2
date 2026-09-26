@@ -9,6 +9,8 @@
 
 ## Markdown and MDX pages
 
+- Every authored wiki title and category label starts with one emoji, including development-only notes. Translations share the Korean source emoji. Use `🏠` for Wiki Home, `📚` for Documents, `🧭` for Guides, `🛠️` for Design and `📄` for otherwise unclassified notes. Do not use the brain emoji. Source validation runs before publication filtering.
+
 - Publication exclusions belong in root `.docignore`. Keep authoring guides in `content/{ko,en}/wiki/_guide/` and site design notes in `_design/`. Local staging exposes them at `/wiki/guide/` and `/wiki/design/`; public builds must exclude their pages and colocated assets before Docusaurus metadata, search and graph generation.
 - `npm run build` is public by default; local development entrypoints explicitly opt in with `SITE_CONTENT_MODE=development`. Do not use browser hostname checks to conceal already-published content. Never put secrets in development notes or the public repository.
 - Do not edit `.content-build/` or generated locale mirrors. Treat canonical routes and initial HTTP status separately from client-side recovery. Preserve directory-index output and run `npm run test:publication` after routing or publication changes.

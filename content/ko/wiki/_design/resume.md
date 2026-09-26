@@ -2,7 +2,7 @@
 sidebar_position: 1
 ---
 
-# 이력서와 상세 CV
+# 📄 이력서와 상세 CV
 
 ## 문서의 역할
 

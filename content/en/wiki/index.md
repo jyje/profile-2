@@ -1,5 +1,5 @@
 ---
-title: Wiki
+title: "🏠 Wiki Home"
 slug: /
 sidebar_position: 1
 ---

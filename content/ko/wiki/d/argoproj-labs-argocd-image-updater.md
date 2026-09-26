@@ -1,5 +1,5 @@
 ---
-title: 'Argo CD: Image Updater'
+title: "📄 Argo CD: Image Updater"
 tags:
   - argoproj-labs
   - argocd

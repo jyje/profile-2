@@ -1,5 +1,5 @@
 ---
-title: Design
+title: "🛠️ Design"
 description: Design notes for the resume and portfolio pages.
 ---
 

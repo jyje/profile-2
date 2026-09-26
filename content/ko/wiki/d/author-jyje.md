@@ -1,5 +1,5 @@
 ---
-title: 'Author: Jeayoung Jeon'
+title: "📄 Author: Jeayoung Jeon"
 tags:
   - author
 type: Profile

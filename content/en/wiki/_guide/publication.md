@@ -1,5 +1,5 @@
 ---
-title: Development documents and public deployment
+title: "📄 Development documents and public deployment"
 sidebar_position: 2
 tags: [guide]
 ---

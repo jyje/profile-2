@@ -1,5 +1,5 @@
 ---
-title: 📝 Posts
+title: "📝 글"
 tags:
   - posts
 ---

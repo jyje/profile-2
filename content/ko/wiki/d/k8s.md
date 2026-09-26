@@ -1,5 +1,5 @@
 ---
-title: Kubernetes
+title: "📄 Kubernetes"
 tags:
   - devops
   - kubernetes

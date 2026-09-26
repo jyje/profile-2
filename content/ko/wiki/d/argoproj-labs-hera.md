@@ -1,5 +1,5 @@
 ---
-title: 'Argo: Hera SDK'
+title: "📄 Argo: Hera SDK"
 tags:
   - argoproj-labs
   - python
