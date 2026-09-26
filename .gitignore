@@ -33,3 +33,6 @@ yarn-error.log*
 
 # AI Builder
 .playwright-mcp/
+/output/pdf/
+/tmp/pdfs/
+/.profile2-build.lock/

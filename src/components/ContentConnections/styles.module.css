@@ -1,0 +1,7 @@
+.connections {margin-top: 2rem; padding-top: 1.25rem; border-top: 1px solid var(--site-border);}
+.connections section {margin-top: 1rem;}
+.connections h2 {font-size: 1rem; margin-bottom: 0.5rem;}
+.connections ul {padding-left: 1.25rem; margin-bottom: 0;}
+.connections li {margin-top: 0.25rem;}
+.connections span {color: var(--site-muted); font-size: 0.8rem; margin-inline-start: 0.6rem;}
+@media print {.connections {display: none;}}

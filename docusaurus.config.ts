@@ -94,15 +94,7 @@ const config: Config = {
     './plugins/color-cookie.cjs',
     './plugins/locale-preference.cjs',
     './plugins/global-tags',
-    [
-      './plugins/document-graph',
-      {
-        defaultDocsPath: 'content/ko/wiki',
-        englishDocsPath: 'content/en/wiki',
-        translatedDocsPath: 'docusaurus-plugin-content-docs/current',
-        koreanDocsPath: 'content/ko/wiki',
-      },
-    ],
+    './plugins/document-graph',
     [
       '@docusaurus/plugin-client-redirects',
       {
@@ -182,6 +174,7 @@ const config: Config = {
           items: [
             {to: '/about', label: 'Overview'},
             {to: '/about/resume', label: 'Resume'},
+            {to: '/about/cv', label: 'CV'},
             {to: '/about/portfolio', label: 'Portfolio'},
           ],
         },

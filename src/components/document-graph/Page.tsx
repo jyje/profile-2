@@ -1,4 +1,5 @@
-import {useMemo, useState, type ReactElement} from 'react';
+import {useEffect, useMemo, useState, type ReactElement} from 'react';
+import {useLocation} from '@docusaurus/router';
 import Link from '@docusaurus/Link';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import {Button} from '@site/src/components/ui/button';
@@ -42,7 +43,7 @@ const COPY = {
     graphLabel: '문서와 태그의 상호작용 그래프',
     noResults: '검색 결과가 없습니다.',
     rendererError: '그래프 렌더러를 불러오지 못했습니다. 네트워크에서 jsDelivr 접근을 허용해주세요.',
-    groups: {knowledge: '지식', design: '디자인', guide: '가이드', home: '홈', tag: '태그'},
+    groups: {knowledge: '지식', design: '디자인', guide: '가이드', home: '홈', tag: '태그', blog: '블로그'},
   },
   en: {
     introduction: 'Explore the connections between notes and tags. Grab a node and move it to set its neighbors in motion.',
@@ -69,7 +70,7 @@ const COPY = {
     graphLabel: 'Interactive graph of documents and tags',
     noResults: 'No notes match that search.',
     rendererError: 'The graph renderer could not load. Allow access to jsDelivr in your network.',
-    groups: {knowledge: 'Knowledge', design: 'Design', guide: 'Guide', home: 'Home', tag: 'Tag'},
+    groups: {knowledge: 'Knowledge', design: 'Design', guide: 'Guide', home: 'Home', tag: 'Tag', blog: 'Blog'},
   },
 } as const;
 
@@ -88,7 +89,7 @@ function displayGroup(group: string, copy: (typeof COPY)['ko'] | (typeof COPY)['
 }
 
 export default function WikiGraphPage({graphData}: PageProps): ReactElement {
-  const {i18n, siteConfig} = useDocusaurusContext();
+  const {i18n} = useDocusaurusContext();
   const locale = i18n.currentLocale === 'ko' ? 'ko' : 'en';
   const copy = COPY[locale];
   const graph = graphData;
@@ -97,6 +98,14 @@ export default function WikiGraphPage({graphData}: PageProps): ReactElement {
   const [selectedId, setSelectedId] = useState('');
   const [mode, setMode] = useState<'global' | 'local'>('global');
   const [search, setSearch] = useState('');
+  const location = useLocation();
+  useEffect(() => {
+    const nodeId = new URLSearchParams(location.search).get('node');
+    if (nodeId && graph.nodes.some(node => node.id === nodeId)) {
+      setSelectedId(nodeId);
+      setMode('local');
+    }
+  }, [location.search, graph]);
 
   const nodeById = useMemo(() => new Map(graph.nodes.map((node) => [node.id, node])), [graph]);
   const selectedNode = nodeById.get(selectedId);
@@ -132,10 +141,6 @@ export default function WikiGraphPage({graphData}: PageProps): ReactElement {
   }, [locale, neighbors, nodeById, selectedId]);
   const fallbackCount = documents.filter((node) => node.koreanFallback).length;
   const graphHasMatches = !search.trim() || matchingIds.size > 0;
-  const localeSuffix = i18n.currentLocale === i18n.defaultLocale ? '' : `${i18n.currentLocale}/`;
-  const rootBase = localeSuffix && siteConfig.baseUrl.endsWith(localeSuffix)
-    ? siteConfig.baseUrl.slice(0, -localeSuffix.length)
-    : siteConfig.baseUrl;
 
   function handleSearchChange(value: string) {
     setSearch(value);
@@ -180,7 +185,7 @@ export default function WikiGraphPage({graphData}: PageProps): ReactElement {
 
             <div className={styles.canvasFrame}>
               <div className={styles.canvasLegend} aria-hidden="true">
-                {(['knowledge', 'design', 'guide'] as const).map((group) => (
+                {(['knowledge', 'design', 'guide', 'blog'] as const).map((group) => (
                   <span key={group}><i className={styles[`dot_${group}`]} />{displayGroup(group, copy)}</span>
                 ))}
                 <span><i className={styles.dot_tag} />{displayGroup('tag', copy)}</span>
@@ -220,7 +225,7 @@ export default function WikiGraphPage({graphData}: PageProps): ReactElement {
                 </div>
                 {selectedNode.path && <Button asChild className={styles.openLink}><Link to={selectedNode.path}>{copy.open}<span aria-hidden="true">↗</span></Link></Button>}
                 {locale === 'en' && selectedNode.koreanFallback && selectedNode.koreanPath && (
-                  <Button asChild variant="outline" className={styles.originalLink}><a href={`${rootBase}${selectedNode.koreanPath.slice(1)}`}>
+                  <Button asChild variant="outline" className={styles.originalLink}><a href={selectedNode.koreanPath}>
                     {copy.openKorean}<span aria-hidden="true">↗</span>
                   </a></Button>
                 )}

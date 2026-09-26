@@ -2,6 +2,7 @@
   --graph-knowledge: #680c2c;
   --graph-design: #246276;
   --graph-guide: #a06a1d;
+  --graph-blog: #477349;
   --graph-home: #526a75;
   --graph-tag: #dce8eb;
   width: 100%;
@@ -12,6 +13,7 @@
   --graph-knowledge: #f0a6bf;
   --graph-design: #77c3d2;
   --graph-guide: #e4b766;
+  --graph-blog: #9bc795;
   --graph-home: #a5bbc4;
   --graph-tag: #25363d;
 }
@@ -432,6 +434,7 @@
 .dot_knowledge { background: var(--graph-knowledge); }
 .dot_design { background: var(--graph-design); }
 .dot_guide { background: var(--graph-guide); }
+.dot_blog { background: var(--graph-blog); }
 .dot_home { background: var(--graph-home); }
 .dot_tag { background: var(--graph-tag); border: 1px solid var(--site-accent); }
 

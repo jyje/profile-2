@@ -35,14 +35,18 @@ function splitFrontmatter(source) {
   };
 }
 
-export function mergeKoreanFallbackDocs() {
-  for (const source of walk(KO_ROOT)) {
-    const relative = path.relative(KO_ROOT, source);
-    const destination = path.join(EN_BUILD_ROOT, relative);
+export function mergeKoreanFallbackDocs(koRoot = KO_ROOT, enBuildRoot = EN_BUILD_ROOT) {
+  for (const source of walk(koRoot)) {
+    const relative = path.relative(koRoot, source);
+    const destination = path.join(enBuildRoot, relative);
     if (fs.existsSync(destination)) continue;
+    if (/\.mdx?$/.test(destination)) {
+      const otherExtension = destination.endsWith('.mdx') ? destination.slice(0, -1) : `${destination}x`;
+      if (fs.existsSync(otherExtension)) continue;
+    }
 
     fs.mkdirSync(path.dirname(destination), {recursive: true});
-    if (source.endsWith('.md')) {
+    if (/\.mdx?$/.test(source)) {
       const {raw, body} = splitFrontmatter(fs.readFileSync(source, 'utf8'));
       const markdown = raw ? `${raw}\n\n${FALLBACK_CALLOUT}${body}` : `${FALLBACK_CALLOUT}${fs.readFileSync(source, 'utf8')}`;
       fs.writeFileSync(destination, markdown);

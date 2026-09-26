@@ -1,0 +1,29 @@
+# Explicit selection for the one-page document. Full data stays in resume.{ko,en}.yml.
+# Indices refer to those source arrays; validation fails if a selection is stale.
+summary:
+  ko: 도메인 특화 AI 환경을 인프라부터 워크로드까지 구축합니다. Agentic AI 시스템과 이를 실행하는 Kubernetes/GPU/LLMOps 플랫폼을 설계하고, 차량 SW 검증 Agentic AI 플랫폼의 아키텍처와 개발을 리드합니다.
+  en: I build domain-specific AI environments from infrastructure to workloads. I design Agentic AI systems and their Kubernetes/GPU/LLMOps platforms, and lead architecture and development for a vehicle SW verification Agentic AI platform.
+work:
+  - index: 0
+    items: [0, 1]
+  - index: 1
+    items: [0, 1]
+projects:
+  - index: 0
+    items: [0]
+  - index: 1
+    items: [0]
+  - index: 2
+    items: [0, 1]
+education: [0, 1]
+skills:
+  - index: 1
+    keywords: [0, 1, 2, 4]
+  - index: 2
+    keywords: [0, 1, 2, 3, 5, 6]
+  - index: 3
+    keywords: [0, 1, 2, 3]
+  - index: 4
+    keywords: [0, 1, 2, 3]
+certificates: [0, 1, 2, 3, 4]
+languages: [0, 1]
