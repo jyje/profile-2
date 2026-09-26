@@ -1,6 +1,7 @@
 import type {ReactNode} from 'react';
 import {marked} from 'marked';
 import InternalLink from '@docusaurus/Link';
+import useBrokenLinks from '@docusaurus/useBrokenLinks';
 
 import tagRegistry from '@site/src/generated/tags.json';
 import styles from './styles.module.css';
@@ -38,7 +39,7 @@ const Html = ({text}: {text: unknown}) => <span dangerouslySetInnerHTML={{__html
 
 const ym = (d?: string) => (d ? d.slice(0, 7) : '');
 const period = (start: string | undefined, end: unknown, present: string) =>
-  `${ym(start)} – ${typeof end === 'string' && end ? ym(end) : present}`;
+  `${ym(start)} - ${typeof end === 'string' && end ? ym(end) : present}`;
 
 function Link({href, children}: {href?: string; children: ReactNode}) {
   return href ? (
@@ -89,7 +90,7 @@ function Items({items}: {items?: {header?: string; content?: string}[]}) {
       {items.map((it, i) => (
         <li key={i}>
           {it.header && <strong>{it.header}</strong>}
-          {it.header && it.content ? ' — ' : ''}
+          {it.header && it.content ? ': ' : ''}
           <Html text={it.content} />
         </li>
       ))}
@@ -107,13 +108,17 @@ function Section({title, children}: {title: string; children: ReactNode}) {
 }
 
 export default function Resume({data, locale}: {data: Data; locale: string}): ReactNode {
+  const {collectAnchor} = useBrokenLinks();
+  for (const section of ['work', 'projects', 'education', 'skills']) {
+    (data[section] ?? []).forEach((_: Data, index: number) => collectAnchor(`${section}-${index}`));
+  }
   const t = TITLES[locale] ?? TITLES.en;
   const b = data.basics ?? {};
   const abstract = String(b.contents?.[`resume-${locale}`]?.abstract ?? '').replace(/<span[^>]*>(.*?)<\/span>/g, '$1');
   const nameEn = b['name-english'];
 
   return (
-    <div className={styles.resume}>
+    <article className={styles.resume} data-career-document="cv">
       <header className={styles.top}>
         <h1 className={styles.name}>
           {b.name}
@@ -138,7 +143,9 @@ export default function Resume({data, locale}: {data: Data; locale: string}): Re
         <Section title={t.work}>
           {data.work.map((w: Data, i: number) => (
             <Card id={`work-${i}`} key={w.company + w.startDate} icon={w.headerIcon} title={<Link href={w.website}>{w.company}</Link>} sub={w.position} date={period(w.startDate, w.endDate, t.present)}>
+              {w.roles?.description && <p><Html text={w.roles.description} /></p>}
               <Items items={w.roles?.items} />
+              <Items items={w.results?.items} />
               <TaxonomyTags tags={w.tags} locale={locale} />
             </Card>
           ))}
@@ -149,6 +156,7 @@ export default function Resume({data, locale}: {data: Data; locale: string}): Re
         <Section title={t.projects}>
           {data.projects.map((p: Data, i: number) => (
             <Card id={`projects-${i}`} key={p.position + p.startDate} icon={p.headerIcon} title={p.position} sub={[p.company, p.roles?.description].filter(Boolean).join(' · ')} date={period(p.startDate, p.endDate, t.present)}>
+              <Items items={p.roles?.items} />
               <Items items={p.results?.items} />
               <TaxonomyTags tags={p.tags} locale={locale} />
             </Card>
@@ -220,7 +228,7 @@ export default function Resume({data, locale}: {data: Data; locale: string}): Re
                     <Link href={h.website}>
                       <strong>{h.title}</strong>
                     </Link>
-                    {h.description ? ` — ${h.description}` : ''}
+                    {h.description ? `: ${h.description}` : ''}
                   </li>
                 ))}
               </ul>
@@ -252,6 +260,6 @@ export default function Resume({data, locale}: {data: Data; locale: string}): Re
           <p className={styles.tags}>{data.languages.map((l: Data) => `${l.language} (${l.fluency})`).join(' · ')}</p>
         </Section>
       )}
-    </div>
+    </article>
   );
 }
