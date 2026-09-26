@@ -5,7 +5,7 @@ Replaces the Jekyll/Hydejack site in `jyje/profile`.
 
 ## Requirements
 
-Use Node.js 24.14.0 or later. CI and GitHub Pages builds run on Node.js 24 to align with the Docusaurus v4 runtime baseline.
+Use Node.js 26.0.0 or later. CI and GitHub Pages builds run on Node.js 26 to align with the project's Docusaurus v4 preparation target.
 
 ## Layout
 
