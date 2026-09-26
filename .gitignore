@@ -30,3 +30,6 @@ yarn-error.log*
 /content/.obsidian/*
 !/content/.obsidian/app.json
 .DS_Store
+
+# AI Builder
+.playwright-mcp/
