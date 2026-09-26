@@ -1,5 +1,12 @@
 # Content authoring and component rules
 
+## Plan completion and remote communication
+
+- Once a plan is completed, reconcile its status and checklist with the actual result. Record verification, review, commit/PR references, and deployment evidence when deployment was in scope. Distinguish remaining limitations from unfinished deliverables.
+- Close the plan with a focused cleanup commit, or an explicitly requested local-only commit. Preserve the decision and review history; do not leave completed work described as pending approval, review, merge or deployment.
+- Respect the user's commit and push authorization. A local completion commit does not imply permission to push or deploy again.
+- Write GitHub issues, PR descriptions, reviews and comments in English. This does not change the site's bilingual content requirements.
+
 ## Markdown and MDX pages
 
 - The About section has an overview at `/about`, a one-page resume at `/about/resume`, a detailed CV at `/about/cv`, and a portfolio at `/about/portfolio`; the site home remains `/`.

@@ -1,5 +1,8 @@
 # Independent review and verification
 
+Status: completed on 2026-09-27 KST. Reviewed, merged with owner approval, deployed
+and checked in production.
+
 ## Reviewer
 
 Claude Code 2.1.283, exact model `claude-opus-5-5`, read-only Read/Glob/Grep tools,
@@ -45,6 +48,9 @@ usage-limit wait was required.
 
 - Initial remote CI: https://github.com/jyje/profile-2/actions/runs/36258722330
 - Post-review remote CI: https://github.com/jyje/profile-2/actions/runs/36259334688
+- Final-head CI (`05af88b`): https://github.com/jyje/profile-2/actions/runs/36259718035
+- Merged PR: https://github.com/jyje/profile-2/pull/17, merge commit `eb70038`.
+- Production deployment: https://github.com/jyje/profile-2/actions/runs/36275246699
 - TypeScript, 10 content tests and 6 UI tests passed.
 - Both locale builds at `/profile-2/` passed broken-link checks.
 - Browser checks cover a wiki-to-graph entry, mixed blog/wiki tag results, a CV
@@ -58,10 +64,34 @@ usage-limit wait was required.
 - The root-path bilingual live server is available separately from project-path
   CI builds. Switching deployment contexts no longer retains stale font URLs.
 
-## Handoff gate and limits
+## Production verification and URL distinction
 
-The [PR checks](https://github.com/jyje/profile-2/pull/17/checks) must pass for the
-final pushed head before removing draft status. Do not merge automatically.
+The deployment succeeded for the merge commit. Both locales' canonical home,
+blog, wiki, resume and CV URLs returned HTTP 200. Browser checks confirmed graph
+canvas rendering after following a document connection, mixed blog/wiki tag
+results, CV anchor targets, loaded regular/bold Korean fonts, and career layouts
+without horizontal overflow at 390 CSS pixels. No JavaScript page errors or
+same-origin asset HTTP errors were observed on those checked routes.
+
+Direct trailing-slash navigation was checked separately on 2026-09-27 KST:
+
+| Environment and path | Initial HTTP status | Browser result with JavaScript |
+| --- | --- | --- |
+| Development `/wiki/` and `/en/wiki/` | 200 | Wiki content renders in both locales |
+| Pages `/profile-2/wiki/` | 404 | Korean wiki content renders after client-side routing |
+| Pages `/profile-2/en/wiki/` | 404 | Not-found page remains in the tested fresh browser context |
+
+Therefore, an initial HTTP 404 does not always mean the user sees a not-found
+screen. The earlier deployment comment's HTTP observation was correct but did
+not explain this visible recovery. Production navbar links use the canonical
+slashless wiki URLs, which return HTTP 200. The existing `trailingSlash: false`
+setting predates this work. No routing change was made as part of this
+documentation cleanup.
+
+## Completion and retained limits
+
+All delivery gates passed; PR #17 was merged with separate owner approval and
+issues #10 through #16 closed. No review, merge or deployment gate remains pending.
 Computed JSX navigation is not indexed as a document link. The CV preserves the
 current structured YAML facts, not every page of the old portfolio PDF. Future
 summary-anchor links should register their actual rendered IDs, as the CV does.
