@@ -5,7 +5,7 @@ Use the house emoji for Wiki Home. Preserve the existing theme and graph physics
 
 - [x] Create this root checklist and initial plan commit.
 - [x] Verify and commit existing publication boundaries and static routing.
-- [ ] Verify and commit authored last-update dates.
+- [x] Verify and commit authored last-update dates.
 - [ ] Embed automatic local graphs in wiki and blog detail footers.
 - [ ] Move the knowledge subtree to `/wiki/d/` with compatible old URLs.
 - [ ] Integrate the global graph at the bottom of Wiki Home; retire the standalone page.

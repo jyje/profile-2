@@ -25,6 +25,19 @@ Rules are relative to the repository root. `*` and `**` globs, `#` comment lines
 
 Build inputs are generated under `.content-build/`; do not edit them. Links from public documents to excluded documents fail the build. Keep development instructions in this section. Between local-only sections, site links can use existing routes such as `/wiki/design/resume`.
 
+## Last updated dates
+
+Wiki documents and blog posts use Docusaurus's built-in last-updated footer. Staging reads the authored file's last Git commit, not build time or filesystem mtime. English fallback pages inherit the Korean source date. Uncommitted edits do not advance the date; new documents without Git history have no inferred date until committed.
+
+An explicit source front-matter date takes precedence:
+
+```yaml
+last_update:
+  date: '2026-09-27T09:00:00+09:00'
+```
+
+The standard Docusaurus renderer formats dates in UTC using the page locale. CI requires full history (`fetch-depth: 0`). Never edit dates in generated staging or locale mirrors.
+
 ## Verification
 
 ```sh

@@ -59,6 +59,8 @@ const config: Config = {
       'classic',
       {
         docs: {
+          showLastUpdateTime: true,
+          showLastUpdateAuthor: false,
           path: '.content-build/ko/wiki',
           routeBasePath: 'wiki',
           tagsBasePath: '_tag-archives',
@@ -66,6 +68,8 @@ const config: Config = {
           beforeDefaultRemarkPlugins: [obsidianCallouts, contentTemplateBlocks],
         },
         blog: {
+          showLastUpdateTime: true,
+          showLastUpdateAuthor: false,
           path: '.content-build/ko/blog',
           routeBasePath: 'blog',
           blogListComponent: '@site/src/components/BlogListPage',

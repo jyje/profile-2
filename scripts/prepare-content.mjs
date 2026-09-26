@@ -1,11 +1,13 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import {contentMode, ignorePatterns, isDocIgnored, publicationContext} from '../plugins/content-visibility.cjs';
+import {createLastUpdateReader, withLastUpdate} from './content-last-update.mjs';
 
 // Stage authored content without mutating it. Underscored development sections get
 // their old public-shaped paths only in the local development build.
 export function prepareContent(root, mode = contentMode()) {
   const patterns = ignorePatterns(root);
+  const readDate = createLastUpdateReader(root);
   const output = path.join(root, '.content-build');
   fs.rmSync(output, {recursive: true, force: true});
   for (const locale of ['ko', 'en']) {
@@ -24,7 +26,10 @@ export function prepareContent(root, mode = contentMode()) {
           const destination = path.join(to, development ? entry.name.slice(1) : entry.name);
           if (fs.existsSync(destination)) throw new Error(`Development content alias collision: ${relative}`);
           if (entry.isDirectory()) copy(path.join(from, entry.name), destination);
-          else fs.copyFileSync(path.join(from, entry.name), destination);
+          else if (/\.mdx?$/.test(entry.name)) {
+            const authored = path.join(from, entry.name);
+            fs.writeFileSync(destination, withLastUpdate(fs.readFileSync(authored, 'utf8'), authored, readDate));
+          } else fs.copyFileSync(path.join(from, entry.name), destination);
         }
       }
       copy(source, target, true);
