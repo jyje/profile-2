@@ -5,6 +5,7 @@ import type {Props} from '@theme/NavbarItem/DefaultNavbarItem';
 
 function getLocalizedLabel(label: ReactNode, className: string | undefined, locale: string): ReactNode {
   if (locale !== 'ko') return label;
+  if (className?.split(/\s+/).includes('site-labs-link')) return '실험실';
   if (className?.split(/\s+/).includes('site-blog-link')) return '블로그';
   if (className?.split(/\s+/).includes('site-wiki-link')) return '위키';
   return label;

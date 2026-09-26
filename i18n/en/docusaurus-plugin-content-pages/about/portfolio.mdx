@@ -1,0 +1,39 @@
+---
+title: Portfolio
+description: Selected project case studies and implementation notes.
+wrapperClassName: site-about-page
+hide_table_of_contents: true
+---
+
+import Link from '@docusaurus/Link';
+
+<header className="about-hero">
+  <div className="container">
+    <p className="about-eyebrow">PORTFOLIO / SELECTED WORK</p>
+    <h1 className="about-name">Portfolio</h1>
+    <p className="about-lead">Project background, architecture, and implementation experience.</p>
+    <div className="about-intro">
+      <p>Explore case studies covering digital twin platforms, on-premise MLOps, and hybrid Kubernetes.</p>
+    </div>
+  </div>
+</header>
+
+<main className="container about-main">
+  <section className="about-section">
+    <h2>Case studies</h2>
+    <div className="about-links">
+      <Link to="/blog/widearth-digital-twins-platforms-at-maxst">
+        <span>Widearth: AR &amp; Digital Twins Platforms <span aria-hidden="true">↗</span></span>
+        <small>A case study of real-world AR services and a digital twin platform.</small>
+      </Link>
+      <Link to="/blog/mlops-onpremise-mlops-with-open-source-projects">
+        <span>On-Premise MLOps Platform <span aria-hidden="true">↗</span></span>
+        <small>A GPU cluster built with Kubeflow, Argo Workflows, and open source projects.</small>
+      </Link>
+      <Link to="/blog/devops-hybrid-clusters-with-onpremise-baremetal-k8s-and-aws-eks">
+        <span>Hybrid Kubernetes Cluster <span aria-hidden="true">↗</span></span>
+        <small>Architecture and operations across on-premise infrastructure and AWS EKS.</small>
+      </Link>
+    </div>
+  </section>
+</main>

@@ -100,7 +100,7 @@ function resumeEntries(siteDir, locale) {
         title: String(title ?? key),
         description,
         date: String(item.startDate ?? '').slice(0, 10),
-        route: '/resume',
+        route: '/about/resume',
         tags,
         locale,
         source: `data/resume.${locale}.yml#${section}-${index}`,

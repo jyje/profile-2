@@ -125,9 +125,14 @@ const config: Config = {
           if (existingPath === '/blog') return [`${legacy}/posts`];
           const post = existingPath.match(/^\/blog\/(?!tags\/|page\/|archive|authors)([^/]+)$/);
           if (post) return [`${legacy}/posts/${post[1]}`];
+          if (existingPath === '/about') return ['/about/profile'];
+          if (existingPath === '/about/resume') {
+            return isEn ? ['/resume'] : ['/resume', '/ko/resume'];
+          }
+          if (existingPath === '/about/portfolio') {
+            return isEn ? ['/portfolio'] : ['/portfolio', '/ko/portfolio'];
+          }
           if (isEn) return undefined;
-          if (existingPath === '/resume') return ['/ko/resume'];
-          if (existingPath === '/portfolio') return ['/ko/portfolio'];
           return undefined;
         },
       },
@@ -162,6 +167,7 @@ const config: Config = {
         src: 'img/logo-128.png',
       },
       items: [
+        {to: '/labs', label: 'Labs', className: 'site-labs-link', position: 'left'},
         {to: '/blog', label: 'Blog', className: 'site-blog-link', position: 'left'},
         {type: 'docSidebar', sidebarId: 'wikiSidebar', position: 'left', label: 'Wiki', className: 'site-wiki-link'},
         {
@@ -170,8 +176,9 @@ const config: Config = {
           className: 'site-about-split',
           position: 'left',
           items: [
-            {to: '/about', label: 'Profile'},
-            {to: '/resume', label: 'Resume'},
+            {to: '/about', label: 'Overview'},
+            {to: '/about/resume', label: 'Resume'},
+            {to: '/about/portfolio', label: 'Portfolio'},
           ],
         },
         {

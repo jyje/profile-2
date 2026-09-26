@@ -21,7 +21,8 @@ yarn-debug.log*
 yarn-error.log*
 
 # Mirrored from content/en by scripts/sync-content.mjs
-/i18n/en/docusaurus-plugin-content-*
+/i18n/en/docusaurus-plugin-content-blog
+/i18n/en/docusaurus-plugin-content-docs
 # Generated from data/*.yml
 /src/generated
 
