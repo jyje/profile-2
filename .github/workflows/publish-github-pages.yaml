@@ -1,4 +1,4 @@
-name: Deploy to GitHub Pages
+name: Publish GitHub Pages
 
 on:
   push:
@@ -10,22 +10,29 @@ permissions:
   contents: read
 
 concurrency:
-  group: github-pages
+  group: pages
   cancel-in-progress: false
 
 jobs:
   build:
     name: Build the site
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04-arm
+    permissions:
+      contents: read
+      pages: read
     steps:
       - name: Check out source
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Set up Node.js
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v7
         with:
           node-version: 22
           cache: npm
+
+      - name: Configure GitHub Pages
+        id: pages
+        uses: actions/configure-pages@v6
 
       - name: Install dependencies
         run: npm ci
@@ -33,14 +40,14 @@ jobs:
       - name: Typecheck
         run: npm run typecheck
 
-      - name: Build all locales for GitHub Pages
+      - name: Build all locales
         run: npm run build
         env:
-          SITE_URL: https://jyje.github.io
-          SITE_BASE_URL: /profile-2/
+          SITE_URL: ${{ steps.pages.outputs.origin }}
+          SITE_BASE_URL: ${{ steps.pages.outputs.base_path }}/
 
       - name: Upload Pages artifact
-        uses: actions/upload-pages-artifact@v4
+        uses: actions/upload-pages-artifact@v5
         with:
           path: build
           retention-days: 1
@@ -48,7 +55,7 @@ jobs:
   deploy:
     name: Publish the site
     needs: build
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04-arm
     permissions:
       pages: write
       id-token: write
@@ -58,4 +65,4 @@ jobs:
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5
