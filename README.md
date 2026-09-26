@@ -1,7 +1,14 @@
-# profile-2
+<div align="center">
+
+# jyje/profile-2
 
 Personal site of Jeayoung Jeon (Home, Wiki, Blog, About, Resume). Docusaurus, Korean (default) and English.
 Replaces the Jekyll/Hydejack site in `jyje/profile`.
+
+[![CI](https://github.com/jyje/profile-2/actions/workflows/ci.yaml/badge.svg)](https://github.com/jyje/profile-2/actions/workflows/ci.yaml)
+[![GitHub Pages](https://github.com/jyje/profile-2/actions/workflows/publish-github-pages.yaml/badge.svg)](https://github.com/jyje/profile-2/actions/workflows/publish-github-pages.yaml)
+
+</div>
 
 ## Requirements
 
