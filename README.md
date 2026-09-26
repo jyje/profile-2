@@ -3,6 +3,10 @@
 Personal site of Jeayoung Jeon (Home, Wiki, Blog, About, Resume). Docusaurus, Korean (default) and English.
 Replaces the Jekyll/Hydejack site in `jyje/profile`.
 
+## Requirements
+
+Use Node.js 24.14.0 or later. CI and GitHub Pages builds run on Node.js 24 to align with the Docusaurus v4 runtime baseline.
+
 ## Layout
 
 ```text
