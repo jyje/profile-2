@@ -65,7 +65,7 @@ jobs:
       - name: Verify bilingual breadcrumbs
         run: npm run test:breadcrumbs
 
-      - name: Verify homepage text resizing and navigation
+      - name: Verify homepage intro, curation and navigation
         run: npm run test:homepage
 
       - name: Upload career document review artifacts

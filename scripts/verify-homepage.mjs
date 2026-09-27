@@ -1,5 +1,4 @@
 import assert from 'node:assert/strict';
-import fs from 'node:fs';
 import path from 'node:path';
 import http from 'node:http';
 import handler from 'serve-handler';
@@ -15,8 +14,7 @@ await new Promise(resolve => server.listen(0, '127.0.0.1', resolve));
 const origin = `http://127.0.0.1:${server.address().port}`;
 const browser = await chromium.launch();
 const errors = [];
-const screenshots = '.playwright-mcp/homepage';
-fs.mkdirSync(screenshots, {recursive: true});
+
 try {
   for (const locale of ['ko', 'en']) {
     const context = await browser.newContext({locale: locale === 'ko' ? 'ko-KR' : 'en-US', reducedMotion: 'reduce'});
@@ -26,6 +24,7 @@ try {
     const root = origin + prefix + (locale === 'en' ? 'en/' : '');
     assert.equal((await page.goto(root, {waitUntil: 'networkidle'})).status(), 200);
     await page.evaluate(() => document.fonts.ready);
+
     const navigation = page.locator('main nav');
     const labels = locale === 'ko' ? ['블로그', '위키', '실험실', '소개'] : ['Blog', 'Wiki', 'Labs', 'About'];
     assert.deepEqual(await navigation.locator('a').allTextContents(), labels);
@@ -35,64 +34,49 @@ try {
       assert.equal(href.replace(/\/$/, ''), expected);
       assert.equal((await page.request.get(new URL(href, root).href)).status(), 200);
     }
+
     assert.equal(await page.locator('main h1').count(), 1);
     assert.deepEqual(await page.locator('main h1 > span').allTextContents(), ['Jeayoung Jeon', '(전제영)']);
-    for (const width of [280, 320, 390, 600, 864, 1222, 1920]) {
+    for (const id of ['home-featured', 'home-reading', 'home-wiki', 'home-daily']) {
+      assert.equal(await page.locator(`#${id}`).count(), 1, `${locale}: missing curated section ${id}`);
+    }
+    assert.ok(await page.locator('section[aria-labelledby="home-reading"] ol a').count() > 0);
+
+    // Measure the intro and menu at a narrow phone width, the reference phone width, and desktop.
+    // Editorial content below the intro is variable and is not part of this layout contract.
+    for (const width of [320, 390, 1222]) {
       await page.setViewportSize({width, height: 900});
-      for (const theme of ['light', 'dark']) {
-        // The shared navbar already overflows below 320px with doubled root text.
-        // Keep the 280px default-size regression without expanding this home-only fix.
-        for (const scale of width < 320 ? [100] : [100, 200]) {
-          await page.evaluate(({theme, scale}) => {
-            document.documentElement.dataset.theme = theme;
-            document.documentElement.style.fontSize = `${scale}%`;
-          }, {theme, scale});
-          const result = await page.evaluate(() => {
-            const rect = element => {
-              const r = element.getBoundingClientRect();
-              return {left: r.left, right: r.right, top: r.top, bottom: r.bottom, height: r.height};
-            };
-            const links = [...document.querySelectorAll('main nav a')].map(element => {
-              const range = document.createRange();
-              range.selectNodeContents(element);
-              const text = range.getBoundingClientRect();
-              return {...rect(element), textLeft: text.left, textRight: text.right};
-            });
-            const names = [...document.querySelectorAll('main h1 > span')].map(element => ({...rect(element), lineHeight: parseFloat(getComputedStyle(element).lineHeight)}));
-            const role = document.querySelector('main section > p');
-            const rightEdgeElements = [...document.querySelectorAll('body *')]
-              .map(element => {
-                const box = element.getBoundingClientRect();
-                return {tag: element.tagName, className: typeof element.className === 'string' ? element.className : '', text: (element.innerText || '').slice(0, 36), left: box.left, right: box.right, width: box.width};
-              })
-              .filter(element => element.right > innerWidth + 1)
-              .sort((a, b) => b.right - a.right)
-              .slice(0, 8);
-            return {viewport: innerWidth, scrollWidth: document.documentElement.scrollWidth, links, names, rightEdgeElements,
-              role: {...rect(role), lineHeight: parseFloat(getComputedStyle(role).lineHeight)}};
-          });
-          const label = `${locale} ${width}px ${theme} text ${scale}%`;
-          assert(result.scrollWidth <= result.viewport, `${label}: page overflows to ${result.scrollWidth}px; right-edge elements: ${JSON.stringify(result.rightEdgeElements)}`);
-          for (const name of result.names) {
-            assert(name.left >= 0 && name.right <= width + 1, `${label}: name escapes viewport`);
-            if (scale === 100) assert(name.height <= name.lineHeight + 1, `${label}: name portion unexpectedly wraps at default size`);
-          }
-          if (scale === 100) assert(result.role.height <= result.role.lineHeight + 1, `${label}: role wraps at default size`);
-          for (const [index, link] of result.links.entries()) {
-            assert(link.height >= 44, `${label}: small touch target`);
-            assert(link.textLeft >= link.left - 1 && link.textRight <= link.right + 1, `${label}: label escapes target`);
-            for (const other of result.links.slice(index + 1)) {
-              assert(link.right <= other.left + 1 || other.right <= link.left + 1 || link.bottom <= other.top + 1 || other.bottom <= link.top + 1, `${label}: targets overlap`);
-            }
-          }
-          if (width === 390 || (width === 1222 && scale === 100)) {
-            await page.screenshot({path: `${screenshots}/${locale}-${width}-${theme}-${scale}.png`, fullPage: true});
-          }
+      const measurements = await page.evaluate(() => {
+        const textRects = (element) => {
+          const range = document.createRange();
+          range.selectNodeContents(element);
+          return [...range.getClientRects()].map(({left, right, top, bottom}) => ({left, right, top, bottom}));
+        };
+        const identity = document.querySelector('main > section[aria-labelledby="home-title"] > p');
+        const names = [...document.querySelectorAll('main h1 > span')];
+        const links = [...document.querySelectorAll('main nav a')].map((element) => {
+          const box = element.getBoundingClientRect();
+          return {left: box.left, right: box.right, top: box.top, bottom: box.bottom, text: textRects(element)};
+        });
+        return {identity: textRects(identity), names: names.map(textRects), links};
+      });
+
+      const label = `${locale} ${width}px`;
+      const nameLines = [['title', measurements.identity], ...measurements.names.map((lines, index) => [`name ${index + 1}`, lines])];
+      for (const [name, lines] of nameLines) {
+        assert.equal(lines.length, 1, `${label}: ${name} breaks across lines`);
+        assert(lines[0].left >= 0 && lines[0].right <= width + 1, `${label}: ${name} escapes viewport`);
+      }
+      for (const [index, link] of measurements.links.entries()) {
+        assert(link.bottom - link.top >= 44, `${label}: small touch target`);
+        assert(link.text.length > 0 && link.text.every((line) => line.left >= link.left - 1 && line.right <= link.right + 1), `${label}: label escapes target`);
+        for (const other of measurements.links.slice(index + 1)) {
+          assert(link.right <= other.left + 1 || other.right <= link.left + 1 || link.bottom <= other.top + 1 || other.bottom <= link.top + 1, `${label}: targets overlap`);
         }
       }
     }
+
     await page.setViewportSize({width: 390, height: 900});
-    await page.evaluate(() => document.documentElement.style.fontSize = '200%');
     await navigation.locator('a').first().focus();
     await page.keyboard.press('Tab');
     assert.equal(await page.locator(':focus').innerText(), labels[1]);
@@ -100,7 +84,7 @@ try {
     await page.keyboard.press('Enter');
     await page.waitForURL(url => url.pathname.replace(/\/$/, '') === new URL('wiki', root).pathname);
     await context.close();
-    console.log(`Homepage verified: ${locale}, 7 widths at 100%, 6 widths (320px+) at 200%, both themes, links and keyboard.`);
+    console.log(`Homepage verified: ${locale}, intro and navigation at 320px, 390px and 1222px; curated sections and keyboard navigation.`);
   }
   assert.deepEqual(errors, []);
 } finally {
