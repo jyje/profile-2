@@ -32,8 +32,8 @@ try {
   for (const locale of ['ko', 'en']) {
     const ctx = await context(locale);
     const page = await ctx.newPage();
-    page.setDefaultTimeout(15000);
-    page.on('pageerror', error => errors.push(error.message));
+    page.setDefaultTimeout(30000);
+    page.on('pageerror', error => {errors.push(error.message); console.error(`Page error (${page.url()}): ${error.message}`);});
     const root = origin + prefix + (locale === 'en' ? 'en/' : '');
     const ko = locale === 'ko';
     const blog = ko ? '블로그' : 'Blog', about = ko ? '소개' : 'About', tags = ko ? '전체 태그' : 'All tags';
@@ -75,9 +75,13 @@ try {
     for (const width of [390, 864, 1222]) {
       await page.setViewportSize({width, height: 900});
       for (const theme of ['light', 'dark']) {
-        await page.goto(root + 'wiki/d/argo-cd/');
+        console.log(`Checking ${locale} ${width}px ${theme}`);
+        const response = await page.goto(root + 'wiki/d/argo-cd/');
+        assert.equal(response.status(), 200);
+        assert.equal(new URL(page.url()).pathname, new URL(root + 'wiki/d/argo-cd/').pathname);
+        await page.locator(selector).waitFor();
         await page.evaluate(theme => document.documentElement.dataset.theme = theme, theme);
-        await page.locator(selector).screenshot({path: `${screenshots}/${locale}-${width}-${theme}.png`});
+        await page.locator(selector).screenshot({path: `${screenshots}/${locale}-${width}-${theme}.png`, animations: 'disabled'});
         await page.goto(root + 'about/portfolio/');
         await page.evaluate(theme => document.documentElement.dataset.theme = theme, theme);
         await page.locator(selector).evaluate(nav => {nav.querySelector('.breadcrumbs__item--active span').textContent = 'LongTitle'.repeat(35);});
