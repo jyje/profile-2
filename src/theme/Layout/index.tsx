@@ -4,6 +4,7 @@ import {useLocation} from '@docusaurus/router';
 import useBaseUrl from '@docusaurus/useBaseUrl';
 import SiteBreadcrumbs, {useBreadcrumbLabels} from '@site/src/components/SiteBreadcrumbs';
 import styles from '@site/src/components/SiteBreadcrumbs/styles.module.css';
+import ScrollReveal from '@site/src/components/ScrollReveal';
 
 // These original pages have no insertion slot inside their content component.
 // Wrap the layout's children only; keep their state, routing and markup upstream.
@@ -15,6 +16,7 @@ export default function Layout(props: Props) {
   const items = relative === 'search' ? [{label: labels.search}]
     : relative === 'blog/archive' ? [{label: labels.blog, href: '/blog/'}, {label: labels.archive}] : null;
   return <OriginalLayout {...props}>
+    <ScrollReveal pathname={pathname} />
     {items && <div className={`container ${styles.standalone}`}><SiteBreadcrumbs items={items} /></div>}
     {props.children}
   </OriginalLayout>;
