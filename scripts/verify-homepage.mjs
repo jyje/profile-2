@@ -26,17 +26,25 @@ try {
     await page.evaluate(() => document.fonts.ready);
 
     const navigation = page.locator('main nav');
-    const labels = locale === 'ko' ? ['블로그', '위키', '실험실', '소개'] : ['Blog', 'Wiki', 'Labs', 'About'];
+    const labels = locale === 'ko'
+      ? ['소개', '이력서', '블로그', '경험', '성취', '위키', '실험실']
+      : ['About', 'Resume', 'Blog', 'Careers', 'Achievements', 'Wiki', 'Labs'];
     assert.deepEqual(await navigation.locator('a').allTextContents(), labels);
     for (const [index, link] of (await navigation.locator('a').all()).entries()) {
       const href = await link.getAttribute('href');
-      const expected = new URL(['blog', 'wiki', 'labs', 'about'][index], root).pathname;
+      const expected = new URL(['about', 'about/resume', 'blog', 'tags/careers', 'tags/achievements', 'wiki', 'labs'][index], root).pathname;
       assert.equal(href.replace(/\/$/, ''), expected);
+      assert.equal(await link.locator('svg').count(), 1, `${locale}: missing navigation icon`);
       assert.equal((await page.request.get(new URL(href, root).href)).status(), 200);
     }
 
     assert.equal(await page.locator('main h1').count(), 1);
-    assert.deepEqual(await page.locator('main h1 > span').allTextContents(), ['Jeayoung Jeon', '(전제영)']);
+    assert.equal(await page.locator('main h1').innerText(), 'jyje.online');
+    assert.equal(await page.title(), 'jyje.online');
+    assert.equal(await page.locator('#home-author').innerText(), locale === 'ko'
+      ? '- AI 플랫폼 엔지니어 전제영'
+      : '- Jeayoung Jeon, AI Platform Engineer');
+    assert.equal(await page.locator('#home-author strong').innerText(), locale === 'ko' ? '전제영' : 'Jeayoung Jeon');
     for (const id of ['home-featured', 'home-reading', 'home-wiki', 'home-daily']) {
       assert.equal(await page.locator(`#${id}`).count(), 1, `${locale}: missing curated section ${id}`);
     }
@@ -52,24 +60,27 @@ try {
           range.selectNodeContents(element);
           return [...range.getClientRects()].map(({left, right, top, bottom}) => ({left, right, top, bottom}));
         };
-        const identity = document.querySelector('main > section[aria-labelledby="home-title"] > p');
-        const names = [...document.querySelectorAll('main h1 > span')];
+        const title = document.querySelector('main h1');
+        const author = [...document.querySelectorAll('#home-author > span, #home-author strong')];
         const links = [...document.querySelectorAll('main nav a')].map((element) => {
           const box = element.getBoundingClientRect();
-          return {left: box.left, right: box.right, top: box.top, bottom: box.bottom, text: textRects(element)};
+          const icon = element.querySelector('svg').getBoundingClientRect();
+          return {left: box.left, right: box.right, top: box.top, bottom: box.bottom, iconLeft: icon.left, iconRight: icon.right};
         });
-        return {identity: textRects(identity), names: names.map(textRects), links};
+        return {title: textRects(title), author: author.map(textRects), links};
       });
 
       const label = `${locale} ${width}px`;
-      const nameLines = [['title', measurements.identity], ...measurements.names.map((lines, index) => [`name ${index + 1}`, lines])];
+      const nameLines = [['title', measurements.title], ...measurements.author.map((lines, index) => [`author ${index + 1}`, lines])];
       for (const [name, lines] of nameLines) {
         assert.equal(lines.length, 1, `${label}: ${name} breaks across lines`);
         assert(lines[0].left >= 0 && lines[0].right <= width + 1, `${label}: ${name} escapes viewport`);
       }
       for (const [index, link] of measurements.links.entries()) {
         assert(link.bottom - link.top >= 44, `${label}: small touch target`);
-        assert(link.text.length > 0 && link.text.every((line) => line.left >= link.left - 1 && line.right <= link.right + 1), `${label}: label escapes target`);
+        assert(link.iconLeft >= link.left && link.iconRight <= link.right, `${label}: icon escapes target`);
+        assert(link.left >= 0 && link.right <= width + 1, `${label}: menu escapes viewport`);
+        assert(Math.abs(link.top - measurements.links[0].top) <= 1, `${label}: menu wraps onto another row`);
         for (const other of measurements.links.slice(index + 1)) {
           assert(link.right <= other.left + 1 || other.right <= link.left + 1 || link.bottom <= other.top + 1 || other.bottom <= link.top + 1, `${label}: targets overlap`);
         }
@@ -79,10 +90,10 @@ try {
     await page.setViewportSize({width: 390, height: 900});
     await navigation.locator('a').first().focus();
     await page.keyboard.press('Tab');
-    assert.equal(await page.locator(':focus').innerText(), labels[1]);
+    assert.equal(await page.locator(':focus').getAttribute('title'), labels[1]);
     assert.equal(await page.locator(':focus').evaluate(element => getComputedStyle(element).outlineStyle), 'solid');
     await page.keyboard.press('Enter');
-    await page.waitForURL(url => url.pathname.replace(/\/$/, '') === new URL('wiki', root).pathname);
+    await page.waitForURL(url => url.pathname.replace(/\/$/, '') === new URL('about/resume', root).pathname);
     await context.close();
     console.log(`Homepage verified: ${locale}, intro and navigation at 320px, 390px and 1222px; curated sections and keyboard navigation.`);
   }
