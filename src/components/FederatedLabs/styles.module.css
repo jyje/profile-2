@@ -1,4 +1,6 @@
-.frame {margin: 0; min-width: 0; width: 100%; --labs-min-height: calc(100dvh - var(--ifm-navbar-height));}
+.frame {margin: 0; min-width: 0; width: 100%; --labs-min-height: max(0px, calc(100dvh - var(--ifm-navbar-height) - var(--labs-breadcrumb-height, 0px)));}
+.breadcrumbBar {padding: 1rem 1rem 0.01px;}
+@media print { .breadcrumbBar {display: none;} }
 .connection {position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap;}
 .placeholder {padding: clamp(1rem, 3vw, 2rem); background: var(--site-surface); min-height: var(--labs-min-height);}
 .placeholder h2 {font-size: 1.5rem;}

@@ -3,10 +3,9 @@ import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import {useColorMode} from '@docusaurus/theme-common';
 import {Button} from '@site/src/components/ui/button';
 import styles from './styles.module.css';
+import SiteBreadcrumbs, {useBreadcrumbLabels} from '@site/src/components/SiteBreadcrumbs';
+import {validScreens, type LabsOptions as Options, type LabsHandle as Handle, type LabsRemote as Remote, type LabsScreen} from './contract';
 
-type Options = {locale: 'ko' | 'en'; theme: 'light' | 'dark'};
-type Handle = {update(options: Options): void; unmount(): void};
-type Remote = {contractVersion: number; mount(container: HTMLElement, options: Options): Handle};
 type Copy = {loading: string; unavailable: string; explanation: string; retry: string; missing: string; connected: string};
 let attemptSequence = 0;
 const recoveredEntries = new Map<string, string>();
@@ -15,16 +14,35 @@ export default function FederatedLabs({copy}: {copy: Copy}) {
   const {siteConfig, i18n} = useDocusaurusContext();
   const {colorMode} = useColorMode();
   const container = useRef<HTMLDivElement>(null);
+  const frame = useRef<HTMLDivElement>(null);
+  const breadcrumbBar = useRef<HTMLDivElement>(null);
+  const labels = useBreadcrumbLabels();
+  const [screens, setScreens] = useState<LabsScreen[]>([]);
   const handle = useRef<Handle | null>(null);
   const options = useRef<Options>({locale: i18n.currentLocale === 'en' ? 'en' : 'ko', theme: colorMode});
-  options.current = {locale: i18n.currentLocale === 'en' ? 'en' : 'ko', theme: colorMode};
+  options.current = {...options.current, locale: i18n.currentLocale === 'en' ? 'en' : 'ko', theme: colorMode};
   const entryConfig = String(siteConfig.customFields?.labsRemoteEntry ?? '');
   const [state, setState] = useState<'loading' | 'ready' | 'error' | 'missing'>('loading');
   const [attempt, setAttempt] = useState(0);
 
   useEffect(() => {
+    const bar = breadcrumbBar.current;
+    if (!bar) return;
+    const measure = () => frame.current?.style.setProperty('--labs-breadcrumb-height', `${bar.getBoundingClientRect().height}px`);
+    measure();
+    const observer = new ResizeObserver(measure);
+    observer.observe(bar);
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    setScreens([]);
     if (!entryConfig) {setState('missing'); return;}
     let stopped = false;
+    const onNavigationChange = (next: LabsScreen[]) => {
+      if (!stopped) setScreens(validScreens(next) ? next.map(({id, label}) => ({id, label})) : []);
+    };
+    options.current = {...options.current, onNavigationChange};
     let timeout: ReturnType<typeof setTimeout>;
     let mounted: Handle | undefined;
     setState('loading');
@@ -67,6 +85,7 @@ export default function FederatedLabs({copy}: {copy: Copy}) {
     void load();
     return () => {
       stopped = true;
+      if (options.current.onNavigationChange === onNavigationChange) options.current.onNavigationChange = undefined;
       clearTimeout(timeout);
       mounted?.unmount();
       if (handle.current === mounted) handle.current = null;
@@ -75,7 +94,14 @@ export default function FederatedLabs({copy}: {copy: Copy}) {
 
   useEffect(() => {handle.current?.update(options.current);}, [i18n.currentLocale, colorMode]);
 
-  return <div className={styles.frame}>
+  return <div ref={frame} className={styles.frame}>
+    <div ref={breadcrumbBar} className={styles.breadcrumbBar}>
+      <SiteBreadcrumbs items={[
+        {label: labels.labs, href: '/labs/'},
+        ...(state === 'ready' ? screens.map(screen => ({label: screen.label, virtual: true,
+          onNavigate: handle.current?.navigate ? () => handle.current?.navigate?.(screen.id) : undefined})) : []),
+      ]} />
+    </div>
     {state === 'loading' && <div className={styles.loading} role="status" aria-live="polite">
       <span className={styles.spinner} aria-hidden="true" />
       <p>{copy.loading}</p>
