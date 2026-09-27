@@ -1,6 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import * as yaml from 'js-yaml';
+import {contentMode, isDocIgnored, authorFile} from '../plugins/content-visibility.cjs';
 
 const ROOT = path.resolve(import.meta.dirname, '..');
 const CONFIG = path.join(ROOT, 'data/home-curation.yml');
@@ -17,12 +18,15 @@ function readItem(kind, id, locale) {
   if (kind !== 'blog' && kind !== 'wiki') {
     throw new Error('Invalid curation kind: ' + String(kind));
   }
+  if (contentMode() === 'public' && isDocIgnored(authorFile(`content/${locale}/${kind}/${id}.md`))) {
+    throw new Error('Development-only document cannot be curated in a public build: ' + id);
+  }
 
   let sourceLocale = locale;
-  let file = path.join(ROOT, 'content', sourceLocale, kind, id + '.md');
+  let file = path.join(ROOT, authorFile(`content/${sourceLocale}/${kind}/${id}.md`));
   if (!fs.existsSync(file) && kind === 'wiki' && locale === 'en') {
     sourceLocale = 'ko';
-    file = path.join(ROOT, 'content', sourceLocale, kind, id + '.md');
+    file = path.join(ROOT, authorFile(`content/${sourceLocale}/${kind}/${id}.md`));
   }
   if (!fs.existsSync(file)) {
     throw new Error('Curated document is missing: ' + file);

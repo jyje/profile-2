@@ -1,7 +1,21 @@
 # Content authoring and component rules
 
+## Plan completion and remote communication
+
+- Once a plan is completed, reconcile its status and checklist with the actual result. Record verification, review, commit/PR references, and deployment evidence when deployment was in scope. Distinguish remaining limitations from unfinished deliverables.
+- Close the plan with a focused cleanup commit, or an explicitly requested local-only commit. Preserve the decision and review history; do not leave completed work described as pending approval, review, merge or deployment.
+- Respect the user's commit and push authorization. A local completion commit does not imply permission to push or deploy again.
+- Write GitHub issues, PR descriptions, reviews and comments in English. This does not change the site's bilingual content requirements.
+
 ## Markdown and MDX pages
 
+- Every authored wiki title and category label starts with one emoji, including development-only notes. Translations share the Korean source emoji. Use `🏠` for Wiki Home, `📚` for Documents, `🧭` for Guides, `🛠️` for Design and `📄` for otherwise unclassified notes. Do not use the brain emoji. Source validation runs before publication filtering.
+
+- Publication exclusions belong in root `.docignore`. Keep authoring guides in `content/{ko,en}/wiki/_guide/` and site design notes in `_design/`. Local staging exposes them at `/wiki/guide/` and `/wiki/design/`; public builds must exclude their pages and colocated assets before Docusaurus metadata, search and graph generation.
+- `npm run build` is public by default; local development entrypoints explicitly opt in with `SITE_CONTENT_MODE=development`. Do not use browser hostname checks to conceal already-published content. Never put secrets in development notes or the public repository.
+- Local staging automatically prepends a localized publication warning to documents matched by `.docignore`. It precedes any English fallback notice. Do not copy this generated warning into authored Markdown.
+- Do not edit `.content-build/` or generated locale mirrors. Treat canonical routes and initial HTTP status separately from client-side recovery. Preserve directory-index output and run `npm run test:publication` after routing or publication changes.
+- Wiki and blog update dates use Docusaurus `showLastUpdateTime`. Staging injects `last_update.date` from the authored file's last Git commit, preserving explicit overrides. English fallback pages inherit the Korean source date. Never substitute build time or filesystem mtime; use full Git history in CI. New uncommitted documents have no inferred date.
 - The About section has an overview at `/about`, a one-page resume at `/about/resume`, a detailed CV at `/about/cv`, and a portfolio at `/about/portfolio`; the site home remains `/`.
 - Author the Korean overview page in `src/pages/about.mdx` and its English translation in `i18n/en/docusaurus-plugin-content-pages/about.mdx`.
 - Keep prose and locale-specific labels in those MDX files. Do not add overview copy or repeated content arrays to a TSX page.

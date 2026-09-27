@@ -2,6 +2,7 @@
 // translation notice before Docusaurus loads its localized docs plugin.
 import fs from 'node:fs';
 import path from 'node:path';
+import {developmentNotice, splitDevelopmentNotice} from './development-notice.mjs';
 
 const ROOT = path.resolve(import.meta.dirname, '..');
 const KO_ROOT = path.join(ROOT, 'content/ko/wiki');
@@ -48,7 +49,8 @@ export function mergeKoreanFallbackDocs(koRoot = KO_ROOT, enBuildRoot = EN_BUILD
     fs.mkdirSync(path.dirname(destination), {recursive: true});
     if (/\.mdx?$/.test(source)) {
       const {raw, body} = splitFrontmatter(fs.readFileSync(source, 'utf8'));
-      const markdown = raw ? `${raw}\n\n${FALLBACK_CALLOUT}${body}` : `${FALLBACK_CALLOUT}${fs.readFileSync(source, 'utf8')}`;
+      const notice = splitDevelopmentNotice(body);
+      const markdown = `${raw ? `${raw}\n\n` : ''}${notice.hasNotice ? developmentNotice('en') : ''}${FALLBACK_CALLOUT}${notice.body}`;
       fs.writeFileSync(destination, markdown);
     } else {
       fs.copyFileSync(source, destination);

@@ -1,5 +1,9 @@
 # Content network and career documents
 
+Status: completed on 2026-09-27 KST. Implementation, independent review, merge
+and deployment verification are complete. This document is a closed delivery
+record, not an active execution loop.
+
 ## Scope and acceptance
 
 This work preserves Docusaurus routing, i18n, original theme behavior, existing
@@ -28,13 +32,13 @@ localized YAML. Do not shrink or crop content to hide a pagination failure.
 The existing local reference resume has one A4 page and the portfolio has six.
 Reference PDFs are read-only visual references, not imported public artifacts.
 
-## Delivery loop
+## Delivery loop used
 
-Implement and test each concern, commit separately, push one integration PR.
-Request a read-only review using Claude Code `claude-opus-5-5`, address valid
-findings and rerun relevant checks. Do not merge without a separate request.
-If rate-limited, preserve progress and retry after the provider reset; never
-silently substitute a different review model.
+Each concern was implemented, tested and committed separately in one integration
+PR. Read-only Claude Code `claude-opus-5-5` review was followed by fixes and a
+second review. Final CI passed before draft status was removed. The PR was
+merged only after the user's separate approval. No usage-limit wait or model
+substitution was needed.
 
 ## Progress
 
@@ -44,8 +48,21 @@ silently substitute a different review model.
 - [x] Resume/CV implemented and visually verified.
 - [x] CI and project-path build verified.
 - [x] Independent review findings resolved.
+- [x] Final-head CI passed and PR made ready for review.
+- [x] Separate merge approval received; PR #17 merged and issues #10 through #16 closed.
+- [x] GitHub Pages deployment succeeded; production routes and interactions checked.
+- [x] Plan and review records reconciled with the delivered state.
 
-Delivery is tracked in [PR #17](https://github.com/jyje/profile-2/pull/17).
-The final-head CI check is the readiness gate. Issues remain open until merge;
-this implementation task does not authorize merging the PR.
-See [the review record](content-network-review.md) for evidence and boundaries.
+## Completion evidence
+
+- [Merged PR #17](https://github.com/jyje/profile-2/pull/17), merge commit `eb70038`.
+- [Final implementation CI](https://github.com/jyje/profile-2/actions/runs/36259718035), head `05af88b`.
+- [Successful Pages deployment](https://github.com/jyje/profile-2/actions/runs/36275246699), merge commit `eb70038`.
+- [Production site](https://jyje.github.io/profile-2/): both locales' canonical
+  home, blog, wiki, resume and CV routes verified, plus graph navigation, shared
+  tags, CV anchors, font loading and mobile career layouts.
+
+See [the review record](content-network-review.md) for the production URL
+compatibility caveat and the distinction between HTTP status and browser display.
+The completion cleanup is documentation-only; it does not alter routing or
+require another deployment.

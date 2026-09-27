@@ -4,6 +4,7 @@ import path from 'node:path';
 import {spawn} from 'node:child_process';
 import handler from 'serve-handler';
 import {chromium} from 'playwright';
+import {verifyCareerChips} from './verify-career-chips.mjs';
 
 const prefix = process.env.VERIFY_BASE_PATH ?? '/profile-2/';
 const directory = path.resolve(process.env.VERIFY_BUILD_DIR ?? 'build');
@@ -22,19 +23,19 @@ try {
     await context.addCookies([{name: 'jyje_locale', value: locale, url: origin}]);
     const page = await context.newPage();
     const root = base + (locale === 'en' ? 'en/' : '');
-    const response = await page.goto(root + 'wiki/guide/obsidian-authoring');
+    const response = await page.goto(root + 'wiki/d/');
     assert.ok(response.ok());
     const connections = page.getByRole('complementary', {name: locale === 'ko' ? '문서 연결' : 'Content connections'});
     await connections.waitFor();
-    const graphLink = connections.getByRole('link', {name: locale === 'ko' ? '그래프에서 보기' : 'Explore in graph'});
-    assert.ok((await graphLink.getAttribute('href')).startsWith(new URL(root).pathname + 'wiki/graph?node='));
+    const graphLink = connections.getByRole('link', {name: locale === 'ko' ? '전체 그래프에서 보기' : 'Explore in the full graph'});
+    assert.ok((await graphLink.getAttribute('href')).startsWith(new URL(root).pathname + 'wiki/?node='));
     await graphLink.click();
     await page.getByRole('button', {name: locale === 'ko' ? '주변 문서' : 'Nearby notes', exact: true}).waitFor();
-    assert.match(page.url(), /wiki\/graph\?node=/);
+    assert.match(page.url(), /wiki\/\?node=/);
     await page.goto(root + 'tags/kubernetes');
     assert.ok(await page.locator('main a[href*="/blog/"]').count() > 0);
     assert.ok(await page.locator('main a[href*="/wiki/"]').count() > 0);
-    const cvLink = page.locator('main a[href*="/about/cv#"]').first();
+    const cvLink = page.locator('main a[href*="/about/cv/#"], main a[href*="/about/cv#"]').first();
     const href = await cvLink.getAttribute('href');
     await cvLink.click();
     await page.locator('[data-career-document="cv"]').waitFor();
@@ -45,6 +46,8 @@ try {
         await page.goto(root + `about/${variant}`);
         await page.locator(`[data-career-document="${variant}"]`).waitFor();
         assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth + 1), `horizontal overflow at ${locale}/${variant}/${width}`);
+        await page.evaluate(() => document.fonts.ready);
+        if (variant === 'cv') await verifyCareerChips(page);
       }
     }
     await context.close();

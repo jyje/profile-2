@@ -1,6 +1,7 @@
 const fs = require('node:fs');
 const path = require('node:path');
 const yaml = require('js-yaml');
+const {authorFile} = require('./content-visibility.cjs');
 
 const cleanPath = value => {
   try { return decodeURI(value).replace(/\/$/, '') || '/'; }
@@ -27,7 +28,8 @@ function tagSlug(tag) {
 
 function authorSource(source) {
   return source.replace('i18n/en/docusaurus-plugin-content-docs/current/', 'content/en/wiki/')
-    .replace('i18n/en/docusaurus-plugin-content-blog/', 'content/en/blog/');
+    .replace('i18n/en/docusaurus-plugin-content-blog/', 'content/en/blog/')
+    .replace(/^\.content-build\//, 'content/');
 }
 
 const networks = new WeakMap();
@@ -48,7 +50,7 @@ async function computeNetwork(context, allContent) {
   const entries = metadataEntries(allContent).map(({kind, metadata: m}) => {
     const source = m.source.replace(/^@site\//, '');
     const authored = authorSource(source);
-    const fallback = locale === 'en' && kind === 'wiki' && !fs.existsSync(path.join(siteDir, authored));
+    const fallback = locale === 'en' && kind === 'wiki' && !fs.existsSync(path.join(siteDir, authorFile(authored, siteDir)));
     const tags = [...new Set((m.tags ?? []).map(tagSlug).filter(Boolean))];
     for (const tag of tags) {
       if (!registry[tag]?.label?.[locale]) throw new Error(`Unregistered ${locale} tag '${tag}' in ${source}`);
@@ -56,7 +58,7 @@ async function computeNetwork(context, allContent) {
     return {
       id: `${kind}:${m.permalink}`, kind, title: m.title, description: m.description ?? '',
       path: m.permalink, source, authored, tags, date: m.date instanceof Date ? m.date.toISOString().slice(0, 10) : String(m.date ?? '').slice(0, 10),
-      group: kind === 'blog' ? 'blog' : (m.sourceDirName === '.' ? 'home' : m.sourceDirName?.split('/')[0]) || 'home',
+      group: kind === 'blog' ? 'blog' : m.sourceDirName?.split('/')[0] === 'd' ? 'knowledge' : (m.sourceDirName === '.' ? 'home' : m.sourceDirName?.split('/')[0]) || 'home',
       koreanFallback: fallback,
       koreanPath: fallback ? m.permalink.replace(base, base.replace(/en\/$/, '')) : undefined,
     };
@@ -78,6 +80,9 @@ async function computeNetwork(context, allContent) {
     let decoded;
     try { decoded = decodeURIComponent(pathname); } catch { return; }
     if (!/^(?:[a-z][a-z\d+.-]*:|\/)/i.test(pathname)) {
+      if (!path.posix.extname(decoded)) {
+        throw new Error(`Relative route link '${href}' in ${entry.authored} is ambiguous with trailing slashes. Use a .md/.mdx file link or a root-relative site route.`);
+      }
       const target = path.resolve(siteDir, path.dirname(entry.authored), decoded);
       for (const candidate of [target, `${target}.md`, `${target}.mdx`, path.join(target, 'index.md'), path.join(target, 'index.mdx')]) {
         if (bySource.has(candidate)) return bySource.get(candidate);

@@ -3,8 +3,10 @@ import type {Config} from '@docusaurus/types';
 import type * as Preset from '@docusaurus/preset-classic';
 import obsidianCallouts from './src/remark/obsidian-callouts.mjs';
 import contentTemplateBlocks from './plugins/content-templates/remark-plugin.cjs';
+import {assertPreparedContent} from './plugins/content-visibility.cjs';
 
 // This runs in Node.js - Don't use client-side code here (browser APIs, JSX...)
+assertPreparedContent();
 
 const config: Config = {
   title: 'jyje',
@@ -13,6 +15,9 @@ const config: Config = {
 
   future: {
     v4: true,
+    // Authored dates are injected before staging. Never ask Git about generated
+    // files or allow the development preset's hardcoded example date.
+    experimental_vcs: 'disabled',
   },
 
   // GitHub Pages builds set SITE_URL and SITE_BASE_URL to publish under /profile-2/.
@@ -27,7 +32,8 @@ const config: Config = {
   organizationName: 'jyje',
   projectName: 'profile-2',
   deploymentBranch: 'gh-pages',
-  trailingSlash: false,
+  // Match canonical links to the directory-index URLs served by GitHub Pages.
+  trailingSlash: true,
 
   onBrokenLinks: 'throw',
 
@@ -55,14 +61,18 @@ const config: Config = {
       'classic',
       {
         docs: {
-          path: 'content/ko/wiki',
+          showLastUpdateTime: true,
+          showLastUpdateAuthor: false,
+          path: '.content-build/ko/wiki',
           routeBasePath: 'wiki',
           tagsBasePath: '_tag-archives',
           sidebarPath: './sidebars.ts',
           beforeDefaultRemarkPlugins: [obsidianCallouts, contentTemplateBlocks],
         },
         blog: {
-          path: 'content/ko/blog',
+          showLastUpdateTime: true,
+          showLastUpdateAuthor: false,
+          path: '.content-build/ko/blog',
           routeBasePath: 'blog',
           blogListComponent: '@site/src/components/BlogListPage',
           tagsBasePath: '_tag-archives',
@@ -95,6 +105,7 @@ const config: Config = {
     './plugins/locale-preference.cjs',
     './plugins/global-tags',
     './plugins/document-graph',
+    './plugins/wiki-graph-redirect.cjs',
     [
       '@docusaurus/plugin-client-redirects',
       {
@@ -102,6 +113,9 @@ const config: Config = {
         // Each locale is built separately and paths are relative to that locale's baseUrl:
         // ko -> /ko/posts/x (old) ; en -> /posts/x (written under /en/), matching the old /en/posts/x.
         createRedirects(existingPath: string) {
+          existingPath = existingPath.replace(/\/$/, '') || '/';
+          const document = existingPath.match(/^\/wiki\/d(\/.*)?$/);
+          if (document) return [`/wiki/knowledge${document[1] ?? ''}`];
           const isEn = process.env.DOCUSAURUS_CURRENT_LOCALE === 'en';
           const legacy = isEn ? '' : '/ko';
           const globalTag = existingPath.match(/^\/tags(?:\/([^/]+))?$/);
@@ -143,9 +157,9 @@ const config: Config = {
         hashed: 'filename',
         language: ['en', 'ko'],
         docsRouteBasePath: 'wiki',
-        docsDir: ['content/ko/wiki', 'content/en/wiki'],
+        docsDir: ['.content-build/ko/wiki', '.content-build/en/wiki'],
         blogRouteBasePath: 'blog',
-        blogDir: ['content/ko/blog', 'content/en/blog'],
+        blogDir: ['.content-build/ko/blog', '.content-build/en/blog'],
         indexPages: true,
         searchBarPosition: 'right',
       },

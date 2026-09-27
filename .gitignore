@@ -25,6 +25,7 @@ yarn-error.log*
 /i18n/en/docusaurus-plugin-content-docs
 # Generated from data/*.yml
 /src/generated
+/.content-build/
 
 # Obsidian vault (content/) local state; share only app.json
 /content/.obsidian/*

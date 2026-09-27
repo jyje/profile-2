@@ -1,6 +1,6 @@
 import {useEffect, useRef, useState, type ReactElement} from 'react';
 import {Button} from '@site/src/components/ui/button';
-import styles from '../../pages/wiki/graph.module.css';
+import styles from './styles.module.css';
 
 export type GraphCanvasNode = {
   id: string;
@@ -26,6 +26,8 @@ type Props = {
   resetLabel: string;
   onSelect: (nodeId: string) => void;
   loadErrorLabel: string;
+  retryLabel?: string;
+  compact?: boolean;
 };
 
 type Libraries = {d3: any; PIXI: any};
@@ -44,30 +46,39 @@ type RenderNode = {
 type RenderLink = {simulationData: any; gfx: any; alpha: number; width: number; color: number};
 
 let librariesPromise: Promise<Libraries> | undefined;
+const scriptPromises = new Map<string, Promise<void>>();
 
 function loadScript(src: string): Promise<void> {
-  const existing = [...document.scripts].find((script) => script.src === src);
-  if (existing) return Promise.resolve();
-
-  return new Promise((resolve, reject) => {
+  const cached = scriptPromises.get(src);
+  if (cached) return cached;
+  const promise = new Promise<void>((resolve, reject) => {
     const script = document.createElement('script');
     script.src = src;
     script.crossOrigin = 'anonymous';
     script.onload = () => resolve();
-    script.onerror = () => reject(new Error(`Could not load ${src}`));
+    script.onerror = () => { script.remove(); scriptPromises.delete(src); reject(new Error(`Could not load ${src}`)); };
     document.head.appendChild(script);
   });
+  scriptPromises.set(src, promise);
+  return promise;
 }
 
 function loadGraphLibraries(): Promise<Libraries> {
   if (!librariesPromise) {
-    librariesPromise = Promise.all([
+    const loading = Promise.all([
       loadScript('https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js'),
       loadScript('https://cdn.jsdelivr.net/npm/pixi.js@8/dist/pixi.js'),
-    ]).then(() => ({
+    ]);
+    // A removed, timed-out script may still execute. Retain its in-flight promise
+    // so retries wait for it rather than inserting a second copy. Actual network
+    // errors remove their failed script and allow a fresh request.
+    librariesPromise = new Promise<void>((resolve, reject) => {
+      const timer = window.setTimeout(() => reject(new Error('Graph libraries timed out')), 20000);
+      loading.then(() => { clearTimeout(timer); resolve(); }, error => { clearTimeout(timer); reject(error); });
+    }).then(() => ({
       d3: (window as any).d3,
       PIXI: (window as any).PIXI,
-    }));
+    })).catch(error => { librariesPromise = undefined; throw error; });
   }
   return librariesPromise;
 }
@@ -104,8 +115,8 @@ function blendColor(current: number, target: number, amount: number): number {
   return (blendChannel(16) << 16) | (blendChannel(8) << 8) | blendChannel(0);
 }
 
-function palette(): {groups: Record<string, number>; tag: number; muted: number; border: number; accent: number; text: string; font: string} {
-  const root = getComputedStyle(document.documentElement);
+function palette(element: HTMLElement): {groups: Record<string, number>; tag: number; muted: number; border: number; accent: number; text: string; font: string} {
+  const root = getComputedStyle(element);
   const get = (name: string, fallback: string) => resolveColor(root.getPropertyValue(name).trim(), fallback);
   return {
     groups: {
@@ -137,6 +148,8 @@ export default function GraphCanvas({
   resetLabel,
   onSelect,
   loadErrorLabel,
+  retryLabel = 'Retry',
+  compact = false,
 }: Props): ReactElement {
   const mountRef = useRef<HTMLDivElement>(null);
   const zoomRef = useRef<any>(null);
@@ -145,6 +158,24 @@ export default function GraphCanvas({
   const searchActiveRef = useRef(searchActive);
   const onSelectRef = useRef(onSelect);
   const [loadError, setLoadError] = useState(false);
+  const [ready, setReady] = useState(false);
+  const [loaded, setLoaded] = useState(false);
+  const [attempt, setAttempt] = useState(0);
+  const [visible, setVisible] = useState(false);
+  const activeRef = useRef(false);
+  const pauseRef = useRef<(paused: boolean) => void>(() => {});
+
+  useEffect(() => {
+    const mount = mountRef.current;
+    if (!mount) return;
+    let intersecting = false;
+    const update = () => { const active = intersecting && !document.hidden; activeRef.current = active; setVisible(active); pauseRef.current(!active); };
+    const near = new IntersectionObserver(entries => { if (entries[0].isIntersecting) { setReady(true); near.disconnect(); } }, {rootMargin: '240px'});
+    const viewport = new IntersectionObserver(entries => { intersecting = entries[0].isIntersecting; update(); });
+    near.observe(mount); viewport.observe(mount);
+    document.addEventListener('visibilitychange', update);
+    return () => { near.disconnect(); viewport.disconnect(); document.removeEventListener('visibilitychange', update); };
+  }, []);
 
   selectedIdRef.current = selectedId;
   matchingIdsRef.current = matchingIds;
@@ -153,7 +184,7 @@ export default function GraphCanvas({
 
   useEffect(() => {
     const mount = mountRef.current;
-    if (!mount) return undefined;
+    if (!mount || !ready) return undefined;
     const graphMount = mount as HTMLDivElement;
 
     let cancelled = false;
@@ -175,6 +206,7 @@ export default function GraphCanvas({
     const neighborIds = new Map<string, Set<string>>();
 
     setLoadError(false);
+    setLoaded(false);
 
     async function start() {
       try {
@@ -183,9 +215,9 @@ export default function GraphCanvas({
         if (!d3 || !PIXI) throw new Error('Graph rendering libraries were not available.');
 
         const bounds = graphMount.getBoundingClientRect();
-        width = Math.max(320, bounds.width);
-        height = Math.max(360, bounds.height);
-        const colors = palette();
+        width = Math.max(1, bounds.width);
+        height = Math.max(1, bounds.height);
+        const colors = palette(graphMount);
         const visitedKey = 'document-graph-visited';
         let visited: Set<string>;
         try {
@@ -197,8 +229,8 @@ export default function GraphCanvas({
         const simulationNodes = nodes.map((node) => ({
           ...node,
           text: node.title,
-          x: Math.random() * width - width / 2,
-          y: Math.random() * height - height / 2,
+          x: node.id === selectedIdRef.current ? 0 : Math.random() * width - width / 2,
+          y: node.id === selectedIdRef.current ? 0 : Math.random() * height - height / 2,
           vx: 0,
           vy: 0,
         }));
@@ -302,12 +334,12 @@ export default function GraphCanvas({
 
         simulation = d3
           .forceSimulation(simulationNodes)
-          .force('charge', d3.forceManyBody().strength(-100 * 0.5))
+          .force('charge', d3.forceManyBody().strength(compact ? -110 : -50))
           .force('center', d3.forceCenter().strength(0.3))
-          .force('link', d3.forceLink(simulationLinks).distance(30))
+          .force('link', d3.forceLink(simulationLinks).distance(compact ? 70 : 30))
           .force(
             'collide',
-            d3.forceCollide().radius((node: any) => 2 + Math.sqrt(degree.get(node.id) ?? 0)).iterations(3),
+            d3.forceCollide().radius((node: any) => (compact ? 16 : 2) + Math.sqrt(degree.get(node.id) ?? 0)).iterations(3),
           );
         if (enableRadial) {
           simulation.force('radial', d3.forceRadial((Math.min(width, height) / 2) * 0.8).strength(0.2));
@@ -414,7 +446,7 @@ export default function GraphCanvas({
             if (Math.hypot(point[0] - dragStart.x, point[1] - dragStart.y) < 6) {
               onSelectRef.current(event.subject.id);
               visited.add(event.subject.id);
-              localStorage.setItem(visitedKey, JSON.stringify([...visited]));
+              try { localStorage.setItem(visitedKey, JSON.stringify([...visited])); } catch { /* Storage may be disabled. */ }
             }
           });
         d3.select(graphCanvas).call(drag);
@@ -441,7 +473,7 @@ export default function GraphCanvas({
 
         let lastDrawAt = performance.now();
         const draw = () => {
-          if (cancelled) return;
+          if (cancelled || !activeRef.current) return;
           const now = performance.now();
           const elapsed = Math.min(64, now - lastDrawAt);
           lastDrawAt = now;
@@ -506,12 +538,19 @@ export default function GraphCanvas({
         simulation.on('tick', () => {});
         if (!reducedMotion) simulation.restart();
         draw();
+        pauseRef.current = paused => {
+          window.cancelAnimationFrame(frame);
+          if (paused) { simulation.stop(); app.stop(); }
+          else { app.start(); if (!reducedMotion) simulation.restart(); lastDrawAt = performance.now(); draw(); }
+        };
+        pauseRef.current(!activeRef.current);
+        setLoaded(true);
 
         resizeObserver = new ResizeObserver(() => {
           if (!app || !mount) return;
           const next = graphMount.getBoundingClientRect();
-          const nextWidth = Math.max(320, next.width);
-          const nextHeight = Math.max(360, next.height);
+          const nextWidth = Math.max(1, next.width);
+          const nextHeight = Math.max(1, next.height);
           if (Math.abs(nextWidth - width) < 1 && Math.abs(nextHeight - height) < 1) return;
           width = nextWidth;
           height = nextHeight;
@@ -521,14 +560,15 @@ export default function GraphCanvas({
           }
           if (reducedMotion) {
             simulation.stop().alpha(0.35).tick(300);
-          } else {
+          } else if (activeRef.current) {
             simulation.alpha(0.35).restart();
           }
         });
         resizeObserver.observe(graphMount);
 
         themeObserver = new MutationObserver(() => {
-          const nextColors = palette();
+          const nextColors = palette(graphMount);
+          Object.assign(colors, nextColors);
           for (const item of nodeRenderData) {
             item.color = item.simulationData.isTag
               ? nextColors.tag
@@ -552,23 +592,25 @@ export default function GraphCanvas({
       themeObserver?.disconnect();
       zoomRef.current = null;
       simulation?.stop();
+      pauseRef.current = () => {};
       try {
         app?.destroy(true);
       } catch {
         // Pixi may throw after a WebGL context is lost.
       }
     };
-  }, [edges, enableRadial, nodes]);
+  }, [edges, enableRadial, nodes, ready, attempt, compact]);
 
   function zoom(factor: number) {
     const canvas = mountRef.current?.querySelector('canvas');
     if (!canvas || !(window as any).d3 || !zoomRef.current) return;
     const d3 = (window as any).d3;
-    d3.select(canvas).transition().duration(180).call(zoomRef.current.scaleBy, factor);
+    d3.select(canvas).transition().duration(window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 180).call(zoomRef.current.scaleBy, factor);
   }
 
   return (
-    <div className={styles.graph} role="group" aria-label={label}>
+    <div className={`${styles.graph} ${compact ? styles.compact : ''}`} role="group" aria-label={label}
+      data-graph-state={loadError ? 'error' : loaded ? visible ? 'active' : 'paused' : 'loading'}>
       <div ref={mountRef} className={styles.graphMount} />
       <div className={styles.canvasTools}>
         <Button type="button" variant="ghost" size="icon" shape="square" onClick={() => zoom(1.18)} aria-label={zoomInLabel}>+</Button>
@@ -581,13 +623,13 @@ export default function GraphCanvas({
           onClick={() => {
             const canvas = mountRef.current?.querySelector('canvas');
             if (canvas && (window as any).d3 && zoomRef.current) {
-              (window as any).d3.select(canvas).transition().duration(180).call(zoomRef.current.transform, (window as any).d3.zoomIdentity);
+              (window as any).d3.select(canvas).transition().duration(window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 180).call(zoomRef.current.transform, (window as any).d3.zoomIdentity);
             }
           }}
           aria-label={resetLabel}
         >↺</Button>
       </div>
-      {loadError && <p className={styles.rendererError} role="status">{loadErrorLabel}</p>}
+      {loadError && <div className={styles.rendererError} role="status">{loadErrorLabel} <Button type="button" variant="outline" size="sm" onClick={() => setAttempt(value => value + 1)}>{retryLabel}</Button></div>}
     </div>
   );
 }

@@ -98,6 +98,31 @@ interface. Use them only on a trusted network.
 
 ## Authoring
 
-See the wiki page "Obsidian authoring guide" (`content/ko/wiki/guide/obsidian-authoring.md`).
+See the local-only wiki page "Obsidian authoring guide" (`content/ko/wiki/_guide/obsidian-authoring.md`).
+
+### Development-only documents
+
+The root `.docignore` lists root-relative `content/` globs excluded from public
+builds. `_guide/` and `_design/` contain local authoring and implementation notes.
+`npm run dev`, `npm start`, `dev:ko`, `dev:en` and `preview:lan` include them;
+their local routes remain `/wiki/guide/` and `/wiki/design/` in both locales.
+The all-locale `npm run dev` server binds to `0.0.0.0:3000` for localhost/LAN use.
+
+`npm run build` defaults to `SITE_CONTENT_MODE=public`. CI and GitHub Pages set
+this mode explicitly. Development content and its colocated assets are removed
+before Docusaurus loads documents, so they are absent from routes, navigation,
+search, graph, tags and the sitemap. Generated `.content-build/` and i18n mirrors
+must not be edited. Public documents must not link to development-only documents.
+
+`.docignore` supports root-relative globs, `#` comment lines and directory rules
+ending in `/`. Negation is not supported. Use underscored top-level section
+directories inside each locale's wiki/blog; local staging drops the underscore
+without changing the source. An invalid or missing policy fails the build.
+This is a publication boundary, not access control: source files in this public
+Git repository are still readable, and the LAN development server is not private.
+
+Docusaurus' default directory-index HTML layout handles slash and slashless
+page URLs on GitHub Pages. `npm run test:publication` checks both URL forms with
+JavaScript-free HTTP requests and rejects development routes in public artifacts.
 Short version: relative Markdown links (no `[[wikilinks]]`), `> [!note]` callouts, `.md` for
 posts and `.mdx` only when a React component is needed.

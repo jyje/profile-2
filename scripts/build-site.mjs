@@ -3,12 +3,15 @@ import {withBuildLock} from './build-lock.mjs';
 import path from 'node:path';
 import {prepareBuildContext} from './build-context.mjs';
 import {syncAll} from './sync-content.mjs';
+import {contentMode} from '../plugins/content-visibility.cjs';
 
 await withBuildLock(async () => {
   prepareBuildContext(path.resolve(import.meta.dirname, '..'), {
     url: process.env.SITE_URL ?? 'https://jyje.online',
     baseUrl: process.env.SITE_BASE_URL ?? '/',
     remote: process.env.LABS_REMOTE_ENTRY ?? '',
+    contentMode: contentMode(),
+    outputLayout: 'directory-index-v1',
   });
   // Sync and bundling share one lock because both change generated inputs.
   syncAll();

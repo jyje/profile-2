@@ -6,12 +6,12 @@ import {Button} from '@site/src/components/ui/button';
 import {Input} from '@site/src/components/ui/input';
 
 import GraphCanvas, {type GraphCanvasEdge, type GraphCanvasNode} from './GraphCanvas';
-import styles from '../../pages/wiki/graph.module.css';
+import styles from './styles.module.css';
 
 type GraphNode = GraphCanvasNode & {
   path?: string;
   koreanPath?: string;
-  koreanFallback: boolean;
+  koreanFallback?: boolean;
 };
 
 type Graph = {nodes: GraphNode[]; edges: GraphCanvasEdge[]};
@@ -43,7 +43,7 @@ const COPY = {
     graphLabel: '문서와 태그의 상호작용 그래프',
     noResults: '검색 결과가 없습니다.',
     rendererError: '그래프 렌더러를 불러오지 못했습니다. 네트워크에서 jsDelivr 접근을 허용해주세요.',
-    groups: {knowledge: '지식', design: '디자인', guide: '가이드', home: '홈', tag: '태그', blog: '블로그'},
+    groups: {knowledge: '문서', design: '설계', guide: '가이드', home: '홈', tag: '태그', blog: '블로그'},
   },
   en: {
     introduction: 'Explore the connections between notes and tags. Grab a node and move it to set its neighbors in motion.',
@@ -70,7 +70,7 @@ const COPY = {
     graphLabel: 'Interactive graph of documents and tags',
     noResults: 'No notes match that search.',
     rendererError: 'The graph renderer could not load. Allow access to jsDelivr in your network.',
-    groups: {knowledge: 'Knowledge', design: 'Design', guide: 'Guide', home: 'Home', tag: 'Tag', blog: 'Blog'},
+    groups: {knowledge: 'Documents', design: 'Design', guide: 'Guides', home: 'Home', tag: 'Tag', blog: 'Blog'},
   },
 } as const;
 
@@ -100,10 +100,12 @@ export default function WikiGraphPage({graphData}: PageProps): ReactElement {
   const [search, setSearch] = useState('');
   const location = useLocation();
   useEffect(() => {
-    const nodeId = new URLSearchParams(location.search).get('node');
-    if (nodeId && graph.nodes.some(node => node.id === nodeId)) {
-      setSelectedId(nodeId);
+    const nodeId = new URLSearchParams(location.search).get('node')?.replace('/wiki/knowledge', '/wiki/d');
+    const node = nodeId && graph.nodes.find(node => node.id.replace(/\/$/, '') === nodeId.replace(/\/$/, ''));
+    if (node) {
+      setSelectedId(node.id);
       setMode('local');
+      document.getElementById('document-graph')?.scrollIntoView();
     }
   }, [location.search, graph]);
 
@@ -203,6 +205,7 @@ export default function WikiGraphPage({graphData}: PageProps): ReactElement {
                 resetLabel={copy.reset}
                 onSelect={setSelectedId}
                 loadErrorLabel={copy.rendererError}
+                retryLabel={locale === 'ko' ? '다시 시도' : 'Retry'}
               />
               {!graphHasMatches && <p className={styles.emptySearch}>{copy.noResults}</p>}
             </div>

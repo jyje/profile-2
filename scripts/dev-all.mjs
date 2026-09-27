@@ -68,7 +68,7 @@ function buildInto(slot) {
     const relative = path.relative(root, destination);
     buildProcess = spawn('npm', ['run', 'build', '--', '--out-dir', relative], {
       cwd: root,
-      env: {...process.env, LABS_REMOTE_ENTRY: process.env.LABS_REMOTE_ENTRY ?? 'local'},
+      env: {...process.env, SITE_CONTENT_MODE: 'development', LABS_REMOTE_ENTRY: process.env.LABS_REMOTE_ENTRY ?? 'local'},
       stdio: 'inherit',
     });
     buildProcess.once('error', (error) => {
@@ -146,7 +146,7 @@ function watchSources() {
     });
     watchers.push(watcher);
   }
-  for (const name of ['docusaurus.config.ts', 'sidebars.ts', 'package.json']) {
+  for (const name of ['docusaurus.config.ts', 'sidebars.ts', 'package.json', '.docignore']) {
     const filename = path.join(root, name);
     const listener = (current, previous) => {
       if (current.mtimeMs !== previous.mtimeMs) scheduleBuild();

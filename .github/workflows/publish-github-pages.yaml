@@ -9,6 +9,9 @@ on:
 permissions:
   contents: read
 
+env:
+  SITE_CONTENT_MODE: public
+
 concurrency:
   group: pages
   cancel-in-progress: false
@@ -23,6 +26,8 @@ jobs:
     steps:
       - name: Check out source
         uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
 
       - name: Set up Node.js
         uses: actions/setup-node@v7
@@ -45,6 +50,9 @@ jobs:
         env:
           SITE_URL: ${{ steps.pages.outputs.origin }}
           SITE_BASE_URL: ${{ steps.pages.outputs.base_path }}/
+
+      - name: Verify static routes and publication boundaries
+        run: npm run test:publication
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v5

@@ -80,11 +80,11 @@ KCSA의 특징을 정리하면:
 
 ## 관련 위키
 
-- [쿠버네티스](../wiki/knowledge/k8s)
-- [컨테이너](../wiki/knowledge/container)
-- [CNCF](../wiki/knowledge/cncf)
-- [리눅스 재단](../wiki/knowledge/linux-foundation)
+- [쿠버네티스](/wiki/d/k8s)
+- [컨테이너](/wiki/d/container)
+- [CNCF](/wiki/d/cncf)
+- [리눅스 재단](/wiki/d/linux-foundation)
 
 ## 함께 읽기
 
-- [KCNA: Kubernetes and Cloud Native Associate](./kcna-kubernetes-and-cloud-native-associate)
+- [KCNA: Kubernetes and Cloud Native Associate](./2025-10-22-kcna-kubernetes-and-cloud-native-associate.md)

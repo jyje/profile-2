@@ -45,6 +45,7 @@ function fixture(t, locale = 'ko', base = '/') {
   t.after(() => fs.rmSync(siteDir, {recursive: true, force: true}));
   const write = (file, body) => { const p = path.join(siteDir, file); fs.mkdirSync(path.dirname(p), {recursive: true}); fs.writeFileSync(p, body); };
   write('data/tags.yml', 'tags:\n  ai:\n    label: {ko: AI, en: AI}\n');
+  write('.docignore', 'content/*/wiki/_guide/\ncontent/*/wiki/_design/\n');
   const metadata = (source, permalink, extra = {}) => ({source: `@site/${source}`, permalink, title: 'Same title', tags: [{permalink: `${base}tags/ai`}], ...extra});
   const context = {siteDir, siteConfig: {baseUrl: base, url: 'https://example.com'}, i18n: {currentLocale: locale}};
   const content = (docs, posts) => ({'docusaurus-plugin-content-docs': {default: {loadedVersions: [{docs}]}}, 'docusaurus-plugin-content-blog': {default: {blogPosts: posts.map(metadata => ({metadata}))}}});
@@ -86,6 +87,16 @@ test('duplicate routes and unregistered tags fail instead of silently merging', 
   const m = f.metadata('a.md', '/same');
   await assert.rejects(buildNetwork(f.context, f.content([m, m], [])), /Duplicate content route/);
   await assert.rejects(buildNetwork(f.context, f.content([{...m, tags: ['unknown']}], [])), /Unregistered/);
+});
+
+test('relative route links fail before slash-dependent navigation can ship', async t => {
+  const f = fixture(t);
+  f.write('content/ko/wiki/a.md', '[post](../blog/actual)');
+  f.write('content/ko/blog/post.md', '# Post');
+  await assert.rejects(buildNetwork(f.context, f.content(
+    [f.metadata('content/ko/wiki/a.md', '/wiki/a/')],
+    [f.metadata('content/ko/blog/post.md', '/blog/actual/')],
+  )), /ambiguous with trailing slashes/);
 });
 
 test('fallback supports MDX, preserves front matter and authored translations', t => {
