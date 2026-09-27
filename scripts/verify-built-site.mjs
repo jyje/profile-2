@@ -4,6 +4,7 @@ import path from 'node:path';
 import {spawn} from 'node:child_process';
 import handler from 'serve-handler';
 import {chromium} from 'playwright';
+import {verifyCareerChips} from './verify-career-chips.mjs';
 
 const prefix = process.env.VERIFY_BASE_PATH ?? '/profile-2/';
 const directory = path.resolve(process.env.VERIFY_BUILD_DIR ?? 'build');
@@ -45,6 +46,8 @@ try {
         await page.goto(root + `about/${variant}`);
         await page.locator(`[data-career-document="${variant}"]`).waitFor();
         assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth + 1), `horizontal overflow at ${locale}/${variant}/${width}`);
+        await page.evaluate(() => document.fonts.ready);
+        if (variant === 'cv') await verifyCareerChips(page);
       }
     }
     await context.close();
