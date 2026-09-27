@@ -179,9 +179,6 @@ const config: Config = {
         src: 'img/logo-128.png',
       },
       items: [
-        {to: '/blog', label: 'Blog', position: 'left'},
-        {type: 'docSidebar', sidebarId: 'wikiSidebar', position: 'left', label: 'Wiki'},
-        {to: '/labs', label: 'Labs', position: 'left'},
         {
           to: '/about',
           label: 'About',
@@ -193,6 +190,9 @@ const config: Config = {
             {to: '/about/portfolio', label: 'Portfolio'},
           ],
         },
+        {to: '/blog', label: 'Blog', position: 'left'},
+        {type: 'docSidebar', sidebarId: 'wikiSidebar', position: 'left', label: 'Wiki'},
+        {to: '/labs', label: 'Labs', position: 'left'},
         {
           type: 'localeDropdown',
           className: 'site-locale-compact',
