@@ -9,7 +9,7 @@ import {assertPreparedContent} from './plugins/content-visibility.cjs';
 assertPreparedContent();
 
 const config: Config = {
-  title: 'jyje',
+  title: 'jyje.online',
   tagline: 'AI Platform Engineer',
   favicon: 'img/favicon-32.png',
 

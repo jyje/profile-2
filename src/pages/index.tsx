@@ -6,6 +6,7 @@ import Layout from '@theme/Layout';
 import curation from '@site/src/generated/curation.json';
 import {pickForDay, seoulDate, type CuratedItem} from '@site/src/utils/daily-curation';
 import HomeQuickLinks from '@site/src/components/HomeQuickLinks';
+import {IconArticle, IconBooks, IconBriefcase, IconFileCv, IconFlask, IconTrophy, IconUserCircle} from '@tabler/icons-react';
 import styles from './index.module.css';
 
 type Catalog = {
@@ -16,12 +17,13 @@ type Catalog = {
 };
 
 type Copy = {
-  title: string;
   description: string;
   identity: string;
-  name: string;
-  nativeName: string;
+  authorName: string;
   introduction: string;
+  resume: string;
+  experience: string;
+  achievements: string;
   labs: string;
   about: string;
   featured: string;
@@ -43,11 +45,12 @@ type Copy = {
 const CATALOG = curation as Catalog;
 const COPY: Record<string, Copy> = {
   ko: {
-    title: 'Jeayoung Jeon (전제영) | AI 플랫폼 엔지니어',
     description: 'AI와 클라우드에 대한 지식과 경험을 기록합니다.',
     identity: 'AI 플랫폼 엔지니어',
-    name: 'Jeayoung Jeon',
-    nativeName: '(전제영)',
+    authorName: '전제영',
+    resume: '이력서',
+    experience: '경험',
+    achievements: '성취',
     introduction: 'AI와 클라우드에 대한 지식과 경험을 기록합니다.',
     labs: '실험실',
     about: '소개',
@@ -67,11 +70,12 @@ const COPY: Record<string, Copy> = {
     korean: '한국어 원문',
   },
   en: {
-    title: 'Jeayoung Jeon (전제영) | AI Platform Engineer',
     description: 'Notes on my knowledge and experience in AI and cloud.',
     identity: 'AI Platform Engineer',
-    name: 'Jeayoung Jeon',
-    nativeName: '(전제영)',
+    authorName: 'Jeayoung Jeon',
+    resume: 'Resume',
+    experience: 'Careers',
+    achievements: 'Achievements',
     introduction: 'I document my knowledge and experience in AI and cloud.',
     labs: 'Labs',
     about: 'About',
@@ -157,23 +161,30 @@ export default function Home(): ReactNode {
   const wikiPicks = day ? pickForDay(daily.wiki, CATALOG.counts.wiki, day, 'wiki') : [];
 
   return (
-    <Layout title={copy.title} description={copy.description}>
+    <Layout description={copy.description}>
       <main>
         <section className={styles.hero} aria-labelledby="home-title">
-          <p className={`container ${styles.kicker} ${styles.heroIdentity}`}>{copy.identity}</p>
           <div className={`container ${styles.heroInner}`}>
-            <h1 className={styles.name} id="home-title">
-              <span>{copy.name}</span>
-              <span className={styles.nativeName}>{copy.nativeName}</span>
-            </h1>
+            <h1 className={styles.siteTitle} id="home-title">jyje.online</h1>
             <p className={styles.introduction}>{copy.introduction}</p>
+            <p className={styles.author} id="home-author">
+              {'- '}
+              {locale === 'ko' ? (
+                <><span>{copy.identity}</span>{' '}<Link to="/about" rel="author"><strong>{copy.authorName}</strong></Link></>
+              ) : (
+                <><Link to="/about" rel="author"><strong>{copy.authorName}</strong></Link>{', '}<span>{copy.identity}</span></>
+              )}
+            </p>
             <HomeQuickLinks
               ariaLabel={locale === 'ko' ? '사이트 메뉴' : 'Site navigation'}
               items={[
-                {to: '/blog', label: copy.blog},
-                {to: '/wiki', label: copy.wiki},
-                {to: '/labs', label: copy.labs},
-                {to: '/about', label: copy.about},
+                {to: '/about', label: copy.about, icon: <IconUserCircle size={22} stroke={1.75} />, emphasis: true},
+                {to: '/about/resume', label: copy.resume, icon: <IconFileCv size={22} stroke={1.75} />, groupEnd: true},
+                {to: '/blog', label: copy.blog, icon: <IconArticle size={22} stroke={1.75} />, emphasis: true},
+                {to: '/tags/careers', label: copy.experience, icon: <IconBriefcase size={22} stroke={1.75} />},
+                {to: '/tags/achievements', label: copy.achievements, icon: <IconTrophy size={22} stroke={1.75} />, groupEnd: true},
+                {to: '/wiki', label: copy.wiki, icon: <IconBooks size={22} stroke={1.75} />, emphasis: true, groupEnd: true},
+                {to: '/labs', label: copy.labs, icon: <IconFlask size={22} stroke={1.75} />, emphasis: true},
               ]}
             />
           </div>
