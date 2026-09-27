@@ -80,6 +80,9 @@ async function computeNetwork(context, allContent) {
     let decoded;
     try { decoded = decodeURIComponent(pathname); } catch { return; }
     if (!/^(?:[a-z][a-z\d+.-]*:|\/)/i.test(pathname)) {
+      if (!path.posix.extname(decoded)) {
+        throw new Error(`Relative route link '${href}' in ${entry.authored} is ambiguous with trailing slashes. Use a .md/.mdx file link or a root-relative site route.`);
+      }
       const target = path.resolve(siteDir, path.dirname(entry.authored), decoded);
       for (const candidate of [target, `${target}.md`, `${target}.mdx`, path.join(target, 'index.md'), path.join(target, 'index.mdx')]) {
         if (bySource.has(candidate)) return bySource.get(candidate);

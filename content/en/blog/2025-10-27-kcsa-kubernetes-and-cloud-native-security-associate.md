@@ -80,11 +80,11 @@ The KCSA certification validates a solid foundation in cloud native security tec
 
 ## Related wiki pages
 
-- [Kubernetes](../wiki/d/k8s)
-- [Containers](../wiki/d/container)
-- [CNCF](../wiki/d/cncf)
-- [Linux Foundation](../wiki/d/linux-foundation)
+- [Kubernetes](/wiki/d/k8s)
+- [Containers](/wiki/d/container)
+- [CNCF](/wiki/d/cncf)
+- [Linux Foundation](/wiki/d/linux-foundation)
 
 ## Related article
 
-- [KCNA: Kubernetes and Cloud Native Associate](./kcna-kubernetes-and-cloud-native-associate)
+- [KCNA: Kubernetes and Cloud Native Associate](./2025-10-22-kcna-kubernetes-and-cloud-native-associate.md)

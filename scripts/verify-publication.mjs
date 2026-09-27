@@ -3,6 +3,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import http from 'node:http';
 import {contentMode, ignorePatterns, isDocIgnored} from '../plugins/content-visibility.cjs';
+import {blogPublicationRoute} from './publication-blog-routes.mjs';
 
 const root = path.resolve(import.meta.dirname, '..');
 const output = path.resolve(process.env.VERIFY_BUILD_DIR ?? 'build');
@@ -56,6 +57,18 @@ try {
       for (const entry of fs.readdirSync(source, {withFileTypes: true})) {
         if (!entry.isDirectory() || !entry.name.startsWith('_') || !isDocIgnored(`content/${locale}/${kind}/${entry.name}/`, patterns)) continue;
         const section = entry.name.slice(1);
+        if (kind === 'blog') {
+          const directory = path.join(source, entry.name);
+          for (const file of fs.readdirSync(directory, {recursive: true}).filter(file => /\.mdx?$/.test(file))) {
+            const route = blogPublicationRoute(fs.readFileSync(path.join(directory, file), 'utf8'), `${section}/${file}`, prefix + (locale === 'en' ? 'en/' : ''));
+            if (!route) continue;
+            assert.equal((await fetch(origin + route)).status, mode === 'development' ? 200 : 404, `Excluded blog permalink ${route}`);
+            if (mode === 'public') for (const outputFile of files.filter(file => /\.(html|js|json|xml|map)$/.test(file))) {
+              assert.ok(!fs.readFileSync(path.join(output, outputFile), 'utf8').replaceAll('\\/', '/').includes(route), `Development blog route leaked into ${outputFile}: ${route}`);
+            }
+          }
+          continue;
+        }
         const relative = `${locale === 'en' ? 'en/' : ''}${kind}/${section}/`;
         if (mode === 'development') {
           assert.ok(files.some(file => file.startsWith(relative)), `Missing development section ${relative}`);

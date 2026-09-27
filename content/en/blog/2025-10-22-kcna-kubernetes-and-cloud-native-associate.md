@@ -78,11 +78,11 @@ I shared my certification on LinkedIn with [this post](https://www.linkedin.com/
 
 ## Related wiki pages
 
-- [Kubernetes](../wiki/d/k8s)
-- [Containers](../wiki/d/container)
-- [CNCF](../wiki/d/cncf)
-- [Linux Foundation](../wiki/d/linux-foundation)
+- [Kubernetes](/wiki/d/k8s)
+- [Containers](/wiki/d/container)
+- [CNCF](/wiki/d/cncf)
+- [Linux Foundation](/wiki/d/linux-foundation)
 
 ## Related article
 
-- [KCSA: Kubernetes and Cloud Native Security Associate](./kcsa-kubernetes-and-cloud-native-security-associate)
+- [KCSA: Kubernetes and Cloud Native Security Associate](./2025-10-27-kcsa-kubernetes-and-cloud-native-security-associate.md)

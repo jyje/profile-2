@@ -11,7 +11,7 @@ import * as yaml from 'js-yaml';
 import {buildCuration} from './build-curation.mjs';
 import {mergeKoreanFallbackDocs} from './build-wiki-graph.mjs';
 import {prepareContent} from './prepare-content.mjs';
-import {shouldRebuild} from './source-watch.mjs';
+import {shouldRebuild, authoredWatchPaths} from './source-watch.mjs';
 import {validateWikiTitles} from './validate-wiki-titles.mjs';
 import {syncWikiNavigation} from './sync-wiki-navigation.mjs';
 
@@ -98,22 +98,8 @@ if (isDirect && process.argv.includes('--watch')) {
     }, 150);
   };
 
-  function walk(dir, paths) {
-    paths.add(dir);
-    for (const entry of fs.readdirSync(dir, {withFileTypes: true})) {
-      if (!shouldRebuild('content', path.relative(path.join(ROOT, 'content'), path.join(dir, entry.name)))) continue;
-      const entryPath = path.join(dir, entry.name);
-      paths.add(entryPath);
-      if (entry.isDirectory()) walk(entryPath, paths);
-    }
-  }
-
   function refreshWatchers() {
-    const paths = new Set([path.join(ROOT, '.docignore')]);
-    for (const dir of ['content/ko', 'content/en', 'data']) {
-      const source = path.join(ROOT, dir);
-      if (fs.existsSync(source)) walk(source, paths);
-    }
+    const paths = authoredWatchPaths(ROOT);
     for (const p of watched) {
       if (!paths.has(p)) {
         fs.unwatchFile(p);

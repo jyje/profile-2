@@ -15,6 +15,9 @@ const config: Config = {
 
   future: {
     v4: true,
+    // Authored dates are injected before staging. Never ask Git about generated
+    // files or allow the development preset's hardcoded example date.
+    experimental_vcs: 'disabled',
   },
 
   // GitHub Pages builds set SITE_URL and SITE_BASE_URL to publish under /profile-2/.
@@ -29,9 +32,8 @@ const config: Config = {
   organizationName: 'jyje',
   projectName: 'profile-2',
   deploymentBranch: 'gh-pages',
-  // Keep Docusaurus' default directory/index.html output. Static hosts can
-  // serve /route/ directly and redirect /route to it, without a JS 404 recovery.
-  trailingSlash: undefined,
+  // Match canonical links to the directory-index URLs served by GitHub Pages.
+  trailingSlash: true,
 
   onBrokenLinks: 'throw',
 
@@ -111,6 +113,7 @@ const config: Config = {
         // Each locale is built separately and paths are relative to that locale's baseUrl:
         // ko -> /ko/posts/x (old) ; en -> /posts/x (written under /en/), matching the old /en/posts/x.
         createRedirects(existingPath: string) {
+          existingPath = existingPath.replace(/\/$/, '') || '/';
           const document = existingPath.match(/^\/wiki\/d(\/.*)?$/);
           if (document) return [`/wiki/knowledge${document[1] ?? ''}`];
           const isEn = process.env.DOCUSAURUS_CURRENT_LOCALE === 'en';

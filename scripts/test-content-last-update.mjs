@@ -8,10 +8,22 @@ import * as yaml from 'js-yaml';
 import {createLastUpdateReader, withLastUpdate} from './content-last-update.mjs';
 import {prepareContent} from './prepare-content.mjs';
 import {mergeKoreanFallbackDocs} from './build-wiki-graph.mjs';
+import {getVcsPreset, readLastUpdateData} from '@docusaurus/utils';
 
 const initial = '2024-03-01T10:00:00+09:00';
 const updated = '2025-06-02T10:00:00+09:00';
 const frontmatter = text => yaml.load(text.match(/^---\n([\s\S]*?)\n---/)[1]);
+
+test('native Docusaurus dates keep staged values and never fabricate missing dates', async () => {
+  const config = fs.readFileSync(new URL('../docusaurus.config.ts', import.meta.url), 'utf8');
+  assert.match(config, /experimental_vcs:\s*['"]disabled['"]/);
+  const options = {showLastUpdateTime: true, showLastUpdateAuthor: false};
+  const vcs = getVcsPreset('disabled');
+  for (const source of ['.content-build/ko/wiki/new.md', 'i18n/en/docusaurus-plugin-content-docs/current/new.md', '.content-build/ko/blog/new.mdx']) {
+    assert.equal((await readLastUpdateData(source, options, undefined, vcs)).lastUpdatedAt, null);
+    assert.equal((await readLastUpdateData(source, options, {date: initial}, vcs)).lastUpdatedAt, Date.parse(initial));
+  }
+});
 function fixture(t) {
   const root = fs.mkdtempSync(path.join(os.tmpdir(), 'profile2-last-update-'));
   t.after(() => fs.rmSync(root, {recursive: true, force: true}));

@@ -22,5 +22,5 @@ sources:
 
 ## 관련 블로그 글
 
-- [KCSA: Kubernetes and Cloud Native Security Associate](../../blog/kcsa-kubernetes-and-cloud-native-security-associate)
-- [KCNA: Kubernetes and Cloud Native Associate](../../blog/kcna-kubernetes-and-cloud-native-associate)
+- [KCSA: Kubernetes and Cloud Native Security Associate](/blog/kcsa-kubernetes-and-cloud-native-security-associate)
+- [KCNA: Kubernetes and Cloud Native Associate](/blog/kcna-kubernetes-and-cloud-native-associate)

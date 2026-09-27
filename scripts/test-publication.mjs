@@ -5,7 +5,24 @@ import path from 'node:path';
 import {test} from 'node:test';
 import {prepareContent} from './prepare-content.mjs';
 import {contentMode, ignorePatterns, isDocIgnored, authorFile, assertPreparedContent} from '../plugins/content-visibility.cjs';
-import {shouldRebuild} from './source-watch.mjs';
+import {shouldRebuild, authoredWatchPaths} from './source-watch.mjs';
+import {blogPublicationRoute} from './publication-blog-routes.mjs';
+
+test('excluded blog audits use explicit or native date-based permalinks, not source directories', () => {
+  assert.equal(blogPublicationRoute('---\nslug: private-demo\n---\nBody', 'internal/2026-01-01-note.md', '/profile-2/en/'), '/profile-2/en/blog/private-demo');
+  assert.equal(blogPublicationRoute('# Note', 'internal/2026-01-01-note.md', '/'), '/blog/2026/01/01/internal/note');
+  assert.equal(blogPublicationRoute('---\ndraft: true\n---\nBody', 'internal/note.md', '/'), undefined);
+});
+
+test('polling enumerates editable data files as well as content, excluding hidden files', t => {
+  const f = fixture(t);
+  f.write('data/resume.ko.yml', 'basics: {}');
+  f.write('data/tags.yml', 'tags: {}');
+  f.write('data/.hidden.yml', 'hidden: true');
+  const paths = authoredWatchPaths(f.root);
+  for (const file of ['data/resume.ko.yml', 'data/tags.yml', 'content/en/wiki/_guide/authoring.mdx']) assert.ok(paths.has(path.join(f.root, file)));
+  assert.equal(paths.has(path.join(f.root, 'data/.hidden.yml')), false);
+});
 
 function fixture(t) {
   const root = fs.mkdtempSync(path.join(os.tmpdir(), 'profile2-publication-'));

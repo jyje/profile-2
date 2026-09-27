@@ -89,6 +89,16 @@ test('duplicate routes and unregistered tags fail instead of silently merging', 
   await assert.rejects(buildNetwork(f.context, f.content([{...m, tags: ['unknown']}], [])), /Unregistered/);
 });
 
+test('relative route links fail before slash-dependent navigation can ship', async t => {
+  const f = fixture(t);
+  f.write('content/ko/wiki/a.md', '[post](../blog/actual)');
+  f.write('content/ko/blog/post.md', '# Post');
+  await assert.rejects(buildNetwork(f.context, f.content(
+    [f.metadata('content/ko/wiki/a.md', '/wiki/a/')],
+    [f.metadata('content/ko/blog/post.md', '/blog/actual/')],
+  )), /ambiguous with trailing slashes/);
+});
+
 test('fallback supports MDX, preserves front matter and authored translations', t => {
   const f = fixture(t);
   f.write('ko/page.mdx', '---\ntitle: Test\n---\nimport A from "./a";\n\n# 한국어');
