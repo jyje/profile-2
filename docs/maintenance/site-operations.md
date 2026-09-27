@@ -12,7 +12,7 @@ For framework changes, follow the [compatibility and upgrade policy](docusaurus-
 | Portfolio and Labs page copy | Matching MDX pages under `src/pages/` and `i18n/en/docusaurus-plugin-content-pages/` |
 | Career facts | `data/resume.ko.yml` and `data/resume.en.yml` |
 | One-page resume selection | `data/career-layout.yml` |
-| Featured content, reading list, and daily pools | `data/home-curation.yml` |
+| Retained curation configuration, not displayed on the home page | `data/home-curation.yml` |
 | Structured content templates | One component entrypoint and CSS module per template under `src/components/ContentTemplates/` |
 
 The site home is `/`; the About overview is `/about/`. Resume, CV, and portfolio
@@ -64,18 +64,20 @@ Labs runs independently. Follow [Vue Labs integration](../../src/components/Fede
 for port 5174, local remote-entry selection, and production configuration.
 An unconfigured or unavailable remote displays a fallback, not a working AI backend.
 
-## Home curation and preferences
+## Home page, retained curation, and preferences
 
-Edit [home-curation.yml](../../data/home-curation.yml) for featured pieces, the
-reading list, daily candidate pools, and counts. IDs are source-relative paths
-under each locale's blog or wiki without `.md`; blog IDs retain their date prefix.
-`npm run sync` validates entries and generates the catalog from front matter.
-An English curated wiki item without a translation links to the Korean original.
+The current home page contains an introduction and four text links to Blog, Wiki,
+Labs, and About. Its localized copy lives in `src/pages/index.tsx`. It does not
+render featured pieces, a reading list, or daily picks.
 
-Daily picks use a deterministic browser-side seed based on the Seoul date.
-For the same catalog and date, the selection is stable; it is recalculated daily
-without deployment. A selection can repeat, and changing the catalog or counts
-still requires a build and deployment.
+[home-curation.yml](../../data/home-curation.yml), the catalog generator, and the
+daily-selection utility are retained but have no consumer on the current home
+page. Editing that configuration does not change the visible homepage.
+`npm run sync` still validates it and generates the catalog, so referenced sources
+must remain valid until that build-time dependency is explicitly removed.
+IDs are source-relative paths under each locale's blog/wiki without `.md`; blog
+IDs retain the date prefix. Reintroducing curated content requires an explicit
+UI change rather than a configuration-only edit.
 
 Light is the default theme. `jyje_color_mode` remembers a visitor's selection;
 Docusaurus also maintains its own namespaced local-storage preference.
@@ -154,6 +156,7 @@ npm run test:publication
 node scripts/verify-built-site.mjs
 npm run test:wiki
 npm run test:breadcrumbs
+npm run test:homepage
 ```
 
 Linux runners may need `npx playwright install --with-deps chromium`, as CI uses.
