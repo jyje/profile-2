@@ -19,6 +19,7 @@
     "test:ui": "node --test scripts/test-ui-integration.mjs",
     "test:content": "node --test scripts/test-content-network.mjs scripts/test-career-layout.mjs scripts/test-publication.mjs scripts/test-content-last-update.mjs scripts/test-document-graph.mjs",
     "test:publication": "node scripts/verify-publication.mjs",
+    "test:wiki": "node scripts/verify-wiki.mjs",
     "export:pdf": "node scripts/export-career-pdfs.mjs",
     "sync": "node scripts/sync-locked.mjs",
     "prestart": "node scripts/development-command.mjs run sync",

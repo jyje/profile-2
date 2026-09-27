@@ -11,8 +11,8 @@ Use the house emoji for Wiki Home. Preserve the existing theme and graph physics
 - [x] Integrate the global graph at the bottom of Wiki Home; retire the standalone page.
 - [x] Unify localized wiki headings and emoji, including excluded sources.
 - [x] Add automatic development-only callouts based on `.docignore`.
-- [ ] Verify both locales, public and development builds, responsive graph interactions and existing features.
-- [ ] Preserve final decisions and verification in maintenance documentation.
+- [x] Verify both locales, public and development builds, responsive graph interactions and existing features.
+- [x] Preserve final decisions and verification in maintenance documentation.
 - [ ] Delete this checklist and this task's temporary plan in a separate final cleanup commit.
 
 ## Acceptance
@@ -37,3 +37,10 @@ Titles: all authored wiki pages and categories pass emoji validation, including
 local-only sources. Translation parity and missing/duplicate/brain emoji fixtures pass.
 Publication notices: 22 content tests and typecheck passed. Live Korean and English
 development guides display the localized warning as the first admonition.
+Final verification: 23 content tests, 6 UI tests and typecheck passed. Both locales
+passed the browser suite against public output and the running development server.
+Public 581 and development 609 directory-index HTML routes work with and without
+trailing slashes. Cross-content links, tags, CV anchors and responsive layouts pass.
+Korean and English resumes each export to one A4 page; CVs each export to three.
+All eight PDF pages were rendered and visually checked. Durable decisions and
+reproducible checks are in `docs/maintenance/wiki-content.md`.

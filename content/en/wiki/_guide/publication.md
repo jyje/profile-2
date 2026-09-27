@@ -25,6 +25,10 @@ Rules are relative to the repository root. `*` and `**` globs, `#` comment lines
 
 Build inputs are generated under `.content-build/`; do not edit them. Links from public documents to excluded documents fail the build. Keep development instructions in this section. Between local-only sections, site links can use existing routes such as `/wiki/design/resume`.
 
+Development builds automatically prepend a publication warning to excluded
+documents, before any English fallback notice. Do not copy that warning into
+authored Markdown. Wiki title emoji rules also apply to excluded documents.
+
 ## Last updated dates
 
 Wiki documents and blog posts use Docusaurus's built-in last-updated footer. Staging reads the authored file's last Git commit, not build time or filesystem mtime. English fallback pages inherit the Korean source date. Uncommitted edits do not advance the date; new documents without Git history have no inferred date until committed.

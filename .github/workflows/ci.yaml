@@ -59,6 +59,9 @@ jobs:
       - name: Verify browser navigation and bilingual PDFs
         run: node scripts/verify-built-site.mjs
 
+      - name: Verify wiki graphs and publication behavior
+        run: npm run test:wiki
+
       - name: Upload career document review artifacts
         if: always()
         uses: actions/upload-artifact@v6

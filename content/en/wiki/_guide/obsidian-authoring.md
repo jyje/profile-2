@@ -26,7 +26,7 @@ content/
 
 When a wiki page has no English counterpart, the build preparation step copies the Korean original and its assets to the same path on the English site. The generated page starts with an English callout explaining that no English version is available and recommending browser translation. The source under `content/ko/` is not modified.
 
-Open [Document graph](../index.md#document-graph) from the Wiki sidebar to explore connections between notes and tags. The local Docusaurus `document-graph` plugin reads Markdown links and tags at build time. Grab and shake a node to move its neighbors, or drag the background and use the wheel to pan and zoom. Select a node to inspect its neighbors, open the fallback page, or go directly to the Korean original.
+Explore wiki, blog and tag connections in the [graph at the bottom of Wiki Home](../index.md#document-graph). Each wiki document and blog post also receives a local graph automatically, showing direct links, backlinks and its own tags. No Markdown embed is required. Grab and shake a node to move its neighbors, or pan the background and use the zoom controls. The node selector and document link provide keyboard access.
 
 ## Links and images
 
