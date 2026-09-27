@@ -103,6 +103,7 @@ const config: Config = {
     './plugins/tailwind.cjs',
     './plugins/color-cookie.cjs',
     './plugins/locale-preference.cjs',
+    './plugins/llms-txt/index.cjs',
     './plugins/global-tags',
     './plugins/document-graph',
     './plugins/wiki-graph-redirect.cjs',
