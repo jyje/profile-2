@@ -1,98 +1,44 @@
 .quickLinks {
-  margin-top: 1.7rem;
+  max-width: 36rem;
+  margin-top: clamp(1.4rem, 3vw, 2rem);
+  padding-top: 0.55rem;
+  border-top: 1px solid var(--site-border);
 }
 
 .list {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.35rem clamp(0.35rem, 1vw, 0.75rem);
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 3rem), 1fr));
+  gap: 0.25rem;
   margin: 0;
   padding: 0;
   list-style: none;
 }
 
-.list li {
-  min-width: 0;
-}
-
-.groupEnd {
-  margin-right: 0.35rem;
-  padding-right: 1rem;
-  border-right: 1px solid var(--site-border);
-}
-
 .link {
-  display: inline-flex;
+  display: flex;
   align-items: center;
-  gap: 0.45rem;
+  justify-content: center;
   min-height: 44px;
-  padding: 0.4rem 0.55rem;
+  padding: 0.4rem 0.2rem;
   border-radius: 0.25rem;
   color: var(--site-muted);
-  font-size: 0.95rem;
+  font-size: clamp(0.88rem, 1.4vw, 1rem);
+  font-weight: 650;
+  text-align: center;
   text-decoration: none;
-  transition: color 150ms ease, transform 150ms ease;
+  white-space: nowrap;
+  transition: color 150ms ease, background-color 150ms ease;
 }
 
 .link:hover {
+  background: var(--site-surface);
   color: var(--site-accent);
   text-decoration: none;
-  transform: translateY(-1px);
 }
 
-.link:active {
-  transform: translateY(0) scale(0.98);
-}
-
-.emphasis {
-  color: var(--site-accent);
-  font-weight: 700;
-}
-
-.icon {
-  display: inline-flex;
-  flex: none;
-  align-items: center;
-  justify-content: center;
-}
-
-.icon svg {
-  display: block;
-}
-
-.label {
-  white-space: nowrap;
-}
-
-@media (max-width: 700px) {
-  .list {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(44px, 1fr));
-    gap: 0.25rem;
-  }
-
-  .groupEnd {
-    margin: 0;
-    padding: 0;
-    border: 0;
-  }
-
-  .link {
-    width: 100%;
-    justify-content: center;
-    padding: 0.25rem;
-  }
-
-  .label {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    overflow: hidden;
-    clip: rect(0, 0, 0, 0);
-    clip-path: inset(50%);
-    white-space: nowrap;
-  }
+.link:focus-visible {
+  outline: 2px solid var(--site-accent);
+  outline-offset: 2px;
 }
 
 @media (prefers-reduced-motion: reduce) {

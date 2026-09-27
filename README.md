@@ -42,9 +42,8 @@ Blog posts and wiki notes share [tags](https://jyje.github.io/profile-2/en/tags/
 related links, and interactive document graphs. The wiki home provides the broader
 graph; individual posts and notes show the connections around that document.
 
-The home page combines editorial selections with daily picks based on Korea
-Standard Time. The daily selection is calculated in the browser without rebuilding
-the site. Korean and English are supported; wiki notes without an English version
+The home page introduces the site and provides direct links to Blog, Wiki, Labs,
+and About. Korean and English are supported; wiki notes without an English version
 show the Korean original with a browser-translation notice.
 
 ## Behind the Site
@@ -75,6 +74,6 @@ on a trusted network. Labs needs its separately running remote app.
 
 ## Maintenance
 
-- [Site operations](docs/maintenance/site-operations.md): edit content, curate the home page, develop, verify, and publish.
+- [Site operations](docs/maintenance/site-operations.md): edit content, develop, verify, and publish.
 - [Docusaurus compatibility and upgrades](docs/maintenance/docusaurus-compatibility.md): integration boundaries, dependency policy, upgrade gates, and rollback.
 - [Vue Labs integration](src/components/FederatedLabs/INTEGRATION.md): run and configure the independent remote.
