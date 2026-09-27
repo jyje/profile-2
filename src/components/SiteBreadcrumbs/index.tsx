@@ -8,7 +8,7 @@ import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import HomeItem from '@theme-original/DocBreadcrumbs/Items/Home';
 import styles from './styles.module.css';
 
-export type BreadcrumbItem = {label: string; href?: string; onNavigate?: () => void};
+export type BreadcrumbItem = {label: string; href?: string; onNavigate?: () => void; virtual?: boolean};
 export const BreadcrumbContext = createContext<BreadcrumbItem[] | null>(null);
 
 export function useBreadcrumbLabels() {
@@ -26,7 +26,7 @@ export default function SiteBreadcrumbs({items, className}: {items: BreadcrumbIt
   const {pathname} = useLocation();
   if (!items.length) return null;
   // Remote-only screen IDs are not public URLs and must not become SEO routes.
-  const publicItems = items.filter(item => !item.onNavigate);
+  const publicItems = items.filter(item => !item.virtual && !item.onNavigate);
   const structured = { '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: [
     {label: labels.home, href: home}, ...publicItems,
   ].map((item, index) => ({'@type': 'ListItem', position: index + 1, name: item.label,

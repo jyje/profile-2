@@ -7,9 +7,12 @@ import {useBreadcrumbLabels} from '@site/src/components/SiteBreadcrumbs';
 export default function WikiBreadcrumbData(props: Props) {
   const {metadata} = useDoc();
   const home = useBaseUrl('/wiki/');
+  const siteHome = useBaseUrl('/');
   const labels = useBreadcrumbLabels();
   const isHome = metadata.permalink.replace(/\/$/, '') === home.replace(/\/$/, '');
-  return <OriginalStructuredData {...props} breadcrumbs={isHome ? props.breadcrumbs : [
-    {type: 'link', label: labels.wiki, href: home}, ...props.breadcrumbs,
+  return <OriginalStructuredData {...props} breadcrumbs={[
+    {type: 'link', label: labels.home, href: siteHome},
+    ...(isHome ? [] : [{type: 'link' as const, label: labels.wiki, href: home}]),
+    ...props.breadcrumbs,
   ]} />;
 }

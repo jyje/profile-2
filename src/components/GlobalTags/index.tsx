@@ -1,6 +1,7 @@
 import type {ReactNode} from 'react';
 import Link from '@docusaurus/Link';
 import Layout from '@theme/Layout';
+import SiteBreadcrumbs from '@site/src/components/SiteBreadcrumbs';
 
 import styles from './styles.module.css';
 
@@ -36,6 +37,7 @@ function TagIndex({data}: {data: TagData}): ReactNode {
   const isKorean = data.locale === 'ko';
   return (
     <main className={`container ${styles.page}`}>
+      <SiteBreadcrumbs items={[{label: isKorean ? '전체 태그' : 'All tags'}]} />
       <header className={styles.heading}>
         <h1>{isKorean ? '전체 태그' : 'All tags'}</h1>
         <p>{isKorean ? '블로그, 위키, 이력서, 포트폴리오의 주제를 한곳에서 찾아보세요.' : 'Explore topics across blog posts, wiki pages, the résumé, and portfolio.'}</p>
@@ -58,9 +60,7 @@ function TagDetail({data, tag}: {data: TagData; tag: Tag}): ReactNode {
   const typeLabels = TYPE_LABELS[data.locale] ?? TYPE_LABELS.en;
   return (
     <main className={`container ${styles.page}`}>
-      <nav className={styles.breadcrumb} aria-label={isKorean ? '경로' : 'Breadcrumb'}>
-        <Link to="/tags">{isKorean ? '전체 태그' : 'All tags'}</Link>
-      </nav>
+      <SiteBreadcrumbs items={[{label: isKorean ? '전체 태그' : 'All tags', href: '/tags/'}, {label: tag.label}]} />
       <header className={styles.heading}>
         <h1>{tag.label}</h1>
         <p>{tag.description || (isKorean ? `${tag.count}개 항목` : `${tag.count} items`)}</p>

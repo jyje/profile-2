@@ -18,11 +18,18 @@
 .breadcrumbs button {
   font-family: inherit;
   border: 0;
+  background: transparent;
   cursor: pointer;
+}
+
+.breadcrumbs button:hover {
+  background: var(--ifm-breadcrumb-item-background-active);
+  color: var(--ifm-breadcrumb-color-active);
 }
 
 .standalone { margin-top: 1rem; }
 .career { max-width: 52rem; margin: 1.5rem auto 0; padding: 0 1rem; }
+.summary { max-width: 54rem; padding-inline: 1.5rem; }
 
 @media print {
   .breadcrumbs, :global(.theme-doc-breadcrumbs) { display: none !important; }
