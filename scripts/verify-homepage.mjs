@@ -60,11 +60,19 @@ try {
             });
             const names = [...document.querySelectorAll('main h1 > span')].map(element => ({...rect(element), lineHeight: parseFloat(getComputedStyle(element).lineHeight)}));
             const role = document.querySelector('main section > p');
-            return {viewport: innerWidth, scrollWidth: document.documentElement.scrollWidth, links, names,
+            const rightEdgeElements = [...document.querySelectorAll('body *')]
+              .map(element => {
+                const box = element.getBoundingClientRect();
+                return {tag: element.tagName, className: typeof element.className === 'string' ? element.className : '', right: box.right};
+              })
+              .filter(element => element.right > innerWidth + 1)
+              .sort((a, b) => b.right - a.right)
+              .slice(0, 8);
+            return {viewport: innerWidth, scrollWidth: document.documentElement.scrollWidth, links, names, rightEdgeElements,
               role: {...rect(role), lineHeight: parseFloat(getComputedStyle(role).lineHeight)}};
           });
           const label = `${locale} ${width}px ${theme} text ${scale}%`;
-          assert(result.scrollWidth <= result.viewport, `${label}: page overflows to ${result.scrollWidth}px`);
+          assert(result.scrollWidth <= result.viewport, `${label}: page overflows to ${result.scrollWidth}px; right-edge elements: ${JSON.stringify(result.rightEdgeElements)}`);
           for (const name of result.names) {
             assert(name.left >= 0 && name.right <= width + 1, `${label}: name escapes viewport`);
             if (scale === 100) assert(name.height <= name.lineHeight + 1, `${label}: name portion unexpectedly wraps at default size`);
