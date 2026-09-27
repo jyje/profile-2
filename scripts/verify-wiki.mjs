@@ -46,6 +46,22 @@ try {
     const page = await context.newPage();
     const errors = []; page.on('pageerror', error => errors.push(error.message));
     const root = origin + prefix + (locale === 'en' ? 'en/' : '');
+    // Directory-index routes must also preserve authored body links, not just
+    // navigation links derived from graph metadata. Test both address forms.
+    for (const route of ['blog/kcsa-kubernetes-and-cloud-native-security-associate', 'blog/kcna-kubernetes-and-cloud-native-associate', 'wiki/d/k8s', 'wiki/d/container', 'wiki/d/cncf', 'wiki/d/linux-foundation']) {
+      for (const suffix of ['', '/']) {
+        await page.goto(root + route + suffix);
+        assert.ok(new URL(await page.locator('link[rel="canonical"]').getAttribute('href')).pathname.endsWith('/'), 'Canonical URLs must match directory-index hosting');
+        const links = await page.locator('article .markdown a[href]').evaluateAll(anchors => anchors
+          .map(a => new URL(a.getAttribute('href'), location.href).href)
+          .filter(href => new URL(href).origin === location.origin));
+        assert.ok(links.length > 0, `Missing body links on ${route}`);
+        for (const href of new Set(links)) {
+          assert.ok(new URL(href).pathname.startsWith(new URL(root).pathname), `Locale/base path lost: ${href}`);
+          assert.equal((await page.request.get(href)).status(), 200, `Broken body link from ${page.url()}: ${href}`);
+        }
+      }
+    }
     await page.goto(root + 'wiki/knowledge/argo-cd/?check=1#definition');
     await page.waitForURL(url => /\/wiki\/d\/argo-cd\/?$/.test(url.pathname), {timeout: 15000});
     assert.equal(new URL(page.url()).search, '?check=1'); assert.equal(new URL(page.url()).hash, '#definition');
@@ -64,7 +80,7 @@ try {
     const before = await local.locator('select').inputValue();
     const node = await page.evaluate(() => {
       window.__testGraphSimulation.stop();
-      const node = window.__testGraphNodes.find(node => !node.isTag && !node.id.endsWith('/argo-cd'));
+      const node = window.__testGraphNodes.find(node => !node.isTag && !node.id.replace(/\/$/, '').endsWith('/argo-cd'));
       return {id: node.id, x: node.x, y: node.y};
     });
     const bounds = await canvas.boundingBox();
@@ -134,6 +150,29 @@ try {
   await local.locator('canvas').waitFor({timeout: 30000});
   await local.getByRole('button', {name: 'Zoom in', exact: true}).tap();
   await context.close();
+  const delayedContext = await browser.newContext({locale: 'en-US'});
+  await delayedContext.addCookies([{name: 'jyje_locale', value: 'en', url: origin}]);
+  // Accelerate only the graph's initial loading deadline, then let retry use the
+  // normal deadline while the original requests finish. No production hooks.
+  await delayedContext.addInitScript(() => {
+    window.__testShortDeadline = true;
+    const schedule = window.setTimeout.bind(window);
+    window.setTimeout = (callback, delay, ...args) => schedule(callback, delay === 20000 && window.__testShortDeadline ? 200 : delay, ...args);
+  });
+  const delayedPage = await delayedContext.newPage();
+  const held = [];
+  await delayedPage.route('**/cdn.jsdelivr.net/**', route => { held.push(route); });
+  await delayedPage.goto(origin + prefix + 'en/wiki/d/argo-cd/');
+  const delayedGraph = delayedPage.locator('[data-document-graph="local"]');
+  await delayedGraph.scrollIntoViewIfNeeded();
+  await delayedGraph.getByRole('button', {name: 'Retry', exact: true}).waitFor();
+  assert.equal(await delayedPage.locator('script[src*="cdn.jsdelivr.net"]').count(), 2);
+  await delayedPage.evaluate(() => { window.__testShortDeadline = false; });
+  await delayedGraph.getByRole('button', {name: 'Retry', exact: true}).click();
+  assert.equal(await delayedPage.locator('script[src*="cdn.jsdelivr.net"]').count(), 2, 'retry must not duplicate timed-out scripts');
+  await Promise.all(held.map(route => route.continue()));
+  await delayedGraph.locator('canvas').waitFor({timeout: 30000});
+  await delayedContext.close();
   console.log(`Wiki integration passed (${development ? 'development' : 'public'}): both locales, legacy routes, inline/global graphs, drag, keyboard, responsive themes, pause/resume, retry and touch/reduced motion.`);
 } finally {
   await browser.close();

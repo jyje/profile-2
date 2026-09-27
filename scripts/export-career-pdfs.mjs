@@ -15,7 +15,9 @@ const browser = await chromium.launch({headless: true});
 const report = [];
 try {
   for (const locale of ['ko', 'en']) {
-    const context = await browser.newContext({locale: locale === 'ko' ? 'ko-KR' : 'en-US', viewport: {width: 1200, height: 900}});
+    // Match A4's CSS-pixel width so the print-style chip probe exercises the
+    // actual wrapping constraints, rather than a wide desktop viewport.
+    const context = await browser.newContext({locale: locale === 'ko' ? 'ko-KR' : 'en-US', viewport: {width: Math.round(210 / 25.4 * 96), height: Math.round(297 / 25.4 * 96)}});
     await context.addCookies([{name: 'jyje_locale', value: locale, url: base.origin}]);
     const page = await context.newPage();
     const failedAssets = [];

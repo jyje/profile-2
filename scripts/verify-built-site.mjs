@@ -35,7 +35,7 @@ try {
     await page.goto(root + 'tags/kubernetes');
     assert.ok(await page.locator('main a[href*="/blog/"]').count() > 0);
     assert.ok(await page.locator('main a[href*="/wiki/"]').count() > 0);
-    const cvLink = page.locator('main a[href*="/about/cv#"]').first();
+    const cvLink = page.locator('main a[href*="/about/cv/#"], main a[href*="/about/cv#"]').first();
     const href = await cvLink.getAttribute('href');
     await cvLink.click();
     await page.locator('[data-career-document="cv"]').waitFor();

@@ -15,6 +15,9 @@ a content node; it forwards query/hash information to Wiki Home. Old node IDs
 using `knowledge` are normalized when the home graph reads selection parameters.
 Canonical document HTML uses directory-index output so trailing slashes work on
 static hosts without relying on a 404-page recovery script.
+`trailingSlash: true` also aligns canonical, sitemap and navigation URLs with the
+host. Body links use `.md`/`.mdx` source references or root-relative site routes;
+ambiguous extensionless relative routes fail the content-network build.
 
 Every wiki title and category label starts with one emoji. Translations keep
 the source emoji; brain emojis are not used. Source validation also checks local-only
@@ -80,9 +83,9 @@ and global graphs, actual node dragging, native selection and keyboard focus,
 touch controls, reduced motion and development-only notices. Screenshots are
 written to the ignored `.playwright-mcp/wiki-completion/` directory.
 
-Delivery is local-only. No remote PR, push, merge or deployment is part of this
-completion. Final verification evidence is recorded below before temporary plans
-and the root execution checklist are removed in a separate commit.
+The initial completion was local-only. Its verification evidence is retained
+below. The owner subsequently authorized PR review and merge for the full plan,
+including the career layout follow-up; that delivery is tracked separately.
 
 ## Completion evidence: 2026-09-27
 
@@ -107,3 +110,37 @@ The temporary `IMPLEMENTATION_CHECKLIST.md` and
 `docs/implementation/routing-publication-boundaries.md` are retired in a separate
 cleanup commit. Their history remains recoverable in Git; this maintenance
 document is the ongoing reference.
+
+## Career layout follow-up
+
+The two-line `Cloud-Native Infrastructure` heading stretched adjacent CV skill
+chips through default flex cross-axis alignment. Explicit start alignment now
+keeps chips at their intrinsic text-and-padding height without shrinking fonts,
+changing career data or forcing page breaks. The existing theme is unchanged.
+
+`scripts/verify-career-chips.mjs` compares rendered chip heights with computed
+line height, padding and borders. It runs in both locales at 390/864/1222px and
+in print mode; the print fixture must include a wrapped heading. The check failed
+against the old build (49.06px versus an expected 25.25px screen height), then
+passed after the fix. All four PDFs were regenerated and all eight pages were
+visually inspected again: group spacing, margins, headings, page numbers and
+page transitions remain consistent. Resumes remain one A4 page and CVs three.
+
+Full-plan delivery: [PR #18](https://github.com/jyje/profile-2/pull/18).
+
+## Review safeguards
+
+The full-plan independent review and dispositions are recorded in
+[wiki-review.md](./wiki-review.md). Docusaurus VCS fallback is disabled because
+authored dates are already injected into front matter; missing dates must not
+fall back to the framework's hardcoded development example.
+
+Single-locale HMR commands share the generated staging tree with public builds.
+They print a warning: do not run public build/typecheck concurrently with those
+commands. Use `npm run dev` for the supported all-locale workflow that serves
+separate successful output slots while serialized builds run. This restriction
+does not claim full per-mode isolation of the single-locale HMR entrypoints.
+
+Excluded blog publication verification resolves slugs (and the installed blog
+plugin's filename/date fallback), not source directory names. The verifier-only
+adapter to `parseBlogFileName` must be retested on Docusaurus upgrades.
