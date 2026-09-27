@@ -21,6 +21,7 @@
     "test:publication": "node scripts/verify-publication.mjs",
     "test:wiki": "node scripts/verify-wiki.mjs",
     "test:breadcrumbs": "node scripts/verify-breadcrumbs.mjs",
+    "test:homepage": "node scripts/verify-homepage.mjs",
     "test:labs-breadcrumbs": "node scripts/verify-labs-breadcrumbs.mjs",
     "export:pdf": "node scripts/export-career-pdfs.mjs",
     "sync": "node scripts/sync-locked.mjs",
