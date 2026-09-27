@@ -31,6 +31,7 @@
 
 ## UI integration boundaries
 
+- Follow [Docusaurus compatibility and upgrades](docs/maintenance/docusaurus-compatibility.md) for framework, dependency, theme-wrapper, or plugin changes. Keep its integration/exception inventory current and report the required verification evidence before proposing an upgrade.
 - Site breadcrumbs reuse wiki/Infima styling. Keep native wiki breadcrumb components and use small wrappers for the Wiki Home parent; other pages use `SiteBreadcrumbs` with localized authored labels or Docusaurus metadata. Never derive titles from URL slugs. Labs reports optional screen IDs and labels through its v1 mount contract; render navigation in the host only and do not publish virtual screen IDs as SEO routes. Keep breadcrumbs out of print layouts.
 - Keep profile-2 on Docusaurus public APIs: standard routing, MDX, i18n, search and color mode remain authoritative. Do not eject or replace the theme to add a UI library.
 - Prefer theme configuration and standard i18n JSON before swizzling. Navbar labels belong in `i18n/<locale>/docusaurus-theme-classic/navbar.json`, not locale branches in React components.
