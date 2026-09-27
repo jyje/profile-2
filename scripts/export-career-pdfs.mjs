@@ -30,6 +30,7 @@ try {
       if (!response?.ok()) throw new Error(`Career route failed: ${url} (${response?.status()})`);
       await page.locator(`[data-career-document="${variant}"]`).waitFor();
       await page.emulateMedia({media: 'print', colorScheme: 'light'});
+      if (await page.locator('.site-breadcrumbs').isVisible()) throw new Error('Site breadcrumbs must not be printed');
       const loadedFonts = await page.evaluate(async () => {
         const weights = await Promise.all([document.fonts.load('12px "Noto Sans KR"', '한글 ABC'), document.fonts.load('700 12px "Noto Sans KR"', '한글 ABC')]);
         return weights.every((faces, index) => faces.length > 0 && faces.every(face => face.family.replaceAll('"', '') === 'Noto Sans KR' && face.status === 'loaded' && face.weight === (index ? '700' : '400')));

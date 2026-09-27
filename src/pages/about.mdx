@@ -6,9 +6,11 @@ hide_table_of_contents: true
 ---
 
 import Link from '@docusaurus/Link';
+import SiteBreadcrumbs from '@site/src/components/SiteBreadcrumbs';
 
 <header className="about-hero">
   <div className="container">
+    <SiteBreadcrumbs items={[{label: '소개'}]} />
     <p className="about-eyebrow">ABOUT / JEAYOUNG JEON</p>
     <h1 className="about-name">전제영</h1>
     <p className="about-lead">AI 플랫폼 엔지니어입니다.</p>

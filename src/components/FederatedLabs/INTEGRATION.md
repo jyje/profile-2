@@ -27,6 +27,15 @@ No private API keys or provider tokens belong in this setting or mount props.
 The host mounts only in a browser effect, so SSG does not fetch the remote.
 Contract version 1 exposes `mount(element, {locale, theme})` and returns
 `update(options)` and `unmount()`. Every route cleanup calls `unmount()`.
+Optional navigation is additive within version 1: `onNavigationChange(screens)`
+reports `{id, label}` items in the active locale, and `navigate(screenId)` on the
+handle moves to an ancestor screen. IDs belong to the remote, not public URLs.
+The host owns the only breadcrumb row; the remote keeps its styles isolated.
+Old hosts and remotes remain compatible. The current single-screen sample reports
+`chat` (Chat demo), not simulated routes or new product screens. The host drops
+stale callbacks after unmount and hides screen crumbs during loading or failure.
+Its measured breadcrumb height is subtracted from `--labs-min-height` without
+adding padding inside the remote application.
 Loading times out after 12 seconds. Missing configuration, remote failures, and
 incompatible contracts leave the site navigation usable. Retrying a failed
 entry uses a new URL to avoid the browser's failed-ESM cache. A failed nested

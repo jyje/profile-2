@@ -6,8 +6,17 @@ import postcss from 'postcss';
 import tailwind from '@tailwindcss/postcss';
 import tailwindPlugin from '../plugins/tailwind.cjs';
 import {cn} from '../src/lib/utils.ts';
+import {validScreens} from '../src/components/FederatedLabs/contract.ts';
 
 const root = path.resolve(import.meta.dirname, '..');
+
+test('Labs navigation accepts only stable, unique IDs and text labels', () => {
+  assert.equal(validScreens([]), true);
+  assert.equal(validScreens([{id: 'chat', label: 'Chat demo'}]), true);
+  for (const value of [null, {}, [null], [{id: '', label: 'Chat'}], [{id: 'chat', label: 1}], [{id: 'chat', label: ' '}], [{id: 'chat', label: 'A'}, {id: 'chat', label: 'B'}]]) {
+    assert.equal(validScreens(value), false);
+  }
+});
 
 test('theme behavior stays upstream, with only site-specific label and link wrappers', async () => {
   for (const relative of [

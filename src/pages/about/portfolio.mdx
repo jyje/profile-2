@@ -6,9 +6,11 @@ hide_table_of_contents: true
 ---
 
 import Link from '@docusaurus/Link';
+import SiteBreadcrumbs from '@site/src/components/SiteBreadcrumbs';
 
 <header className="about-hero">
   <div className="container">
+    <SiteBreadcrumbs items={[{label: '소개', href: '/about/'}, {label: '포트폴리오'}]} />
     <p className="about-eyebrow">PORTFOLIO / SELECTED WORK</p>
     <h1 className="about-name">포트폴리오</h1>
     <p className="about-lead">프로젝트의 배경과 설계, 구현 경험을 사례별로 기록했습니다.</p>
