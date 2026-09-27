@@ -316,6 +316,8 @@
 
 .dailyHeading strong {
   display: block;
+  max-width: 100%;
+  overflow-wrap: anywhere;
   margin-top: 2rem;
   color: var(--site-accent);
   font-family: var(--site-font-utility);
