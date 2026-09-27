@@ -63,7 +63,7 @@ try {
             const rightEdgeElements = [...document.querySelectorAll('body *')]
               .map(element => {
                 const box = element.getBoundingClientRect();
-                return {tag: element.tagName, className: typeof element.className === 'string' ? element.className : '', right: box.right};
+                return {tag: element.tagName, className: typeof element.className === 'string' ? element.className : '', text: (element.innerText || '').slice(0, 36), left: box.left, right: box.right, width: box.width};
               })
               .filter(element => element.right > innerWidth + 1)
               .sort((a, b) => b.right - a.right)
