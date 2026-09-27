@@ -1,19 +1,21 @@
 import type {ReactNode} from 'react';
 import Link from '@docusaurus/Link';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
+import useBaseUrl from '@docusaurus/useBaseUrl';
 import {usePluginData} from '@docusaurus/useGlobalData';
 import styles from './styles.module.css';
 import InlineGraph from '@site/src/components/document-graph/InlineGraph';
 import GlobalGraph from '@site/src/components/document-graph/Page';
-import type {Network} from '@site/src/components/document-graph/neighborhood';
+import {isWikiHome, type Network} from '@site/src/components/document-graph/neighborhood';
 
 export default function ContentConnections({permalink}: {permalink: string}): ReactNode {
   const data = usePluginData('docusaurus-plugin-document-graph') as Network;
   const {i18n: {currentLocale}} = useDocusaurusContext();
   const ko = currentLocale === 'ko';
+  const wikiHome = useBaseUrl('/wiki/');
   const current = data.nodes.find(node => node.path === permalink && !node.isTag);
   if (!current) return null;
-  if (/\/wiki\/?$/.test(permalink)) return <section data-document-graph="global" aria-label={ko ? '전체 문서 그래프' : 'Full document graph'}>
+  if (isWikiHome(current, wikiHome)) return <section data-document-graph="global" aria-label={ko ? '전체 문서 그래프' : 'Full document graph'}>
     <GlobalGraph graphData={data} />
   </section>;
   const incoming = new Set(data.edges.filter(edge => edge.kind === 'link' && edge.target === current.id).map(edge => edge.source));

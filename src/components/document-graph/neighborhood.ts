@@ -5,6 +5,10 @@ export type NetworkNode = {
 };
 export type Network = {nodes: NetworkNode[]; edges: {source: string; target: string; kind: string}[]};
 
+export function isWikiHome(node: NetworkNode, homePath: string): boolean {
+  return node.kind === 'wiki' && node.path?.replace(/\/$/, '') === homePath.replace(/\/$/, '');
+}
+
 export function neighborhood(graph: Network, id: string): Network {
   const ids = new Set([id]);
   for (const edge of graph.edges) {

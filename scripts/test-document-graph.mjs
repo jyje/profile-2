@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import {test} from 'node:test';
-import {neighborhood} from '../src/components/document-graph/neighborhood.ts';
+import {neighborhood, isWikiHome} from '../src/components/document-graph/neighborhood.ts';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
@@ -8,6 +8,15 @@ import {titleEmoji, validateWikiTitles} from './validate-wiki-titles.mjs';
 import {withDevelopmentNotice} from './development-notice.mjs';
 import {mergeKoreanFallbackDocs} from './build-wiki-graph.mjs';
 import {syncWikiNavigation} from './sync-wiki-navigation.mjs';
+
+test('only the exact localized wiki home receives the global graph', () => {
+  for (const base of ['/', '/profile-2/', '/profile-2/en/']) {
+    assert.equal(isWikiHome({kind: 'wiki', path: `${base}wiki/`}, `${base}wiki/`), true);
+    assert.equal(isWikiHome({kind: 'wiki', path: `${base}wiki`}, `${base}wiki/`), true);
+    assert.equal(isWikiHome({kind: 'wiki', path: `${base}wiki/d/wiki/`}, `${base}wiki/`), false);
+    assert.equal(isWikiHome({kind: 'blog', path: `${base}blog/wiki/`}, `${base}wiki/`), false);
+  }
+});
 
 test('localized category labels use standard Docusaurus translations without stale private categories', t => {
   const root = fs.mkdtempSync(path.join(os.tmpdir(), 'wiki-navigation-'));

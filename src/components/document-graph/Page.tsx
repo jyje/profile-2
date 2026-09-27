@@ -101,8 +101,9 @@ export default function WikiGraphPage({graphData}: PageProps): ReactElement {
   const location = useLocation();
   useEffect(() => {
     const nodeId = new URLSearchParams(location.search).get('node')?.replace('/wiki/knowledge', '/wiki/d');
-    if (nodeId && graph.nodes.some(node => node.id === nodeId)) {
-      setSelectedId(nodeId);
+    const node = nodeId && graph.nodes.find(node => node.id.replace(/\/$/, '') === nodeId.replace(/\/$/, ''));
+    if (node) {
+      setSelectedId(node.id);
       setMode('local');
       document.getElementById('document-graph')?.scrollIntoView();
     }

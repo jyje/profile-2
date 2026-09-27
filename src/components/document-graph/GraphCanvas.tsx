@@ -53,12 +53,10 @@ function loadScript(src: string): Promise<void> {
   if (cached) return cached;
   const promise = new Promise<void>((resolve, reject) => {
     const script = document.createElement('script');
-    const fail = () => { clearTimeout(timer); script.remove(); scriptPromises.delete(src); reject(new Error(`Could not load ${src}`)); };
-    const timer = window.setTimeout(fail, 20000);
     script.src = src;
     script.crossOrigin = 'anonymous';
-    script.onload = () => { clearTimeout(timer); resolve(); };
-    script.onerror = fail;
+    script.onload = () => resolve();
+    script.onerror = () => { script.remove(); scriptPromises.delete(src); reject(new Error(`Could not load ${src}`)); };
     document.head.appendChild(script);
   });
   scriptPromises.set(src, promise);
@@ -67,10 +65,17 @@ function loadScript(src: string): Promise<void> {
 
 function loadGraphLibraries(): Promise<Libraries> {
   if (!librariesPromise) {
-    librariesPromise = Promise.all([
+    const loading = Promise.all([
       loadScript('https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js'),
       loadScript('https://cdn.jsdelivr.net/npm/pixi.js@8/dist/pixi.js'),
-    ]).then(() => ({
+    ]);
+    // A removed, timed-out script may still execute. Retain its in-flight promise
+    // so retries wait for it rather than inserting a second copy. Actual network
+    // errors remove their failed script and allow a fresh request.
+    librariesPromise = new Promise<void>((resolve, reject) => {
+      const timer = window.setTimeout(() => reject(new Error('Graph libraries timed out')), 20000);
+      loading.then(() => { clearTimeout(timer); resolve(); }, error => { clearTimeout(timer); reject(error); });
+    }).then(() => ({
       d3: (window as any).d3,
       PIXI: (window as any).PIXI,
     })).catch(error => { librariesPromise = undefined; throw error; });
