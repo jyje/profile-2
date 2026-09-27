@@ -1,0 +1,29 @@
+.breadcrumbs {
+  --ifm-breadcrumb-size-multiplier: 0.8;
+  margin-bottom: 0.8rem;
+}
+
+.breadcrumbs :global(.breadcrumbs__item),
+:global(.theme-doc-breadcrumbs .breadcrumbs__item) {
+  max-width: 100%;
+  white-space: normal;
+}
+
+.breadcrumbs :global(.breadcrumbs__link),
+:global(.theme-doc-breadcrumbs .breadcrumbs__link) {
+  overflow-wrap: anywhere;
+  white-space: normal;
+}
+
+.breadcrumbs button {
+  font-family: inherit;
+  border: 0;
+  cursor: pointer;
+}
+
+.standalone { margin-top: 1rem; }
+.career { max-width: 52rem; margin: 1.5rem auto 0; padding: 0 1rem; }
+
+@media print {
+  .breadcrumbs, :global(.theme-doc-breadcrumbs) { display: none !important; }
+}
