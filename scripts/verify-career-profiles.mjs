@@ -31,7 +31,7 @@ export async function verifyCareerProfiles(browser, base) {
           assert.equal(await page.locator(`#projects-${index} li`).count(), expected);
         }
         await page.evaluate(() => document.fonts.ready);
-        await page.screenshot({path: `${screenshotDir}/${locale}-${variant}-${role}.png`, fullPage: true});
+        await page.screenshot({path: `${screenshotDir}/${locale}-${variant}-${role}.png`, fullPage: true, animations: 'disabled'});
       }
     }
     // One focused flow covers routing, keyboard use, browser history and Full CV.
@@ -81,7 +81,7 @@ export async function verifyCareerProfiles(browser, base) {
       await page.locator(`[data-career-document="${variant}"]`).waitFor();
       await page.evaluate(() => {document.documentElement.dataset.theme = 'dark'; return document.fonts.ready;});
       assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1), `${locale}/${variant}: mobile overflow`);
-      await page.screenshot({path: `${screenshotDir}/${locale}-${variant}-mobile-dark.png`, fullPage: true});
+      await page.screenshot({path: `${screenshotDir}/${locale}-${variant}-mobile-dark.png`, fullPage: true, animations: 'disabled'});
     }
     assert.deepEqual(errors, [], `${locale}: browser errors`);
     await context.close();

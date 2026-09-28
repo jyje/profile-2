@@ -14,7 +14,7 @@ const output = path.resolve('output/pdf');
 await fs.mkdir(output, {recursive: true});
 const browser = await chromium.launch({headless: true});
 const report = [];
-const {layout: {profiles}, sources} = loadCareer(process.cwd());
+const {layout: {profiles}} = loadCareer(process.cwd());
 const cases = [...Object.keys(profiles).flatMap(role => ['resume', 'selected-cv'].map(variant => ({role, variant}))), {role: null, variant: 'cv'}];
 try {
   for (const locale of ['ko', 'en']) {

@@ -21,7 +21,7 @@
 - [x] URL role state, locale/document navigation, clipboard fallback, print controls and keyboard focus.
 - [x] Responsive screen layout, site theme tokens, and separate print spacing.
 - [x] Documentation of authoring, text variants, PDF export and content limitations.
-- [ ] Final visual review, local restart and PR delivery recorded below.
+- [x] Final visual review and live local restart verified.
 
 ## Verification
 
@@ -42,6 +42,25 @@ CV anchors; wait for hydration before interaction; test native-control focus and
 selection without OS-specific popup key sequences; avoid a nearly empty final
 print page by adjusting spacing, not font sizes; keep normal letter spacing on
 resume role titles.
+
+## Completion record
+
+Implementation: `be618a8` on `feat/career-profiles`, based on `aea4519`.
+Completed locally on 2026-09-28. The focused closeout commit records the final
+review and verification, with both commits delivered together in the PR.
+
+All listed local checks passed. All 24 PDF pages were rendered and inspected;
+the final correction changed only six resume pages, which were re-rendered and
+reviewed. The other 18 page images were identical to their reviewed versions.
+No font-size reduction or automatic clipping was introduced.
+
+The existing server was stopped and the feature worktree's `npm run dev` was
+started on `0.0.0.0:3000`. Both `/about/selected-cv/?role=inference` and
+`/en/about/selected-cv/?role=inference` returned HTTP 200 and rendered the
+requested role. The live 320px view had no horizontal overflow. Local development
+serves both locales and development-only guides; the separate public build
+passed publication filtering. Production deployment and merging are outside
+this delivery.
 
 ## Content limitations
 
