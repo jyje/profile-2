@@ -9,7 +9,7 @@ import en from '@site/src/generated/resume.en.json';
 export default function CVPage(): ReactNode {
   const {i18n: {currentLocale}} = useDocusaurusContext();
   const locale = currentLocale === 'ko' ? 'ko' : 'en';
-  return <Layout title={locale === 'ko' ? '상세 경력기술서' : 'Curriculum vitae'}>
+  return <Layout title={locale === 'ko' ? '전체 CV' : 'Full CV'}>
     <CareerDocumentTools locale={locale} variant="cv" />
     <Resume data={locale === 'ko' ? ko : en} locale={locale} />
   </Layout>;

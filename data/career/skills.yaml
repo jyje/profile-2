@@ -1,0 +1,107 @@
+- id: ai-tooling
+  anchor: skills-0
+  ko: {}
+  en: {}
+  name: AI Tooling & Workflow
+  tags:
+    - ai
+    - agentic-ai
+  keywords:
+    - Claude Code
+    - Hermes Agent
+    - Codex
+    - GitHub Copilot
+- id: agentic-ai
+  anchor: skills-1
+  ko: {}
+  en: {}
+  name: Agentic AI Systems
+  tags:
+    - agentic-ai
+    - ai
+    - llm
+  keywords:
+    - Python/FastAPI
+    - LangGraph/Deep Agents
+    - RAG/MCP
+    - Agent Protocol/A2A
+    - Agent Evaluation
+- id: ai-platform
+  anchor: skills-2
+  ko: {}
+  en: {}
+  name: AI Platform & AIOps
+  tags:
+    - ai
+    - aiops
+    - llmops
+    - observability
+    - kubernetes
+    - mlops
+  keywords:
+    - Public/Private LLM
+    - AIOps/LLMOps
+    - LangSmith
+    - Langfuse
+    - LGTM Observability
+    - vLLM
+    - Kubeflow
+    - Run:ai
+    - Milvus/Qdrant/pgvector
+- id: cloud-native
+  anchor: skills-3
+  ko: {}
+  en: {}
+  name: Cloud-Native Infrastructure
+  tags:
+    - devops
+    - kubernetes
+    - aws
+    - gitops
+  keywords:
+    - Kubernetes
+    - Hybrid Clusters
+    - AWS EKS/On-Prem
+    - Argo Projects/GitOps
+    - IaC
+- id: secops
+  anchor: skills-4
+  ko: {}
+  en: {}
+  name: SecOps
+  tags:
+    - security
+  keywords:
+    - Istio
+    - OIDC/RBAC
+    - Network Policy
+    - AI Guardrails
+    - Vulnerability Response
+- id: finops
+  anchor: skills-5
+  ko: {}
+  en: {}
+  name: FinOps
+  tags:
+    - finops
+    - aws
+  keywords:
+    - LiteLLM
+    - Karpenter
+    - Hybrid GPU/Cloud
+    - Cost Optimization
+- id: ai-research
+  anchor: skills-6
+  ko: {}
+  en: {}
+  name: AI Research Foundation
+  tags:
+    - ai
+    - computer-vision
+    - digital-twins
+  keywords:
+    - Computer Vision/SLAM
+    - PyTorch/OpenCV
+    - Digital Twins
+    - GPU Optimization
+    - Vehicle SW

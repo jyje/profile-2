@@ -1,0 +1,93 @@
+title: AI Agent Engineer
+summary:
+  ko: >-
+    사내 툴체인과 연결되는 Agentic AI 시스템을 설계하고 개발합니다. Deep Agents 기반 에이전트 통합·도구 실행·평가 구조와 RAG·MCP 기반 AI Assistant 개발을
+    리드합니다.
+  en: >-
+    I design and build Agentic AI systems connected to internal toolchains. I lead agent integration, tool
+    execution and evaluation with Deep Agents, and AI Assistant development with RAG and MCP.
+resume:
+  work:
+    - id: hyundai-autoever
+      responsibilities:
+        - id: ai-llm-platform
+          text: summary
+    - id: maxst
+      responsibilities:
+        - id: mlops
+          text: summary
+  projects:
+    - id: vehicle-sw-agents
+      outcomes:
+        - id: agent-architecture
+          text: summary
+    - id: codebeamer-assistant
+      outcomes:
+        - id: domain-agent
+          text: summary
+  education:
+    - postech
+    - kit
+  skills:
+    - id: agentic-ai
+      keywords:
+        - Python/FastAPI
+        - LangGraph/Deep Agents
+        - RAG/MCP
+        - Agent Protocol/A2A
+        - Agent Evaluation
+    - id: ai-platform
+      keywords:
+        - Public/Private LLM
+        - LangSmith
+        - Langfuse
+        - Milvus/Qdrant/pgvector
+    - id: ai-tooling
+      keywords:
+        - Claude Code
+        - Hermes Agent
+        - Codex
+    - id: secops
+      keywords:
+        - OIDC/RBAC
+        - AI Guardrails
+  certificates:
+    - kcsa
+    - kcna
+    - capa
+    - ckad
+    - cka
+  languages:
+    - korean
+    - english
+selectedCv:
+  work:
+    - id: hyundai-autoever
+      text: detail
+    - id: maxst
+      text: detail
+  education:
+    - postech
+    - kit
+  certificates:
+    - kcsa
+    - kcna
+    - capa
+    - ckad
+    - cka
+  languages:
+    - korean
+    - english
+  projects:
+    - id: vehicle-sw-agents
+      text: detail
+    - id: codebeamer-assistant
+      text: detail
+  skills:
+    - agentic-ai
+    - ai-tooling
+    - ai-platform
+    - secops
+  volunteer:
+    - open-source
+    - agent-book-review

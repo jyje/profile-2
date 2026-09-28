@@ -1,6 +1,29 @@
 {
-  "item.label.Blog": {"message": "블로그"},
-  "item.label.Wiki": {"message": "위키"},
-  "item.label.Labs": {"message": "실험실"},
-  "item.label.About": {"message": "소개"}
+  "item.label.Blog": {
+    "message": "블로그"
+  },
+  "item.label.Wiki": {
+    "message": "위키"
+  },
+  "item.label.Labs": {
+    "message": "실험실"
+  },
+  "item.label.About": {
+    "message": "소개"
+  },
+  "item.label.Overview": {
+    "message": "개요"
+  },
+  "item.label.Resume": {
+    "message": "이력서"
+  },
+  "item.label.Selected CV": {
+    "message": "경력기술서"
+  },
+  "item.label.Full CV": {
+    "message": "전체 CV"
+  },
+  "item.label.Portfolio": {
+    "message": "포트폴리오"
+  }
 }

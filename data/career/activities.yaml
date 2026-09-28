@@ -1,0 +1,43 @@
+- id: open-source
+  ko:
+    position: AI 플랫폼·AIOps 오픈소스 프로젝트
+    highlights:
+      - title: jyje/cluster
+        website: https://github.com/jyje/cluster
+        description: Raspberry Pi Kubernetes에서 GitOps·LLMOps·Agentic AI 운영
+      - title: jyje/hermes-agent-helm
+        website: https://github.com/jyje/hermes-agent-helm
+        description: Self-hosted AI 에이전트 팀을 위한 Helm chart 개발
+  en:
+    position: Open Source AI Platform & AIOps
+    highlights:
+      - title: jyje/cluster
+        website: https://github.com/jyje/cluster
+        description: Run GitOps, LLMOps, and Agentic AI on Raspberry Pi Kubernetes
+      - title: jyje/hermes-agent-helm
+        website: https://github.com/jyje/hermes-agent-helm
+        description: Helm chart for self-hosted AI agent teams
+  organization: GitHub
+  website: https://github.com/jyje
+  period:
+    start: '2024-08-21'
+    end: null
+- id: agent-book-review
+  ko:
+    organization: 한빛앤·한빛미디어
+    position: AI 에이전트 개발서 베타리더
+    highlights:
+      - title: AI 에이전트 개발서
+        website: https://www.linkedin.com/in/parknayeon/
+        description: 기술 리뷰·교정 및 추천사 작성
+  en:
+    organization: Hanbit N · Hanbit Media
+    position: AI Agent Development Book · Beta Reader
+    highlights:
+      - title: AI Agent Book
+        website: https://www.linkedin.com/in/parknayeon/
+        description: Technical review and endorsement
+  website: https://www.linkedin.com/company/hanbit-media-%ED%95%9C%EB%B9%9B%EB%AF%B8%EB%94%94%EC%96%B4/
+  period:
+    start: '2026-03-01'
+    end: '2026-03-31'

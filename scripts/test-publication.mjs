@@ -16,11 +16,11 @@ test('excluded blog audits use explicit or native date-based permalinks, not sou
 
 test('polling enumerates editable data files as well as content, excluding hidden files', t => {
   const f = fixture(t);
-  f.write('data/resume.ko.yml', 'basics: {}');
+  f.write('data/career/projects/example.yaml', 'basics: {}');
   f.write('data/tags.yml', 'tags: {}');
   f.write('data/.hidden.yml', 'hidden: true');
   const paths = authoredWatchPaths(f.root);
-  for (const file of ['data/resume.ko.yml', 'data/tags.yml', 'content/en/wiki/_guide/authoring.mdx']) assert.ok(paths.has(path.join(f.root, file)));
+  for (const file of ['data/career/projects/example.yaml', 'data/tags.yml', 'content/en/wiki/_guide/authoring.mdx']) assert.ok(paths.has(path.join(f.root, file)));
   assert.equal(paths.has(path.join(f.root, 'data/.hidden.yml')), false);
 });
 

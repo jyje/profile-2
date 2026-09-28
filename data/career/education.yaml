@@ -1,0 +1,64 @@
+- id: postech
+  anchor: education-0
+  ko:
+    institution: 포항공과대학교 (POSTECH)
+    area: 전기전자공학 · 컴퓨터비전·신호처리
+    studyType: 석사학위(통합과정수료)
+    keywords:
+      - 엣지컴퓨터비전
+      - 디지털트윈
+      - SLAM
+      - ADAS
+  en:
+    institution: POSTECH
+    area: Electrical Engineering · Computer Vision & Signal Processing
+    studyType: Master's Degree (Integrated Program)
+    keywords:
+      - Edge Computer Vision
+      - Digital Twins
+      - SLAM
+      - ADAS
+  tags:
+    - postech
+    - computer-vision
+    - digital-twins
+    - slam
+    - adas
+  website: https://eee.postech.ac.kr/
+  headerIcon: 🎓
+  gpa: 3.2/4.3
+  thesis: Virtual Visual-SLAM, 2020
+  period:
+    start: '2012-03-01'
+    end: '2020-08-31'
+- id: kit
+  anchor: education-1
+  ko:
+    institution: 금오공과대학교 (kit)
+    area: 전자공학부, 전자 및 정보통신
+    studyType: 학사학위
+    keywords:
+      - 디지털신호처리
+      - 전자통신
+      - 가시광통신
+      - FPGA
+    thesis: LED 조명을 이용한 수중 환경에서의 가시광 통신 연구, 2011
+  en:
+    institution: kit
+    area: Electronics & Communications
+    studyType: Bachelor's Degree
+    keywords:
+      - Digital Signal Processing
+      - Electronic Communication
+      - Visible Light Communication
+      - FPGA
+    thesis: Underwater LED VLC, 2011
+  tags:
+    - kit
+    - fpga
+  website: https://eng.kumoh.ac.kr/eng
+  headerIcon: 🎓
+  gpa: 4.3/4.5
+  period:
+    start: '2008-03-01'
+    end: '2012-02-28'

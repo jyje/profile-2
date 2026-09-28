@@ -2,6 +2,7 @@ import type {ReactNode} from 'react';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import Layout from '@theme/Layout';
 
+import useCareerProfile from '@site/src/components/CareerDocuments/useCareerProfile';
 import ResumeSummary from '@site/src/components/ResumeSummary';
 import CareerDocumentTools from '@site/src/components/CareerDocumentTools';
 import ko from '@site/src/generated/resume.ko.json';
@@ -14,12 +15,13 @@ export default function ResumePage(): ReactNode {
     i18n: {currentLocale},
   } = useDocusaurusContext();
   const locale = currentLocale === 'ko' ? 'ko' : 'en';
+  const {role, profile} = useCareerProfile();
   const title = locale === 'ko' ? '이력서' : 'Resume';
 
   return (
     <Layout title={title}>
       <CareerDocumentTools locale={locale} variant="resume" />
-      <ResumeSummary data={DATA[locale]} locale={locale} />
+      <ResumeSummary data={DATA[locale]} locale={locale} role={role} profile={profile} />
     </Layout>
   );
 }

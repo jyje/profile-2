@@ -152,7 +152,10 @@ additional results in the PR:
   errors/retries, and unmount cleanup. Inspect the actual Vue remote too; fixtures
   do not certify production remote deployment or API services.
 - Regenerate Korean/English career exports and render every PDF page. Each resume
-  stays one A4 page; CVs stay multi-page without content loss. Confirm hidden
+  stays one A4 page for every role; Full CVs stay multi-page without content loss.
+  Selected CV has no page limit. Career files under `data/career/` use shared
+  bilingual `.yaml` records; the source compiler preserves immutable CV anchors
+  consumed by the global tag plugin. Confirm hidden
   breadcrumbs/tools, font loading, page breaks, and normal skill-chip height.
 
 Use [Docusaurus release notes](https://github.com/facebook/docusaurus/releases)

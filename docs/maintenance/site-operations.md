@@ -10,14 +10,18 @@ For framework changes, follow the [compatibility and upgrade policy](docusaurus-
 | Blog posts and wiki notes | `content/ko/{blog,wiki}/` and their matching `content/en/{blog,wiki}/` translations |
 | About overview | `src/pages/about.mdx` and `i18n/en/docusaurus-plugin-content-pages/about.mdx` |
 | Portfolio and Labs page copy | Matching MDX pages under `src/pages/` and `i18n/en/docusaurus-plugin-content-pages/` |
-| Career facts | `data/resume.ko.yml` and `data/resume.en.yml` |
-| One-page resume selection | `data/career-layout.yml` |
+| Career facts | `data/career/**/*.yaml` (shared metadata and bilingual prose) |
+| Role profiles and resume/Selected CV selections | `data/career/profiles/*.yaml` |
 | Retained curation configuration, not displayed on the home page | `data/home-curation.yml` |
 | Structured content templates | One component entrypoint and CSS module per template under `src/components/ContentTemplates/` |
 
-The site home is `/`; the About overview is `/about/`. Resume, CV, and portfolio
+The site home is `/`; the About overview is `/about/`. Resume, Selected CV, Full CV, and portfolio
 are separate pages under `/about/`. Blog listings are generated from post metadata,
-not a second hand-maintained list. Resume/CV pages render the shared career data.
+not a second hand-maintained list. All career documents render the shared career data. See the
+[record authoring contract](../../data/career/README.md) for IDs, short/detail text
+selection, dates, contribution and stable CV anchors. Role-specific views use `?role=platform`,
+`?role=agents`, or `?role=inference`; absent or unknown roles use `platform`.
+Full CV always shows every source record, while its document links retain the role query.
 
 Open [content/](../../content/) as an Obsidian vault. Use relative Markdown links
 instead of `[[wikilinks]]`, and `> [!note]` syntax for callouts. Use Markdown for
@@ -166,7 +170,10 @@ exports from `http://127.0.0.1:3000/`; `PDF_BASE_URL` can select another served
 base URL, including `/profile-2/`. Merely building does not start that server.
 
 PDF outputs live in ignored `output/pdf/`. The summary must be exactly one A4
-page; the CV must remain multi-page. Render and inspect every page for clipping,
+page for each role; Full CV must remain multi-page. Selected CV has no page cap.
+The exporter creates 14 PDFs: three roles in two formats and two locales, plus
+one Full CV per locale. Role-specific filenames include the role key.
+Browser review screenshots are ignored under `output/career-review/`. Render and inspect every page for clipping,
 font loading, skill-chip wrapping, and hidden navigation/breadcrumbs. Automated
 counts are not a substitute for visual review. Do not silently truncate facts or
 shrink text to satisfy page counts.

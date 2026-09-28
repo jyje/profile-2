@@ -1,0 +1,37 @@
+id: maxst
+anchor: work-1
+ko:
+  title: 맥스트
+  role: 리드 MLOps & DevOps 엔지니어
+  responsibilities:
+    - id: mlops
+      title: MLOps
+      summary: |
+        Kubeflow 연구환경 자체 구축·운영 및 디지털 트윈 상품 출시 지원
+    - id: devops
+      title: DevOps
+      summary: |
+        하이브리드 Kubernetes 도입·온보딩 및 개발환경 제공
+en:
+  title: MAXST
+  role: Lead MLOps & DevOps Engineer
+  responsibilities:
+    - id: mlops
+      title: MLOps
+      summary: |
+        Built and operated Kubeflow research environments; supported a digital twin launch
+    - id: devops
+      title: DevOps
+      summary: |
+        Introduced hybrid Kubernetes, onboarded teams, and provided development environments
+headerIcon: 🧑‍🔬
+tags:
+  - careers
+  - mlops
+  - devops
+  - kubernetes
+  - digital-twins
+website: https://www.linkedin.com/company/maxst
+period:
+  start: '2021-01-16'
+  end: '2024-10-31'

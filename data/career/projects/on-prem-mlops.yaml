@@ -1,0 +1,44 @@
+id: on-prem-mlops
+anchor: projects-2
+ko:
+  title: 온프레미스 MLOps 플랫폼 구축
+  role: MLOps 플랫폼 아키텍트 · 테크 리드
+  organization: 맥스트
+  outcomes:
+    - id: gpu-utilization
+      title: GPU 활용 3배
+      summary: 유휴 GPU 통합으로 24/7 연구환경 제공
+      detail: |
+        하이브리드 Kubernetes로 유휴 GPU를 통합해 24/7 연구환경 제공
+    - id: product-delivery
+      title: 제품화
+      summary: Kubeflow 학습환경으로 디지털 트윈 상품 출시 지원
+      detail: |
+        Kubeflow 학습환경으로 디지털 트윈 상품 출시 지원
+en:
+  title: On-Premise MLOps Platform
+  role: MLOps Platform Architect · Tech Lead
+  organization: MAXST
+  outcomes:
+    - id: gpu-utilization
+      title: 3x GPU Utilization
+      summary: Pooled idle GPUs for a 24/7 research environment
+      detail: |
+        Unified idle GPUs with hybrid Kubernetes for a 24/7 research environment
+    - id: product-delivery
+      title: Product Delivery
+      summary: Supported a digital twin launch with Kubeflow
+      detail: |
+        Supported a digital twin launch with Kubeflow training environments
+  website: https://www.linkedin.com/company/maxst
+headerIcon: 🧑‍🔬
+tags:
+  - mlops
+  - devops
+  - kubernetes
+  - digital-twins
+  - aws
+contribution: 90
+period:
+  start: '2024-01-01'
+  end: '2024-06-30'

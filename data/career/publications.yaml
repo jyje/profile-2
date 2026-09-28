@@ -1,0 +1,47 @@
+- id: visual-slam-thesis
+  ko:
+    name: 🎓 실제 환경과 가상 환경을 위한 동시적 위치 추정 및 지도 작성 방법
+    publisher: POSTECH, 학위논문
+    authors: <u>전제영</u>
+    contribution: 1저자
+  en:
+    name: 🎓 Virtual Visual-SLAM for Real-World Environments
+    publisher: POSTECH, Thesis
+    authors: <u>Jeayoung Jeon</u>
+    contribution: 1st
+  releaseDate: '2020-07-24'
+  website: http://postech.dcollection.net/common/orgView/200000341295
+- id: cost-aggregation-table
+  ko:
+    contribution: 2저자
+  en:
+    contribution: 2nd
+  name: >-
+    📄 Cost Aggregation Table: Cost Aggregation Method Using Summed Area Table Scheme for Dense Stereo
+    Correspondence
+  publisher: ISVC, Advances in Visual Computing, 10th International Symposium
+  authors: JeongMok Ha, <u>Jeayoung Jeon</u>, GiYeong Bae, SungYong Jo & Hong Jeong
+  releaseDate: '2014-11-08'
+  website: https://doi.org/10.1007/978-3-319-14249-4_78
+- id: traffic-sign-symmetry
+  ko:
+    contribution: 1저자
+  en:
+    contribution: 1st
+  name: 📄 Polygonal symmetry transform for detecting rectangular traffic signs
+  publisher: ICCAS, 14th International Conference on Control, Automation and Systems
+  authors: <u>Jea Young Jeon</u>, JeongMok Ha, Sung Yong Jo, Gi Yeong Bae, Hong Jeong
+  releaseDate: '2014-10-22'
+  website: https://doi.org/10.1109/ICCAS.2014.6987934
+- id: underwater-visible-light
+  ko:
+    name: 🎓 LED 조명을 이용한 수중 환경에서의 가시광 통신 연구
+    authors: 이대희, 박기성, <u>전제영</u>, 양연모
+    contribution: 공동 1저자
+  en:
+    name: 🎓 A Study on a Visible Light Communication using LED in Under-water Environment
+    authors: Daehee Lee, Ki-Sung Park, <u>Jea-Young Jeon</u>, Yeon-Mo Yang
+    contribution: 1st, equivalent
+  publisher: ICS-KIEE
+  releaseDate: '2011-04-22'
+  website: https://www.dbpia.co.kr/Journal/articleDetail?nodeId=NODE01951197

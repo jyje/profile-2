@@ -1,0 +1,50 @@
+ko:
+  labels:
+    role: 역할
+    roles: 역할
+    results: 성과
+    growth: 성장
+    area: 전공
+    keywords: 키워드
+    gpa: GPA
+    volunteer: Other Activities
+    present: present
+  awards: null
+  interests:
+    - name: Research/Dev
+      keywords:
+        - Agentic RAG
+        - Digital Twins
+        - AMD-to-ARM Transition
+        - Hybrid Clusters
+        - Home Clusters
+    - name: DevOps Culture
+      keywords:
+        - Coop First, Tech Next
+        - Automate as Possible
+        - Internal Development Platform
+en:
+  labels:
+    role: Role
+    roles: Roles
+    results: Results
+    growth: Growth
+    area: Field
+    keywords: Keywords
+    gpa: GPA
+    volunteer: Other Activities
+    present: present
+  awards: null
+  interests:
+    - name: Research/Dev
+      keywords:
+        - Agentic RAG
+        - Digital Twins
+        - AMD-to-ARM Transition
+        - Hybrid Clusters
+        - Home Clusters
+    - name: DevOps Culture
+      keywords:
+        - Coop First, Tech Next
+        - Automate as Possible
+        - Internal Development Platform
