@@ -209,7 +209,11 @@ const config: Config = {
       ],
     },
     footer: {
-      style: 'dark',
+      links: [
+        {to: '/about/', label: 'About'},
+        {to: '/tags/', label: 'All tags'},
+        {href: 'https://github.com/jyje', label: 'GitHub'},
+      ],
       copyright: `Copyright © ${new Date().getFullYear()} Jeayoung Jeon. Built with Docusaurus.`,
     },
     prism: {
