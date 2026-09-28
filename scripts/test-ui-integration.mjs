@@ -34,7 +34,9 @@ test('theme behavior stays upstream, with only site-specific label and link wrap
     assert.doesNotMatch(source, /@docusaurus\/theme-classic\/lib|@docusaurus\/theme-common\/internal/);
   }
   const translations = JSON.parse(await fs.readFile(path.join(root, 'i18n/ko/docusaurus-theme-classic/navbar.json'), 'utf8'));
-  assert.deepEqual(Object.values(translations).map(value => value.message), ['블로그', '위키', '실험실', '소개']);
+  for (const [key, value] of Object.entries({Blog: '블로그', Wiki: '위키', Labs: '실험실', About: '소개', Resume: '이력서', 'Selected CV': '경력기술서', 'Full CV': '전체 CV'})) {
+    assert.equal(translations[`item.label.${key}`].message, value);
+  }
 });
 
 test('prefixed utilities merge without consuming existing CSS-module classes', () => {

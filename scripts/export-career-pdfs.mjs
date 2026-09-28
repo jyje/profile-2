@@ -2,6 +2,7 @@
 // The default local origin is the all-locale development server.
 import fs from 'node:fs/promises';
 import path from 'node:path';
+import {loadCareer} from '../plugins/career-data.cjs';
 import {chromium} from 'playwright';
 import {PDFDocument} from 'pdf-lib';
 import {getDocument} from 'pdfjs-dist/legacy/build/pdf.mjs';
@@ -13,6 +14,8 @@ const output = path.resolve('output/pdf');
 await fs.mkdir(output, {recursive: true});
 const browser = await chromium.launch({headless: true});
 const report = [];
+const {layout: {profiles}, sources} = loadCareer(process.cwd());
+const cases = [...Object.keys(profiles).flatMap(role => ['resume', 'selected-cv'].map(variant => ({role, variant}))), {role: null, variant: 'cv'}];
 try {
   for (const locale of ['ko', 'en']) {
     // Match A4's CSS-pixel width so the print-style chip probe exercises the
@@ -23,12 +26,14 @@ try {
     const failedAssets = [];
     page.on('response', response => { if (new URL(response.url()).origin === base.origin && response.status() >= 400) failedAssets.push(`HTTP ${response.status()}: ${response.url()}`); });
     page.on('requestfailed', request => { if (new URL(request.url()).origin === base.origin && request.failure()?.errorText !== 'net::ERR_ABORTED') failedAssets.push(`${request.url()}: ${request.failure()?.errorText}`); });
-    for (const variant of ['resume', 'cv']) {
+    for (const {variant, role} of cases) {
       failedAssets.length = 0;
       const url = new URL(`${locale === 'en' ? 'en/' : ''}about/${variant}`, base);
+      if (role) url.searchParams.set('role', role);
       const response = await page.goto(url.href, {waitUntil: 'networkidle'});
       if (!response?.ok()) throw new Error(`Career route failed: ${url} (${response?.status()})`);
       await page.locator(`[data-career-document="${variant}"]`).waitFor();
+      if (role) await page.locator(`[data-career-document="${variant}"][data-career-role="${role}"]`).waitFor();
       await page.emulateMedia({media: 'print', colorScheme: 'light'});
       if (await page.locator('.site-breadcrumbs').isVisible()) throw new Error('Site breadcrumbs must not be printed');
       const loadedFonts = await page.evaluate(async () => {
@@ -40,13 +45,13 @@ try {
       await page.evaluate(async () => Promise.all([...document.images].map(image => image.decode().catch(() => {}))));
       if (failedAssets.length) throw new Error(`Career assets failed:\n${failedAssets.join('\n')}`);
       if (variant === 'cv') await verifyCareerChips(page, {requireWrappedHeading: true});
-      const file = path.join(output, `jeayoung-jeon-${variant}-${locale}.pdf`);
+      const file = path.join(output, `jeayoung-jeon-${variant}${role ? `-${role}` : ''}-${locale}.pdf`);
       await page.pdf({path: file, format: 'A4', preferCSSPageSize: true, printBackground: true,
-        displayHeaderFooter: variant === 'cv', headerTemplate: '<span></span>',
+        displayHeaderFooter: variant !== 'resume', headerTemplate: '<span></span>',
         footerTemplate: '<div style="font-size:8px;width:100%;text-align:center;color:#405863">Jeayoung Jeon · <span class="pageNumber"></span> / <span class="totalPages"></span></div>'});
       const pdf = await PDFDocument.load(await fs.readFile(file));
       const pages = pdf.getPageCount();
-      if (variant === 'resume' && pages !== 1) throw new Error(`${locale} resume is ${pages} pages. Edit data/career-layout.yml or print layout; do not clip content or scale down automatically.`);
+      if (variant === 'resume' && pages !== 1) throw new Error(`${locale} resume is ${pages} pages. Edit data/career/profiles/*.yaml or print layout; do not clip content or scale down automatically.`);
       if (variant === 'cv' && pages < 2) throw new Error(`${locale} CV unexpectedly contains ${pages} page.`);
       for (const p of pdf.getPages()) {
         const {width, height} = p.getSize();
@@ -67,8 +72,9 @@ try {
         text.push(strings.map(item => item.str).join(' '));
       }
       if (!text.join(' ').includes(locale === 'ko' ? '전제영' : 'Jeayoung Jeon')) throw new Error(`Missing searchable name in ${file}`);
+      if (role && !text.join(' ').includes(profiles[role].title)) throw new Error(`Wrong role title in ${file}`);
       await loadingTask.destroy();
-      report.push({locale, variant, pages, file: path.basename(file)});
+      report.push({locale, variant, role, pages, file: path.basename(file)});
     }
     await context.close();
   }

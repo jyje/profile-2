@@ -45,7 +45,7 @@ try {
   }
   for (const locale of ['ko', 'en']) {
     const routeRoot = origin + prefix + (locale === 'en' ? 'en/' : '');
-    for (const route of ['wiki', 'blog', 'about', 'about/resume', 'about/cv', 'tags/kubernetes', 'wiki/graph']) {
+    for (const route of ['wiki', 'blog', 'about', 'about/resume', 'about/selected-cv', 'about/cv', 'tags/kubernetes', 'wiki/graph']) {
       const response = await fetch(routeRoot + route + '?publication-test=1', {redirect: 'manual'});
       assert.equal(response.status, 301, `${locale}/${route}: directory redirect`);
       assert.ok(response.headers.get('location').endsWith('/?publication-test=1'));

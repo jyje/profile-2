@@ -1,0 +1,92 @@
+title: LLM Inference Platform Engineer
+summary:
+  ko: >-
+    Kubernetes 기반 Private LLM 워크로드 환경과 하이브리드 GPU 인프라를 구축·운영합니다. LLMOps·AIOps와 관측성, GPU 자원 활용 경험을 바탕으로 AI 플랫폼을
+    설계합니다.
+  en: >-
+    I build and operate Kubernetes environments for private LLM workloads and hybrid GPU infrastructure. My
+    platform work brings together LLMOps, AIOps, observability and GPU resource utilization.
+resume:
+  work:
+    - id: hyundai-autoever
+      responsibilities:
+        - id: cloud-native-ai
+          text: summary
+    - id: maxst
+      responsibilities:
+        - id: devops
+          text: summary
+        - id: mlops
+          text: summary
+  projects:
+    - id: on-prem-mlops
+      outcomes:
+        - id: gpu-utilization
+          text: summary
+        - id: product-delivery
+          text: summary
+  education:
+    - postech
+    - kit
+  skills:
+    - id: ai-platform
+      keywords:
+        - Public/Private LLM
+        - AIOps/LLMOps
+        - LGTM Observability
+        - vLLM
+        - Run:ai
+    - id: cloud-native
+      keywords:
+        - Kubernetes
+        - Hybrid Clusters
+        - AWS EKS/On-Prem
+        - Argo Projects/GitOps
+    - id: finops
+      keywords:
+        - LiteLLM
+        - Karpenter
+        - Hybrid GPU/Cloud
+        - Cost Optimization
+    - id: secops
+      keywords:
+        - Istio
+        - OIDC/RBAC
+        - Network Policy
+  certificates:
+    - kcsa
+    - kcna
+    - capa
+    - ckad
+    - cka
+  languages:
+    - korean
+    - english
+selectedCv:
+  work:
+    - id: hyundai-autoever
+      text: detail
+    - id: maxst
+      text: detail
+  education:
+    - postech
+    - kit
+  certificates:
+    - kcsa
+    - kcna
+    - capa
+    - ckad
+    - cka
+  languages:
+    - korean
+    - english
+  projects:
+    - id: on-prem-mlops
+      text: detail
+  skills:
+    - ai-platform
+    - cloud-native
+    - finops
+    - secops
+  volunteer:
+    - open-source

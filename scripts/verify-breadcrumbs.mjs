@@ -47,8 +47,8 @@ try {
       ['blog/authors/', [blog, ko ? '작성자' : 'Authors']],
       ['blog/_tag-archives/kubernetes/', [tags, 'Kubernetes']],
       ['about/', [about]],
-      ['about/resume/', [about, ko ? '이력서' : 'Resume']],
-      ['about/cv/', [about, ko ? '상세 경력기술서' : 'Curriculum vitae']],
+      ['about/selected-cv/', [about, ko ? '경력기술서' : 'Selected CV']],
+      ['about/cv/', [about, ko ? '전체 CV' : 'Full CV']],
       ['about/portfolio/', [about, ko ? '포트폴리오' : 'Portfolio']],
       ['tags/', [tags]], ['tags/kubernetes/', [tags, 'Kubernetes']],
       ['search/?q=kubernetes', [ko ? '검색' : 'Search']],
@@ -93,7 +93,7 @@ try {
         await page.waitForURL(root + 'about/');
       }
     }
-    for (const route of ['', 'no-such-breadcrumb-page/']) {
+    for (const route of ['', 'about/resume/', 'no-such-breadcrumb-page/']) {
       await page.goto(root + route);
       assert.equal(await page.locator(selector).count(), 0, 'Home/404 must not gain a breadcrumb');
     }
@@ -101,7 +101,7 @@ try {
     await page.locator('.site-breadcrumbs').waitFor();
     assert.equal(await page.locator(selector).count(), 1);
     assert.match(await page.locator(selector).innerText(), ko ? /실험실/ : /Labs/);
-    for (const variant of ['resume', 'cv']) {
+    for (const variant of ['resume', 'selected-cv', 'cv']) {
       await page.goto(root + `about/${variant}/`);
       await page.emulateMedia({media: 'print'});
       assert.equal(await page.locator(selector).isVisible(), false, 'Breadcrumb must not print');

@@ -13,6 +13,8 @@ import {mergeKoreanFallbackDocs} from './build-wiki-graph.mjs';
 import {prepareContent} from './prepare-content.mjs';
 import {shouldRebuild, authoredWatchPaths} from './source-watch.mjs';
 import {validateWikiTitles} from './validate-wiki-titles.mjs';
+import {loadCareer} from '../plugins/career-data.cjs';
+import {validateCareerLayout} from './validate-career-layout.mjs';
 import {syncWikiNavigation} from './sync-wiki-navigation.mjs';
 
 const ROOT = path.resolve(import.meta.dirname, '..');
@@ -37,8 +39,13 @@ function mirror() {
 function convertData() {
   const dataDir = path.join(ROOT, 'data');
   const outDir = path.join(ROOT, 'src/generated');
+  const {sources, layout} = loadCareer(ROOT);
+  validateCareerLayout(layout, sources);
   if (!fs.existsSync(dataDir)) return;
   fs.mkdirSync(outDir, {recursive: true});
+  for (const [name, value] of Object.entries({'resume.ko': sources.ko, 'resume.en': sources.en, 'career-layout': layout})) {
+    fs.writeFileSync(path.join(outDir, `${name}.json`), JSON.stringify(value));
+  }
   for (const f of fs.readdirSync(dataDir).filter((f) => f.endsWith('.yml'))) {
     const json = yaml.load(fs.readFileSync(path.join(dataDir, f), 'utf8'));
     fs.writeFileSync(path.join(outDir, f.replace(/\.yml$/, '.json')), JSON.stringify(json));

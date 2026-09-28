@@ -1,6 +1,7 @@
 const fs = require('node:fs');
 const path = require('node:path');
 const yaml = require('js-yaml');
+const {loadCareer} = require('../career-data.cjs');
 const {buildNetwork} = require('../content-network.cjs');
 
 function normalizedTags(value) {
@@ -8,8 +9,7 @@ function normalizedTags(value) {
 }
 
 function resumeEntries(siteDir, locale) {
-  const file = path.join(siteDir, `data/resume.${locale}.yml`);
-  const resume = yaml.load(fs.readFileSync(file, 'utf8')) ?? {};
+  const resume = loadCareer(siteDir).sources[locale];
   const sections = [
     ['work', 'work'],
     ['projects', 'projects'],
@@ -18,7 +18,7 @@ function resumeEntries(siteDir, locale) {
   ];
   const entries = [];
   for (const [section, key] of sections) {
-    for (const [index, item] of (resume[key] ?? []).entries()) {
+    for (const item of (resume[key] ?? [])) {
       const tags = normalizedTags(item.tags);
       if (!tags.length) continue;
       const title = section === 'work'
@@ -36,10 +36,10 @@ function resumeEntries(siteDir, locale) {
         title: String(title ?? key),
         description,
         date: String(item.startDate ?? '').slice(0, 10),
-        route: `/about/cv#${section}-${index}`,
+        route: `/about/cv#${item.anchor}`,
         tags,
         locale,
-        source: `data/resume.${locale}.yml#${section}-${index}`,
+        source: `data/career/${section}#${item.id}`,
       });
     }
   }
@@ -110,7 +110,7 @@ module.exports = function globalTagsPlugin(context) {
     getPathsToWatch() {
       return [
         path.join(siteDir, 'data/tags.yml'),
-        path.join(siteDir, `data/resume.${locale}.yml`),
+        path.join(siteDir, 'data/career/**/*.yaml'),
         path.join(siteDir, `content/${locale}/blog/**/*.{md,mdx}`),
         path.join(siteDir, locale === 'en' ? 'i18n/en/docusaurus-plugin-content-docs/current/**/*.{md,mdx}' : 'content/ko/wiki/**/*.{md,mdx}'),
       ];

@@ -186,7 +186,8 @@ const config: Config = {
           items: [
             {to: '/about', label: 'Overview'},
             {to: '/about/resume', label: 'Resume'},
-            {to: '/about/cv', label: 'CV'},
+            {to: '/about/selected-cv', label: 'Selected CV'},
+            {to: '/about/cv', label: 'Full CV'},
             {to: '/about/portfolio', label: 'Portfolio'},
           ],
         },

@@ -37,3 +37,6 @@ yarn-error.log*
 /output/pdf/
 /tmp/pdfs/
 /.profile2-build.lock/
+
+# Career browser review artifacts
+/output/career-review/

@@ -1,0 +1,56 @@
+ko:
+  name: 전제영
+  contents:
+    publications:
+      note: 제 논문 목록은 [Google Scholar](https://scholar.google.com/citations?user=gwCPQM8AAAAJ&hl=ko)에서 확인할 수 있습니다.
+    resume-ko:
+      title: 이력서
+      abstract: >
+        **도메인 특화 AI 환경을 인프라부터 워크로드까지 연결하는 AI Platform Engineer**입니다. Agentic AI 시스템과 이를 구동하는
+        Kubernetes·GPU·LLMOps 플랫폼, 안정적인 운영을 위한 AIOps를 함께 설계하며 현재 차량SW 검증 플랫폼의 아키텍처와 개발을 리드합니다.
+
+          - <span class="resume-abstract-emoji no-print" aria-hidden="true">🤖</span> **Agentic AI 시스템:** 에이전트 하네스·워크플로우와 MCP·도메인 도구를 통합하고 평가 환경을 구현할 수 있습니다.
+          - <span class="resume-abstract-emoji no-print" aria-hidden="true">☁️</span> **AI 플랫폼 & AIOps:** 하이브리드 Kubernetes, GPU, LLMOps, 관측·운영 자동화를 연결해 도메인 워크로드를 운영할 수 있습니다.
+          - <span class="resume-abstract-emoji no-print" aria-hidden="true">🧭</span> **아키텍처·기술 리딩:** 개발 그룹의 테크리드로서 SecOps(취약점·네트워크·인증·AI 가드레일)와 FinOps(토큰·인프라 효율화)를 설계 초기에 반영하고 우선순위에 따라 구현할 수 있습니다.
+
+        차량·Computer Vision 연구, MLOps 플랫폼 구축, Agentic AI 개발로 이어진 경력의 상세는
+        [**포트폴리오**](https://jyje.online/about/portfolio)에서 확인할 수 있습니다.
+en:
+  name: Jeayoung Jeon
+  contents:
+    publications:
+      note: >-
+        Full list is available on [Google
+        Scholar](https://scholar.google.com/citations?user=gwCPQM8AAAAJ&hl=ko).
+    resume-en:
+      title: Résumé
+      abstract: >
+        I build **domain-specific AI environments from infrastructure to workloads**. As an AI Platform
+        Engineer, I design Agentic AI systems, the Kubernetes/GPU/LLMOps platforms that run them, and the
+        AIOps practices that keep them operable. I now lead architecture and development for a vehicle SW
+        verification Agentic AI platform.
+
+          - <span class="resume-abstract-emoji no-print" aria-hidden="true">🤖</span> **Agentic AI Systems:** Can integrate agent harnesses, workflows, MCP, and domain tools; build evaluation environments.
+          - <span class="resume-abstract-emoji no-print" aria-hidden="true">☁️</span> **AI Platform & AIOps:** Can connect hybrid Kubernetes, GPUs, LLMOps, observability, and automation to keep domain workloads operable.
+          - <span class="resume-abstract-emoji no-print" aria-hidden="true">🧭</span> **Architecture & Technical Leadership:** As a development-group tech lead, can embed SecOps (vulnerability, network, identity, AI guardrails) and FinOps (token, infrastructure efficiency) into early design and implementation.
+
+        My career connects automotive and computer vision research, MLOps platform engineering, and Agentic AI
+        development. See my [**portfolio**](https://jyje.online/en/about/portfolio) for evidence and
+        implementation details.
+name-english: Jeayoung Jeon
+label: AI Platform Engineer
+email: jyjeon@outlook.com
+website: https://jyje.online
+location:
+  address: ''
+  postalCode: ''
+  city: Seoul
+  countryCode: KR
+  region: ''
+profiles:
+  - network: LinkedIn
+    username: LinkedIn
+    url: https://www.linkedin.com/in/jyje
+  - network: Github
+    username: Github
+    url: http://github.com/jyje

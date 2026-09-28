@@ -1,6 +1,6 @@
 import type {ReactNode} from 'react';
 import {marked} from 'marked';
-import layout from '@site/src/generated/career-layout.json';
+import type {CareerProfile, CareerRole} from '@site/src/components/CareerDocuments/profiles';
 import styles from './styles.module.css';
 
 type Data = Record<string, any>;
@@ -9,18 +9,19 @@ const date = (value?: string) => value?.slice(0, 7) ?? '';
 const range = (item: Data, ko: boolean) => `${date(item.startDate)} - ${typeof item.endDate === 'string' ? date(item.endDate) : ko ? '현재' : 'present'}`;
 const label = {ko: {work: '경력', projects: '주요 프로젝트', education: '학력', skills: '기술', certificates: '자격 취득 이력', languages: '언어'}, en: {work: 'Experience', projects: 'Selected projects', education: 'Education', skills: 'Skills', certificates: 'Certification history', languages: 'Languages'}};
 
-export default function ResumeSummary({data, locale}: {data: Data; locale: 'ko' | 'en'}): ReactNode {
+export default function ResumeSummary({data, locale, profile, role}: {data: Data; locale: 'ko' | 'en'; profile: CareerProfile; role: CareerRole}): ReactNode {
+  const layout = profile.resume;
   const ko = locale === 'ko'; const t = label[locale]; const basics = data.basics;
   const section = (title: string, body: ReactNode) => <section><h2>{title}</h2>{body}</section>;
-  return <article className={styles.page} data-career-document="resume">
+  return <article className={styles.page} data-career-document="resume" data-career-role={role}>
     <header className={styles.header}>
-      <h1>{basics.name}<small>{basics.label}</small></h1>
+      <h1>{basics.name}<small>{profile.title}</small></h1>
       <div className={styles.contact}>
         <a href={`mailto:${basics.email}`}>{basics.email}</a>
         <a href={basics.website}>{basics.website.replace(/^https?:\/\//, '')}</a>
         {basics.profiles.map((p: Data) => <a key={p.network} href={p.url}>{p.network}</a>)}
       </div>
-      <p>{layout.summary[locale]}</p>
+      <p>{profile.summary[locale]}</p>
     </header>
     <div className={styles.columns}>
       <div>
@@ -29,7 +30,7 @@ export default function ResumeSummary({data, locale}: {data: Data; locale: 'ko' 
             return <section className={styles.entry} key={selection.index} id={`${kind}-${selection.index}`}>
               <h3>{kind === 'work' ? item.company : item.position}</h3>
               <div className={styles.meta}>{range(item, ko)} · {kind === 'work' ? item.position : item.company}</div>
-              <ul>{selection.items.map(index => <li key={index}>{bullets[index].header && <strong>{bullets[index].header}: </strong>}{text(bullets[index].content)}</li>)}</ul>
+              <ul>{selection.items.map(({index, text: field}) => <li key={index}>{bullets[index].header && <strong>{bullets[index].header}: </strong>}{text(bullets[index][field] ?? bullets[index].content)}</li>)}</ul>
             </section>;
           })}
         </section>)}

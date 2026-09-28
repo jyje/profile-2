@@ -1,0 +1,12 @@
+defaultRole: platform
+work:
+  - hyundai-autoever
+  - maxst
+projects:
+  - vehicle-sw-agents
+  - codebeamer-assistant
+  - on-prem-mlops
+profiles:
+  - platform
+  - agents
+  - inference

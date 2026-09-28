@@ -1,0 +1,30 @@
+id: codebeamer-assistant
+anchor: projects-1
+ko:
+  role: Agentic AI 테크 리드
+  organization: 현대오토에버
+  outcomes:
+    - id: domain-agent
+      title: 도메인 에이전트
+      summary: RAG·MCP 기반 AI Assistant 구현 및 툴체인 실행 검증
+      detail: |
+        RAG·MCP 도구를 통합한 AI Assistant 구현 및 사내 툴체인 실행 검증
+  title: Codebeamer AI Assistant
+en:
+  role: Agentic AI Tech Lead
+  organization: Hyundai AutoEver
+  outcomes:
+    - id: domain-agent
+      title: Domain Agent
+      summary: Built a RAG/MCP assistant and validated execution with internal toolchains
+      detail: |
+        Built a RAG/MCP assistant and validated in-house toolchain execution
+  title: Codebeamer AI Assistant
+headerIcon: 🤖
+tags:
+  - agentic-ai
+  - ai
+  - llm
+period:
+  start: '2025-02-24'
+  end: '2025-11-30'

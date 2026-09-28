@@ -4,6 +4,7 @@ import path from 'node:path';
 import {spawn} from 'node:child_process';
 import handler from 'serve-handler';
 import {chromium} from 'playwright';
+import {verifyCareerProfiles} from './verify-career-profiles.mjs';
 import {verifyCareerChips} from './verify-career-chips.mjs';
 
 const prefix = process.env.VERIFY_BASE_PATH ?? '/profile-2/';
@@ -55,6 +56,7 @@ try {
     const raw = await fetch(root + 'about/cv'); assert.equal(raw.status, 200);
     assert.equal(raw.url, root + 'about/cv');
   }
+  await verifyCareerProfiles(browser, base);
   await new Promise((resolve, reject) => {
     const child = spawn(process.execPath, ['scripts/export-career-pdfs.mjs'], {stdio: 'inherit', env: {...process.env, PDF_BASE_URL: base}});
     child.on('error', reject); child.on('exit', code => code === 0 ? resolve() : reject(new Error(`PDF validation failed (${code})`)));

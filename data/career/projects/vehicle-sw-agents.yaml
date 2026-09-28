@@ -1,0 +1,31 @@
+id: vehicle-sw-agents
+anchor: projects-0
+ko:
+  title: 차량SW 검증을 위한 Agentic AI 플랫폼
+  role: 플랫폼 아키텍트 · 테크 리드
+  organization: 현대오토에버
+  outcomes:
+    - id: agent-architecture
+      title: 플랫폼 아키텍처
+      summary: Deep Agents 기반 에이전트 통합·실행·평가 설계
+      detail: |
+        Deep Agents 기반 에이전트 통합·도구 실행·평가 구조 설계 및 개발 주도
+en:
+  title: Agentic AI Platform for Vehicle SW Verification
+  role: Platform Architect · Tech Lead
+  organization: Hyundai AutoEver
+  outcomes:
+    - id: agent-architecture
+      title: Platform Architecture
+      summary: Designed agent integration, tool execution and evaluation with Deep Agents
+      detail: |
+        Led Deep Agents integration, tool execution, and evaluation design
+headerIcon: 🚙
+tags:
+  - agentic-ai
+  - ai
+  - kubernetes
+  - llm
+period:
+  start: '2026-04-01'
+  end: null

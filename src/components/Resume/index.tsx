@@ -143,8 +143,8 @@ export default function Resume({data, locale}: {data: Data; locale: string}): Re
 
       {data.work?.length > 0 && (
         <Section title={t.work}>
-          {data.work.map((w: Data, i: number) => (
-            <Card id={`work-${i}`} key={w.company + w.startDate} icon={w.headerIcon} title={<Link href={w.website}>{w.company}</Link>} sub={w.position} date={period(w.startDate, w.endDate, t.present)}>
+          {data.work.map((w: Data) => (
+            <Card id={w.anchor} key={w.company + w.startDate} icon={w.headerIcon} title={<Link href={w.website}>{w.company}</Link>} sub={w.position} date={period(w.startDate, w.endDate, t.present)}>
               {w.roles?.description && <p><Html text={w.roles.description} /></p>}
               <Items items={w.roles?.items} />
               <Items items={w.results?.items} />
@@ -156,8 +156,9 @@ export default function Resume({data, locale}: {data: Data; locale: string}): Re
 
       {data.projects?.length > 0 && (
         <Section title={t.projects}>
-          {data.projects.map((p: Data, i: number) => (
-            <Card id={`projects-${i}`} key={p.position + p.startDate} icon={p.headerIcon} title={p.position} sub={[p.company, p.roles?.description].filter(Boolean).join(' · ')} date={period(p.startDate, p.endDate, t.present)}>
+          {data.projects.map((p: Data) => (
+            <Card id={p.anchor} key={p.position + p.startDate} icon={p.headerIcon} title={p.position} sub={[p.company, p.roles?.description].filter(Boolean).join(' · ')} date={period(p.startDate, p.endDate, t.present)}>
+              {p.description && <p><Html text={p.description} /></p>}
               <Items items={p.roles?.items} />
               <Items items={p.results?.items} />
               <TaxonomyTags tags={p.tags} locale={locale} />
@@ -168,8 +169,8 @@ export default function Resume({data, locale}: {data: Data; locale: string}): Re
 
       {data.education?.length > 0 && (
         <Section title={t.education}>
-          {data.education.map((e: Data, i: number) => (
-            <Card id={`education-${i}`} key={e.institution + e.startDate} icon={e.headerIcon} title={<Link href={e.website}>{e.institution}</Link>} sub={[e.studyType, e.area, e.gpa].filter(Boolean).join(' · ')} date={period(e.startDate, e.endDate, t.present)}>
+          {data.education.map((e: Data) => (
+            <Card id={e.anchor} key={e.institution + e.startDate} icon={e.headerIcon} title={<Link href={e.website}>{e.institution}</Link>} sub={[e.studyType, e.area, e.gpa].filter(Boolean).join(' · ')} date={period(e.startDate, e.endDate, t.present)}>
               {e.keywords?.length > 0 && <p className={styles.tags}>{e.keywords.join(' · ')}</p>}
               {e.thesis && <p className={styles.note}>{e.thesis}</p>}
               <TaxonomyTags tags={e.tags} locale={locale} />
@@ -181,8 +182,8 @@ export default function Resume({data, locale}: {data: Data; locale: string}): Re
       {data.skills?.length > 0 && (
         <Section title={t.skills}>
           <dl className={styles.skills}>
-            {data.skills.map((s: Data, i: number) => (
-              <SkillGroup id={`skills-${i}`} key={s.name}>
+            {data.skills.map((s: Data) => (
+              <SkillGroup id={s.anchor} key={s.name}>
                 <dt>{s.name}</dt>
                 <dd>
                   {(s.keywords ?? []).map((k: string) => {

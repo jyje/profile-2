@@ -1,0 +1,37 @@
+id: hyundai-autoever
+anchor: work-0
+ko:
+  website: https://www.hyundai-autoever.com
+  title: 현대오토에버
+  role: 리드 AI 플랫폼 엔지니어
+  responsibilities:
+    - id: ai-llm-platform
+      title: AI/LLM Platform
+      summary: |
+        사내 툴체인용 Agentic AI 통합·평가 환경의 아키텍처 및 개발 리드
+    - id: cloud-native-ai
+      title: Cloud-Native AI
+      summary: |
+        Kubernetes 기반 LLMOps·AIOps로 Private LLM 워크로드 환경 구성
+en:
+  website: https://www.hyundai-autoever.com/eng
+  title: Hyundai AutoEver
+  role: Lead AI Platform Engineer
+  responsibilities:
+    - id: ai-llm-platform
+      title: AI/LLM Platform
+      summary: |
+        Lead Agentic AI integration and evaluation for in-house toolchains
+    - id: cloud-native-ai
+      title: Cloud-Native AI
+      summary: |
+        Build Kubernetes-based LLMOps/AIOps for private LLM workloads
+headerIcon: 🧑‍💻
+tags:
+  - careers
+  - ai
+  - kubernetes
+  - llmops
+period:
+  start: '2025-02-24'
+  end: null

@@ -1,5 +1,12 @@
+/* Shared career geometry; colors follow the existing site theme. */
+:is([data-career-document], [data-career-tools]) {
+  --career-width: 54rem;
+  --career-gutter: 1.5rem;
+  --career-section-gap: 2rem;
+}
 /* Only career documents opt in. The rest of the Docusaurus theme stays intact. */
 [data-career-document] { font-family: 'Noto Sans KR', sans-serif; word-break: keep-all; overflow-wrap: anywhere; }
+[data-career-document] a { color: var(--ifm-color-primary); }
 @page career { size: A4; margin: 12mm; }
 @media print {
   html:has([data-career-document]) { color-scheme: light; page: career; height: auto; }
