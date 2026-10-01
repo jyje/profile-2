@@ -11,7 +11,6 @@ import styles from './index.module.css';
 
 type Catalog = {
   featured: Record<string, CuratedItem[]>;
-  reading: Record<string, CuratedItem[]>;
   daily: Record<string, {blog: CuratedItem[]; wiki: CuratedItem[]}>;
   counts: {blog: number; wiki: number};
 };
@@ -29,8 +28,6 @@ type Copy = {
   featured: string;
   featuredIntro: string;
   readPost: string;
-  reading: string;
-  readingIntro: string;
   wiki: string;
   wikiIntro: string;
   openWiki: string;
@@ -57,8 +54,6 @@ const COPY: Record<string, Copy> = {
     featured: '먼저 읽을 글',
     featuredIntro: '실제로 만들고 운영한 시스템을 중심으로 고른 이야기입니다.',
     readPost: '글 읽기',
-    reading: '이어 읽기',
-    readingIntro: '프로젝트, 전환점, 회고를 따라 읽어보세요.',
     wiki: '위키',
     wikiIntro: '블로그가 경험의 기록이라면, 위키는 작업 중 다시 찾는 문서입니다.',
     openWiki: '문서 보기',
@@ -82,8 +77,6 @@ const COPY: Record<string, Copy> = {
     featured: 'Start with a story',
     featuredIntro: 'A closer look at a system I built and operated.',
     readPost: 'Read the post',
-    reading: 'Keep reading',
-    readingIntro: 'Projects, turning points, and a year in review.',
     wiki: 'Wiki',
     wikiIntro: 'The blog records experience. The wiki holds notes I keep revising and returning to.',
     openWiki: 'Read the note',
@@ -215,36 +208,10 @@ export default function Home(): ReactNode {
             </section>
           )}
 
-          <section className={styles.reading} aria-labelledby="home-reading">
-            <div className={styles.sectionHeading}>
-              <div>
-                <p className={styles.kicker}>02 / Editorial</p>
-                <h2 id="home-reading">{copy.reading}</h2>
-                <p>{copy.readingIntro}</p>
-              </div>
-            </div>
-            <ol className={styles.readingList}>
-              {CATALOG.reading[locale].map((item, index) => (
-                <li key={item.id}>
-                  <a href={rootBase + item.url.slice(1)}>
-                    <span className={styles.readingNumber}>{String(index + 1).padStart(2, '0')}</span>
-                    <span className={styles.readingBody}>
-                      <ItemMeta item={item} locale={locale} label={copy.blog} />
-                      <strong>{item.title}</strong>
-                      <span className={styles.readingDescription}>{item.description}</span>
-                    </span>
-                    <span className={styles.arrow} aria-hidden="true">↗</span>
-                  </a>
-                </li>
-              ))}
-            </ol>
-            <Link to="/blog" className={styles.bottomLink}>{copy.allBlog} <span aria-hidden="true">↗</span></Link>
-          </section>
-
           {featuredWiki && (
             <section className={styles.wikiFeature} aria-labelledby="home-wiki">
               <div>
-                <p className={styles.kicker}>03 / Wiki</p>
+                <p className={styles.kicker}>02 / Wiki</p>
                 <h2 id="home-wiki">{copy.wiki}</h2>
                 <p>{copy.wikiIntro}</p>
                 <Link to="/wiki" className={styles.sectionLink}>{copy.allWiki} <span aria-hidden="true">↗</span></Link>
@@ -260,7 +227,7 @@ export default function Home(): ReactNode {
 
           <section className={styles.daily} aria-labelledby="home-daily">
             <div className={styles.dailyHeading}>
-              <p className={styles.kicker}>04 / Daily · KST</p>
+              <p className={styles.kicker}>03 / Daily · KST</p>
               <h2 id="home-daily">{copy.daily}</h2>
               <p>{copy.dailyIntro}</p>
               <strong>{day ? formatDate(day, locale) : '···'}</strong>
