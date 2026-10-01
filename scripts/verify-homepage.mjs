@@ -45,13 +45,11 @@ try {
       ? '- AI 플랫폼 엔지니어 전제영'
       : '- Jeayoung Jeon, AI Platform Engineer');
     assert.equal(await page.locator('#home-author strong').innerText(), locale === 'ko' ? '전제영' : 'Jeayoung Jeon');
-    for (const id of ['home-featured', 'home-reading', 'home-wiki', 'home-daily']) {
+    for (const id of ['home-featured', 'home-wiki', 'home-daily']) {
       assert.equal(await page.locator(`#${id}`).count(), 1, `${locale}: missing curated section ${id}`);
     }
-    assert.ok(await page.locator('section[aria-labelledby="home-reading"] ol a').count() > 0);
-
     // Measure the intro and menu at a narrow phone width, the reference phone width, and desktop.
-    // Editorial content below the intro is variable and is not part of this layout contract.
+    // Content below the intro is variable and is not part of this layout contract.
     for (const width of [320, 390, 1222]) {
       await page.setViewportSize({width, height: 900});
       const measurements = await page.evaluate(() => {

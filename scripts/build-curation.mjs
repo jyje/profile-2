@@ -69,17 +69,9 @@ export function buildCuration() {
   if (!Array.isArray(config?.featured)) {
     throw new Error('home-curation.yml needs a featured list');
   }
-  if (!Array.isArray(config?.reading) || new Set(config.reading).size !== config.reading.length) {
-    throw new Error('home-curation.yml needs a unique reading list');
-  }
-  const featuredBlogIds = new Set(config.featured.filter((item) => item.kind === 'blog').map((item) => item.id));
-  if (config.reading.some((id) => featuredBlogIds.has(id))) {
-    throw new Error('Featured blog post appears in reading list');
-  }
-  const output = {featured: {}, reading: {}, daily: {}, counts: {}};
+  const output = {featured: {}, daily: {}, counts: {}};
   for (const locale of ['ko', 'en']) {
     output.featured[locale] = resolveGroup(config.featured, null, locale);
-    output.reading[locale] = resolveGroup(config.reading, 'blog', locale);
     output.daily[locale] = {};
     for (const kind of ['blog', 'wiki']) {
       const group = config.daily?.[kind];
@@ -98,5 +90,5 @@ export function buildCuration() {
 
   fs.mkdirSync(path.dirname(OUTPUT), {recursive: true});
   fs.writeFileSync(OUTPUT, JSON.stringify(output, null, 2) + '\n');
-  console.log('[build-curation] indexed editorial and daily content');
+  console.log('[build-curation] indexed featured and daily content');
 }
