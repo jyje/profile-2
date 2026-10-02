@@ -4,14 +4,19 @@ import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import Layout from '@theme/Layout';
 
 import curation from '@site/src/generated/curation.json';
-import {pickRandom, localDate, type CuratedItem} from '@site/src/utils/daily-curation';
+import {localDate, pickForDay, type CuratedItem} from '@site/src/utils/daily-curation';
 import HomeQuickLinks from '@site/src/components/HomeQuickLinks';
 import {IconArticle, IconBooks, IconBriefcase, IconFileCv, IconFlask, IconRefresh, IconTrophy, IconUserCircle} from '@tabler/icons-react';
 import styles from './index.module.css';
 
 type Catalog = {
   recommendations: Record<string, {blog: CuratedItem[]; wiki: CuratedItem[]}>;
-  counts: {blog: number; wiki: number};
+  counts: {dailyRandom: number; latestBlog: number; latestUpdated: number};
+};
+
+type Recommendation = {
+  item: CuratedItem;
+  role: 'daily-random' | 'recent-blog' | 'recent-update';
 };
 
 type Copy = {
@@ -25,6 +30,8 @@ type Copy = {
   labs: string;
   about: string;
   recommendations: string;
+  randomRecommendationsIntro: string;
+  recommendationsFallback: string;
   refreshRecommendations: string;
   refreshTooltip: string;
   blog: string;
@@ -44,9 +51,11 @@ const COPY: Record<string, Copy> = {
     introduction: 'AI 플랫폼과 클라우드 시스템을 만들고 운영한 경험, 다시 참고할 지식, 진행 중인 실험을 기록합니다.',
     labs: '실험실',
     about: '소개',
-    recommendations: '오늘의 발견',
+    recommendations: '오늘의 추천',
+    randomRecommendationsIntro: '무작위 추천 글 입니다',
+    recommendationsFallback: '오늘 주목할 만한 글입니다.',
     refreshRecommendations: '새로고침',
-    refreshTooltip: 'Fisher-Yates 셔플: 현재 목록에 없는 글을 우선 섞어 다시 추천합니다.',
+    refreshTooltip: 'Fisher-Yates 셔플: 오늘 날짜와 새로고침 횟수를 시드로 무작위 글 한 편을 고릅니다.',
     blog: '블로그',
     wiki: '위키',
     korean: '한국어 원문',
@@ -61,9 +70,11 @@ const COPY: Record<string, Copy> = {
     introduction: 'A record of building and operating AI platform and cloud systems, reusable knowledge, and ongoing experiments.',
     labs: 'Labs',
     about: 'About',
-    recommendations: 'Today’s finds',
+    recommendations: "Today's recommendations",
+    randomRecommendationsIntro: 'A randomly selected recommendation.',
+    recommendationsFallback: 'Noteworthy reads for today.',
     refreshRecommendations: 'Refresh',
-    refreshTooltip: 'Fisher-Yates shuffle: reshuffles the pool, preferring items not shown.',
+    refreshTooltip: 'Fisher-Yates shuffle: uses today’s date and refresh count to choose one random read.',
     blog: 'Blog',
     wiki: 'Wiki',
     korean: 'Korean original',
@@ -79,16 +90,66 @@ function formatDate(day: string, locale: string): string {
   }).format(date);
 }
 
-function ItemMeta({item, locale, label}: {item: CuratedItem; locale: string; label: string}) {
+function formatRecommendationsIntro(day: string, locale: string): string {
+  const date = new Date(day + 'T12:00:00');
+  if (locale === 'ko') {
+    const weekday = new Intl.DateTimeFormat('ko-KR', {weekday: 'long'}).format(date);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const dayOfMonth = String(date.getDate()).padStart(2, '0');
+    return `${year}.${month}.${dayOfMonth} ${weekday}, 오늘 주목할 만한 글입니다.`;
+  }
+  const dateLabel = new Intl.DateTimeFormat('en-US', {
+    weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',
+  }).format(date);
+  return `Noteworthy reads for ${dateLabel}.`;
+}
+
+function latestRecommendations(pools: Catalog['recommendations'][string], counts: Catalog['counts']): Recommendation[] {
+  const recentBlogs = [...pools.blog]
+    .sort((a, b) => (b.date ?? '').localeCompare(a.date ?? ''))
+    .slice(0, counts.latestBlog);
+  const seen = new Set(recentBlogs.map((item) => item.url));
+  const recentUpdates = [...pools.blog, ...pools.wiki]
+    .filter((item) => item.lastUpdatedAt && !seen.has(item.url))
+    .sort((a, b) => (b.lastUpdatedAt ?? '').localeCompare(a.lastUpdatedAt ?? ''));
+  const selected: Recommendation[] = recentBlogs.map((item) => ({item, role: 'recent-blog'}));
+  for (const item of recentUpdates) {
+    if (selected.filter(({role}) => role === 'recent-update').length >= counts.latestUpdated) break;
+    if (seen.has(item.url)) continue;
+    selected.push({item, role: 'recent-update'});
+    seen.add(item.url);
+  }
+  return selected;
+}
+
+function recommendationsForDay(
+  pools: Catalog['recommendations'][string],
+  counts: Catalog['counts'],
+  day: string | null,
+  refreshCount: number,
+  previousRandomUrl?: string,
+): Recommendation[] {
+  const latest = latestRecommendations(pools, counts);
+  if (!day) return latest;
+  const excluded = new Set([...latest.map(({item}) => item.url), previousRandomUrl].filter(Boolean));
+  const candidates = [...pools.blog, ...pools.wiki].filter((item) => !excluded.has(item.url));
+  const randomItem = pickForDay(candidates, counts.dailyRandom, day, `recommendation-${refreshCount}`)
+    .map((item) => ({item, role: 'daily-random' as const}));
+  return [...randomItem, ...latest];
+}
+
+function ItemMeta({item, locale, label, role}: {item: CuratedItem; locale: string; label: string; role: Recommendation['role']}) {
+  const showUpdated = role === 'recent-update' || item.kind === 'wiki';
   return (
     <span className={styles.itemMeta}>
       <span>{label}</span>
-      {item.kind === 'blog' && item.date && <span>{formatDate(item.date, locale)}</span>}
-      {item.kind === 'wiki' && item.lastUpdatedAt && (
+      {showUpdated && item.lastUpdatedAt && (
         <span>
-          {locale === 'ko' ? '마지막 편집' : 'Last edited'} {formatDate(item.lastUpdatedAt, locale)}
+          {formatDate(item.lastUpdatedAt, locale)} {locale === 'ko' ? '수정됨' : 'Updated'}
         </span>
       )}
+      {!showUpdated && item.date && <span>{formatDate(item.date, locale)}</span>}
       {locale === 'en' && item.sourceLocale === 'ko' && <span>{COPY.en.korean}</span>}
     </span>
   );
@@ -105,50 +166,41 @@ export default function Home(): ReactNode {
   const rootBase = localeSuffix && baseUrl.endsWith(localeSuffix)
     ? baseUrl.slice(0, -localeSuffix.length)
     : baseUrl;
-  const [recommendations, setRecommendations] = useState<CuratedItem[] | null>(null);
+  const pools = CATALOG.recommendations[locale];
+  const [today, setToday] = useState<string | null>(null);
+  const [refreshCount, setRefreshCount] = useState(0);
+  const [recommendations, setRecommendations] = useState<Recommendation[]>(() => latestRecommendations(pools, CATALOG.counts));
+  const [hasRefreshed, setHasRefreshed] = useState(false);
 
   useEffect(() => {
-    const choose = (previous: CuratedItem[] = []) => {
-      const pools = CATALOG.recommendations[locale];
-      const blogPicks = pickRandom(
-        pools.blog,
-        CATALOG.counts.blog,
-        previous.filter((item) => item.kind === 'blog').map((item) => item.id),
-      );
-      const wikiPicks = pickRandom(
-        pools.wiki,
-        CATALOG.counts.wiki,
-        previous.filter((item) => item.kind === 'wiki').map((item) => item.id),
-      );
-      return pickRandom([...blogPicks, ...wikiPicks], blogPicks.length + wikiPicks.length);
-    };
-
-    setRecommendations(choose());
     let currentDay = localDate();
+    setToday(currentDay);
+    setRefreshCount(0);
+    setHasRefreshed(false);
+    setRecommendations(recommendationsForDay(pools, CATALOG.counts, currentDay, 0));
     const timer = window.setInterval(() => {
       const nextDay = localDate();
       if (nextDay !== currentDay) {
         currentDay = nextDay;
-        setRecommendations((previous) => choose(previous ?? []));
+        setToday(nextDay);
+        setRefreshCount(0);
+        setHasRefreshed(false);
+        setRecommendations(recommendationsForDay(pools, CATALOG.counts, nextDay, 0));
       }
     }, 60_000);
     return () => window.clearInterval(timer);
-  }, [locale]);
+  }, [pools]);
 
   const refreshRecommendations = () => {
-    const previous = recommendations ?? [];
-    const pools = CATALOG.recommendations[locale];
-    const blogPicks = pickRandom(
-      pools.blog,
-      CATALOG.counts.blog,
-      previous.filter((item) => item.kind === 'blog').map((item) => item.id),
-    );
-    const wikiPicks = pickRandom(
-      pools.wiki,
-      CATALOG.counts.wiki,
-      previous.filter((item) => item.kind === 'wiki').map((item) => item.id),
-    );
-    setRecommendations(pickRandom([...blogPicks, ...wikiPicks], blogPicks.length + wikiPicks.length));
+    const nextDay = localDate();
+    const nextCount = nextDay === today ? refreshCount + 1 : 0;
+    const previousRandomUrl = nextDay === today
+      ? recommendations.find(({role}) => role === 'daily-random')?.item.url
+      : undefined;
+    setToday(nextDay);
+    setRefreshCount(nextCount);
+    setRecommendations(recommendationsForDay(pools, CATALOG.counts, nextDay, nextCount, previousRandomUrl));
+    setHasRefreshed(true);
   };
 
   return (
@@ -187,7 +239,8 @@ export default function Home(): ReactNode {
               <div>
                 <p className={styles.kicker}>01 / Discover</p>
                 <h2 id="home-recommendations">{copy.recommendations}</h2>
-                <p>{locale === 'ko' ? '무작위 추천 글 입니다' : 'Randomly selected recommendations.'}</p>
+                <p>{today ? formatRecommendationsIntro(today, locale) : copy.recommendationsFallback}</p>
+                {hasRefreshed && <p>{copy.randomRecommendationsIntro}</p>}
               </div>
               <button
                 className={styles.refreshButton}
@@ -201,11 +254,11 @@ export default function Home(): ReactNode {
               </button>
             </div>
             <ul className={styles.recommendationList} aria-live="polite">
-              {(recommendations ?? []).map((item) => (
+              {recommendations.map(({item, role}) => (
                 <li key={item.id}>
                   <a href={rootBase + item.url.slice(1)}>
                     <span className={styles.recommendationBody}>
-                      <ItemMeta item={item} locale={locale} label={item.kind === 'blog' ? copy.blog : copy.wiki} />
+                      <ItemMeta item={item} locale={locale} role={role} label={item.kind === 'blog' ? copy.blog : copy.wiki} />
                       <strong className={styles.recommendationTitle}>{item.title}</strong>
                       {item.description && <span className={styles.recommendationDescription}>{item.description}</span>}
                     </span>

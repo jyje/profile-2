@@ -10,32 +10,6 @@ export type CuratedItem = {
   url: string;
 };
 
-export function pickRandom(items: CuratedItem[], count: number, previousIds: string[] = []): CuratedItem[] {
-  const previous = new Set(previousIds);
-  const shuffle = (values: CuratedItem[]) => {
-    const shuffled = [...values];
-    for (let i = shuffled.length - 1; i > 0; i -= 1) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-    }
-    return shuffled;
-  };
-
-  // Prefer fresh items so a refresh always changes the visible selection when
-  // the pool contains more items than the requested count.
-  return [
-    ...shuffle(items.filter((item) => !previous.has(item.id))),
-    ...shuffle(items.filter((item) => previous.has(item.id))),
-  ].slice(0, count);
-}
-
-export function localDate(now: Date = new Date()): string {
-  const year = now.getFullYear();
-  const month = String(now.getMonth() + 1).padStart(2, '0');
-  const day = String(now.getDate()).padStart(2, '0');
-  return `${year}-${month}-${day}`;
-}
-
 function hash(text: string): number {
   let value = 2166136261;
   for (let i = 0; i < text.length; i += 1) {
@@ -56,11 +30,19 @@ function randomFromSeed(seed: number): () => number {
 }
 
 export function pickForDay(items: CuratedItem[], count: number, day: string, kind: string): CuratedItem[] {
-  const shuffled = [...items];
-  const random = randomFromSeed(hash(day + ':' + kind));
+  const unique = [...new Map(items.map((item) => [item.url, item])).values()];
+  const shuffled = [...unique];
+  const random = randomFromSeed(hash(`${day}:${kind}`));
   for (let i = shuffled.length - 1; i > 0; i -= 1) {
     const j = Math.floor(random() * (i + 1));
     [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
   }
   return shuffled.slice(0, count);
+}
+
+export function localDate(now: Date = new Date()): string {
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, '0');
+  const day = String(now.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
 }
