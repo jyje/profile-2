@@ -1,94 +1,109 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import * as yaml from 'js-yaml';
-import {contentMode, isDocIgnored, authorFile} from '../plugins/content-visibility.cjs';
+import {ignorePatterns, isDocIgnored} from '../plugins/content-visibility.cjs';
+import {createLastUpdateReader} from './content-last-update.mjs';
 
 const ROOT = path.resolve(import.meta.dirname, '..');
 const CONFIG = path.join(ROOT, 'data/home-curation.yml');
 const OUTPUT = path.join(ROOT, 'src/generated/curation.json');
+const readLastUpdate = createLastUpdateReader(ROOT);
+const ignoredContent = ignorePatterns(ROOT);
 
-function assertId(id) {
-  if (typeof id !== 'string' || !/^[a-z0-9][a-z0-9/_-]*$/.test(id)) {
-    throw new Error('Invalid curation id: ' + String(id));
+function normalizeDate(value) {
+  if (value instanceof Date) {
+    const iso = value.toISOString();
+    return iso.endsWith('T00:00:00.000Z') ? iso.slice(0, 10) : iso;
   }
+  if (typeof value === 'string' && value) return value;
+  return null;
 }
 
-function readItem(kind, id, locale) {
-  assertId(id);
-  if (kind !== 'blog' && kind !== 'wiki') {
-    throw new Error('Invalid curation kind: ' + String(kind));
-  }
-  if (contentMode() === 'public' && isDocIgnored(authorFile(`content/${locale}/${kind}/${id}.md`))) {
-    throw new Error('Development-only document cannot be curated in a public build: ' + id);
-  }
+function markdownFiles(directory) {
+  if (!fs.existsSync(directory)) return [];
+  return fs.readdirSync(directory, {withFileTypes: true}).flatMap((entry) => {
+    const absolute = path.join(directory, entry.name);
+    if (entry.isSymbolicLink() || entry.name.startsWith('.')) return [];
+    if (entry.isDirectory()) return markdownFiles(absolute);
+    if (!/\.mdx?$/.test(entry.name)) return [];
+    const relative = path.relative(ROOT, absolute).replaceAll('\\', '/');
+    return isDocIgnored(relative, ignoredContent) ? [] : [absolute];
+  });
+}
 
-  let sourceLocale = locale;
-  let file = path.join(ROOT, authorFile(`content/${sourceLocale}/${kind}/${id}.md`));
-  if (!fs.existsSync(file) && kind === 'wiki' && locale === 'en') {
-    sourceLocale = 'ko';
-    file = path.join(ROOT, authorFile(`content/${sourceLocale}/${kind}/${id}.md`));
-  }
-  if (!fs.existsSync(file)) {
-    throw new Error('Curated document is missing: ' + file);
+function itemId(kind, sourceLocale, file) {
+  const directory = path.join(ROOT, 'content', sourceLocale, kind);
+  const relative = path.relative(directory, file).replaceAll('\\', '/').replace(/\.mdx?$/, '');
+  const docId = relative.replace(/(^|\/)index$/, '');
+  return `${kind}:${sourceLocale}:${docId || 'index'}`;
+}
+
+function readItem(kind, sourceLocale, file) {
+  const relative = path.relative(path.join(ROOT, 'content', sourceLocale, kind), file)
+    .replaceAll('\\', '/').replace(/\.mdx?$/, '');
+  const docId = relative.replace(/(^|\/)index$/, '');
+  const id = itemId(kind, sourceLocale, file);
+  if (kind === 'blog' && !/^\d{4}-\d{2}-\d{2}-.+/.test(path.basename(relative))) {
+    throw new Error('Blog curation file needs a date-prefixed filename: ' + file);
   }
 
   const text = fs.readFileSync(file, 'utf8');
   const match = text.match(/^---\r?\n([\s\S]*?)\r?\n---(?:\r?\n|$)/);
-  if (!match) throw new Error('Curated document needs frontmatter: ' + file);
-  const meta = yaml.load(match[1]);
-  if (!meta?.title) throw new Error('Curated document needs a title: ' + file);
-  if (meta.draft === true || meta.unlisted === true) {
-    throw new Error('Curated document is not public: ' + file);
-  }
+  const meta = match ? yaml.load(match[1]) ?? {} : {};
+  if (meta.draft === true || meta.unlisted === true) return null;
+  const body = match ? text.slice(match[0].length) : text;
+  const title = meta.title ?? body.match(/^#\s+(.+?)\s*#*\s*$/m)?.[1] ?? path.basename(relative);
 
-  const slug = kind === 'blog' ? String(meta.slug ?? id.replace(/^\d{4}-\d{2}-\d{2}-/, '')) : id;
-  if (kind === 'blog' && !/^\d{4}-\d{2}-\d{2}-/.test(id)) {
-    throw new Error('Blog curation id needs a date prefix: ' + id);
-  }
-  const route = kind === 'blog' ? '/blog/' + slug : '/wiki/' + slug;
-
+  const slug = kind === 'blog'
+    ? String(meta.slug ?? path.basename(relative).replace(/^\d{4}-\d{2}-\d{2}-/, ''))
+    : String(meta.slug ?? `/${docId}`);
+  const route = kind === 'blog'
+    ? '/blog/' + slug.replace(/^\//, '')
+    : '/wiki' + (slug.startsWith('/') ? slug : `/${slug}`);
   return {
     id,
     kind,
-    title: String(meta.title),
+    title: String(title),
     description: String(meta.description ?? '').replace(/<[^>]*>/g, '').split(/\s*Photo by\s*/i)[0].trim(),
     tags: Array.isArray(meta.tags) ? meta.tags.slice(0, 3).map(String) : [],
-    date: kind === 'blog' ? id.slice(0, 10) : null,
+    date: kind === 'blog' ? path.basename(relative).slice(0, 10) : null,
+    lastUpdatedAt: normalizeDate(meta.last_update?.date) ?? readLastUpdate(file) ?? null,
     sourceLocale,
     url: (sourceLocale === 'en' ? '/en' : '') + route,
   };
 }
 
-function resolveGroup(entries, kind, locale) {
-  if (!Array.isArray(entries)) throw new Error('Curation group must be a list');
-  return entries.map((entry) => readItem(kind ?? entry.kind, kind ? entry : entry.id, locale));
+function discoverItems(kind, locale) {
+  const localizedRoot = path.join(ROOT, 'content', locale, kind);
+  const sourceRoot = path.join(ROOT, 'content', locale === 'en' ? 'ko' : locale, kind);
+  const localized = markdownFiles(localizedRoot).map((file) => readItem(kind, locale, file)).filter(Boolean);
+  if (locale !== 'en' || kind !== 'wiki') return localized;
+
+  const ids = new Set(localized.map((item) => item.id.replace(':ko:', ':en:')));
+  const fallback = markdownFiles(sourceRoot)
+    .map((file) => readItem(kind, 'ko', file))
+    .filter(Boolean)
+    .filter((item) => !ids.has(item.id.replace(':ko:', ':en:')));
+  return [...localized, ...fallback];
 }
 
 export function buildCuration() {
   const config = yaml.load(fs.readFileSync(CONFIG, 'utf8'));
-  if (!Array.isArray(config?.featured)) {
-    throw new Error('home-curation.yml needs a featured list');
+  if (!config?.recommendations || !['dailyRandom', 'latestBlog', 'latestUpdated'].every((key) => Number.isInteger(config.recommendations[key]))) {
+    throw new Error('home-curation.yml needs dailyRandom, latestBlog, and latestUpdated counts');
   }
-  const output = {featured: {}, daily: {}, counts: {}};
+  const output = {recommendations: {}, counts: config.recommendations};
   for (const locale of ['ko', 'en']) {
-    output.featured[locale] = resolveGroup(config.featured, null, locale);
-    output.daily[locale] = {};
-    for (const kind of ['blog', 'wiki']) {
-      const group = config.daily?.[kind];
-      const count = group?.count;
-      if (!Number.isInteger(count) || count < 1 || count > group.ids?.length) {
-        throw new Error('Invalid daily curation count for ' + kind);
-      }
-      const ids = group.ids;
-      if (new Set(ids).size !== ids.length) throw new Error('Duplicate daily curation id in ' + kind);
-      const featuredIds = new Set(config.featured.filter((item) => item.kind === kind).map((item) => item.id));
-      if (ids.some((id) => featuredIds.has(id))) throw new Error('Featured document appears in daily pool: ' + kind);
-      output.daily[locale][kind] = resolveGroup(ids, kind, locale);
-      output.counts[kind] = count;
+    const blog = discoverItems('blog', locale).sort((a, b) => (b.date ?? '').localeCompare(a.date ?? ''));
+    const wiki = discoverItems('wiki', locale).sort((a, b) => (b.lastUpdatedAt ?? '').localeCompare(a.lastUpdatedAt ?? ''));
+    const requiredCount = output.counts.dailyRandom + output.counts.latestBlog + output.counts.latestUpdated;
+    if (blog.length < output.counts.latestBlog || (blog.length + wiki.length) < requiredCount) {
+      throw new Error(`Not enough published content for ${locale} homepage recommendations`);
     }
+    output.recommendations[locale] = {blog, wiki};
   }
 
   fs.mkdirSync(path.dirname(OUTPUT), {recursive: true});
   fs.writeFileSync(OUTPUT, JSON.stringify(output, null, 2) + '\n');
-  console.log('[build-curation] indexed featured and daily content');
+  console.log('[build-curation] indexed homepage recommendation pools');
 }

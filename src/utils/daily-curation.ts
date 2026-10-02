@@ -5,20 +5,10 @@ export type CuratedItem = {
   description: string;
   tags: string[];
   date: string | null;
+  lastUpdatedAt: string | null;
   sourceLocale: string;
   url: string;
 };
-
-export function seoulDate(now: Date = new Date()): string {
-  const parts = new Intl.DateTimeFormat('en-US', {
-    timeZone: 'Asia/Seoul',
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-  }).formatToParts(now);
-  const values = Object.fromEntries(parts.map(({type, value}) => [type, value]));
-  return `${values.year}-${values.month}-${values.day}`;
-}
 
 function hash(text: string): number {
   let value = 2166136261;
@@ -40,11 +30,19 @@ function randomFromSeed(seed: number): () => number {
 }
 
 export function pickForDay(items: CuratedItem[], count: number, day: string, kind: string): CuratedItem[] {
-  const shuffled = [...items];
-  const random = randomFromSeed(hash(day + ':' + kind));
+  const unique = [...new Map(items.map((item) => [item.url, item])).values()];
+  const shuffled = [...unique];
+  const random = randomFromSeed(hash(`${day}:${kind}`));
   for (let i = shuffled.length - 1; i > 0; i -= 1) {
     const j = Math.floor(random() * (i + 1));
     [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
   }
   return shuffled.slice(0, count);
+}
+
+export function localDate(now: Date = new Date()): string {
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, '0');
+  const day = String(now.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
 }

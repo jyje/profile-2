@@ -45,8 +45,8 @@ try {
       ? '- AI 플랫폼 엔지니어 전제영'
       : '- Jeayoung Jeon, AI Platform Engineer');
     assert.equal(await page.locator('#home-author strong').innerText(), locale === 'ko' ? '전제영' : 'Jeayoung Jeon');
-    for (const id of ['home-featured', 'home-wiki', 'home-daily']) {
-      assert.equal(await page.locator(`#${id}`).count(), 1, `${locale}: missing curated section ${id}`);
+    for (const id of ['home-recommendations']) {
+      assert.equal(await page.locator(`#${id}`).count(), 1, `${locale}: missing recommendation section ${id}`);
     }
     // Measure the intro and menu at a narrow phone width, the reference phone width, and desktop.
     // Content below the intro is variable and is not part of this layout contract.
