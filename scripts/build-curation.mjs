@@ -66,29 +66,26 @@ function resolveGroup(entries, kind, locale) {
 
 export function buildCuration() {
   const config = yaml.load(fs.readFileSync(CONFIG, 'utf8'));
-  if (!Array.isArray(config?.featured)) {
-    throw new Error('home-curation.yml needs a featured list');
+  if (!config?.recommendations || typeof config.recommendations !== 'object') {
+    throw new Error('home-curation.yml needs recommendation pools');
   }
-  const output = {featured: {}, daily: {}, counts: {}};
+  const output = {recommendations: {}, counts: {}};
   for (const locale of ['ko', 'en']) {
-    output.featured[locale] = resolveGroup(config.featured, null, locale);
-    output.daily[locale] = {};
+    output.recommendations[locale] = {};
     for (const kind of ['blog', 'wiki']) {
-      const group = config.daily?.[kind];
+      const group = config.recommendations[kind];
       const count = group?.count;
       if (!Number.isInteger(count) || count < 1 || count > group.ids?.length) {
-        throw new Error('Invalid daily curation count for ' + kind);
+        throw new Error('Invalid recommendation count for ' + kind);
       }
       const ids = group.ids;
-      if (new Set(ids).size !== ids.length) throw new Error('Duplicate daily curation id in ' + kind);
-      const featuredIds = new Set(config.featured.filter((item) => item.kind === kind).map((item) => item.id));
-      if (ids.some((id) => featuredIds.has(id))) throw new Error('Featured document appears in daily pool: ' + kind);
-      output.daily[locale][kind] = resolveGroup(ids, kind, locale);
+      if (new Set(ids).size !== ids.length) throw new Error('Duplicate recommendation id in ' + kind);
+      output.recommendations[locale][kind] = resolveGroup(ids, kind, locale);
       output.counts[kind] = count;
     }
   }
 
   fs.mkdirSync(path.dirname(OUTPUT), {recursive: true});
   fs.writeFileSync(OUTPUT, JSON.stringify(output, null, 2) + '\n');
-  console.log('[build-curation] indexed featured and daily content');
+  console.log('[build-curation] indexed homepage recommendation pools');
 }
