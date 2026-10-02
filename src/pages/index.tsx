@@ -4,7 +4,7 @@ import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import Layout from '@theme/Layout';
 
 import curation from '@site/src/generated/curation.json';
-import {pickForDay, seoulDate, type CuratedItem} from '@site/src/utils/daily-curation';
+import {pickForDay, localDate, type CuratedItem} from '@site/src/utils/daily-curation';
 import HomeQuickLinks from '@site/src/components/HomeQuickLinks';
 import {IconArticle, IconBooks, IconBriefcase, IconFileCv, IconFlask, IconTrophy, IconUserCircle} from '@tabler/icons-react';
 import styles from './index.module.css';
@@ -77,24 +77,21 @@ function formatDate(day: string, locale: string): string {
 }
 
 function formatRecommendationsIntro(day: string, locale: string): string {
-  const date = new Date(day + 'T12:00:00+09:00');
+  const date = new Date(day + 'T12:00:00');
   if (locale === 'ko') {
     const parts = new Intl.DateTimeFormat('ko-KR', {
-      timeZone: 'Asia/Seoul',
       year: 'numeric',
       month: '2-digit',
       day: '2-digit',
     }).formatToParts(date);
     const values = Object.fromEntries(parts.map(({type, value}) => [type, value]));
     const weekday = new Intl.DateTimeFormat('ko-KR', {
-      timeZone: 'Asia/Seoul',
       weekday: 'long',
     }).format(date);
     return `${values.year}.${values.month}.${values.day} ${weekday}, 오늘 주목할 만한 글입니다.`;
   }
 
   const dateLabel = new Intl.DateTimeFormat('en-US', {
-    timeZone: 'Asia/Seoul',
     weekday: 'long',
     year: 'numeric',
     month: 'long',
@@ -127,7 +124,7 @@ export default function Home(): ReactNode {
   const [day, setDay] = useState<string | null>(null);
 
   useEffect(() => {
-    const update = () => setDay(seoulDate());
+    const update = () => setDay(localDate());
     update();
     const timer = window.setInterval(update, 60_000);
     return () => window.clearInterval(timer);

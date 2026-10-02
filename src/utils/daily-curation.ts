@@ -9,15 +9,11 @@ export type CuratedItem = {
   url: string;
 };
 
-export function seoulDate(now: Date = new Date()): string {
-  const parts = new Intl.DateTimeFormat('en-US', {
-    timeZone: 'Asia/Seoul',
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-  }).formatToParts(now);
-  const values = Object.fromEntries(parts.map(({type, value}) => [type, value]));
-  return `${values.year}-${values.month}-${values.day}`;
+export function localDate(now: Date = new Date()): string {
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, '0');
+  const day = String(now.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
 }
 
 function hash(text: string): number {
