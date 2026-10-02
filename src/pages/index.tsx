@@ -4,9 +4,9 @@ import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import Layout from '@theme/Layout';
 
 import curation from '@site/src/generated/curation.json';
-import {pickForDay, localDate, type CuratedItem} from '@site/src/utils/daily-curation';
+import {pickRandom, localDate, type CuratedItem} from '@site/src/utils/daily-curation';
 import HomeQuickLinks from '@site/src/components/HomeQuickLinks';
-import {IconArticle, IconBooks, IconBriefcase, IconFileCv, IconFlask, IconTrophy, IconUserCircle} from '@tabler/icons-react';
+import {IconArticle, IconBooks, IconBriefcase, IconFileCv, IconFlask, IconRefresh, IconTrophy, IconUserCircle} from '@tabler/icons-react';
 import styles from './index.module.css';
 
 type Catalog = {
@@ -25,7 +25,7 @@ type Copy = {
   labs: string;
   about: string;
   recommendations: string;
-  recommendationsIntro: string;
+  refreshRecommendations: string;
   blog: string;
   wiki: string;
   korean: string;
@@ -44,7 +44,7 @@ const COPY: Record<string, Copy> = {
     labs: '실험실',
     about: '소개',
     recommendations: '오늘의 발견',
-    recommendationsIntro: '오늘 주목할 만한 글입니다.',
+    refreshRecommendations: '새로고침',
     blog: '블로그',
     wiki: '위키',
     korean: '한국어 원문',
@@ -60,7 +60,7 @@ const COPY: Record<string, Copy> = {
     labs: 'Labs',
     about: 'About',
     recommendations: 'Today’s finds',
-    recommendationsIntro: 'Noteworthy reads for today.',
+    refreshRecommendations: 'Refresh',
     blog: 'Blog',
     wiki: 'Wiki',
     korean: 'Korean original',
@@ -68,43 +68,24 @@ const COPY: Record<string, Copy> = {
 };
 
 function formatDate(day: string, locale: string): string {
+  const date = new Date(day.includes('T') ? day : day + 'T12:00:00');
   return new Intl.DateTimeFormat(locale === 'ko' ? 'ko-KR' : 'en-US', {
-    timeZone: 'Asia/Seoul',
     year: 'numeric',
     month: 'short',
     day: 'numeric',
-  }).format(new Date(day + 'T12:00:00+09:00'));
-}
-
-function formatRecommendationsIntro(day: string, locale: string): string {
-  const date = new Date(day + 'T12:00:00');
-  if (locale === 'ko') {
-    const parts = new Intl.DateTimeFormat('ko-KR', {
-      year: 'numeric',
-      month: '2-digit',
-      day: '2-digit',
-    }).formatToParts(date);
-    const values = Object.fromEntries(parts.map(({type, value}) => [type, value]));
-    const weekday = new Intl.DateTimeFormat('ko-KR', {
-      weekday: 'long',
-    }).format(date);
-    return `${values.year}.${values.month}.${values.day} ${weekday}, 오늘 주목할 만한 글입니다.`;
-  }
-
-  const dateLabel = new Intl.DateTimeFormat('en-US', {
-    weekday: 'long',
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
   }).format(date);
-  return `Noteworthy reads for ${dateLabel}.`;
 }
 
 function ItemMeta({item, locale, label}: {item: CuratedItem; locale: string; label: string}) {
   return (
     <span className={styles.itemMeta}>
       <span>{label}</span>
-      {item.date && <span>{formatDate(item.date, locale)}</span>}
+      {item.kind === 'blog' && item.date && <span>{formatDate(item.date, locale)}</span>}
+      {item.kind === 'wiki' && item.lastUpdatedAt && (
+        <span>
+          {locale === 'ko' ? '마지막 편집' : 'Last edited'} {formatDate(item.lastUpdatedAt, locale)}
+        </span>
+      )}
       {locale === 'en' && item.sourceLocale === 'ko' && <span>{COPY.en.korean}</span>}
     </span>
   );
@@ -121,21 +102,51 @@ export default function Home(): ReactNode {
   const rootBase = localeSuffix && baseUrl.endsWith(localeSuffix)
     ? baseUrl.slice(0, -localeSuffix.length)
     : baseUrl;
-  const [day, setDay] = useState<string | null>(null);
+  const [recommendations, setRecommendations] = useState<CuratedItem[] | null>(null);
 
   useEffect(() => {
-    const update = () => setDay(localDate());
-    update();
-    const timer = window.setInterval(update, 60_000);
-    return () => window.clearInterval(timer);
-  }, []);
+    const choose = (previous: CuratedItem[] = []) => {
+      const pools = CATALOG.recommendations[locale];
+      const blogPicks = pickRandom(
+        pools.blog,
+        CATALOG.counts.blog,
+        previous.filter((item) => item.kind === 'blog').map((item) => item.id),
+      );
+      const wikiPicks = pickRandom(
+        pools.wiki,
+        CATALOG.counts.wiki,
+        previous.filter((item) => item.kind === 'wiki').map((item) => item.id),
+      );
+      return pickRandom([...blogPicks, ...wikiPicks], blogPicks.length + wikiPicks.length);
+    };
 
-  const pools = CATALOG.recommendations[locale];
-  const blogPicks = day ? pickForDay(pools.blog, CATALOG.counts.blog, day, 'blog') : [];
-  const wikiPicks = day ? pickForDay(pools.wiki, CATALOG.counts.wiki, day, 'wiki') : [];
-  const recommendations = day
-    ? pickForDay([...blogPicks, ...wikiPicks], blogPicks.length + wikiPicks.length, day, 'recommendations')
-    : [];
+    setRecommendations(choose());
+    let currentDay = localDate();
+    const timer = window.setInterval(() => {
+      const nextDay = localDate();
+      if (nextDay !== currentDay) {
+        currentDay = nextDay;
+        setRecommendations((previous) => choose(previous ?? []));
+      }
+    }, 60_000);
+    return () => window.clearInterval(timer);
+  }, [locale]);
+
+  const refreshRecommendations = () => {
+    const previous = recommendations ?? [];
+    const pools = CATALOG.recommendations[locale];
+    const blogPicks = pickRandom(
+      pools.blog,
+      CATALOG.counts.blog,
+      previous.filter((item) => item.kind === 'blog').map((item) => item.id),
+    );
+    const wikiPicks = pickRandom(
+      pools.wiki,
+      CATALOG.counts.wiki,
+      previous.filter((item) => item.kind === 'wiki').map((item) => item.id),
+    );
+    setRecommendations(pickRandom([...blogPicks, ...wikiPicks], blogPicks.length + wikiPicks.length));
+  };
 
   return (
     <Layout description={copy.description}>
@@ -173,11 +184,20 @@ export default function Home(): ReactNode {
               <div>
                 <p className={styles.kicker}>01 / Discover</p>
                 <h2 id="home-recommendations">{copy.recommendations}</h2>
-                <p>{day ? formatRecommendationsIntro(day, locale) : copy.recommendationsIntro}</p>
+                <p>{locale === 'ko' ? '무작위 추천 글 입니다' : 'Randomly selected recommendations.'}</p>
               </div>
+              <button
+                className={styles.refreshButton}
+                type="button"
+                onClick={refreshRecommendations}
+                aria-label={copy.refreshRecommendations}
+              >
+                <IconRefresh size={18} stroke={1.8} aria-hidden="true" />
+                <span>{copy.refreshRecommendations}</span>
+              </button>
             </div>
-            <ul className={styles.recommendationList}>
-              {recommendations.map((item) => (
+            <ul className={styles.recommendationList} aria-live="polite">
+              {(recommendations ?? []).map((item) => (
                 <li key={item.id}>
                   <a href={rootBase + item.url.slice(1)}>
                     <span className={styles.recommendationBody}>

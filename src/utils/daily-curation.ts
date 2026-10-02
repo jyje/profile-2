@@ -5,9 +5,29 @@ export type CuratedItem = {
   description: string;
   tags: string[];
   date: string | null;
+  lastUpdatedAt: string | null;
   sourceLocale: string;
   url: string;
 };
+
+export function pickRandom(items: CuratedItem[], count: number, previousIds: string[] = []): CuratedItem[] {
+  const previous = new Set(previousIds);
+  const shuffle = (values: CuratedItem[]) => {
+    const shuffled = [...values];
+    for (let i = shuffled.length - 1; i > 0; i -= 1) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+    return shuffled;
+  };
+
+  // Prefer fresh items so a refresh always changes the visible selection when
+  // the pool contains more items than the requested count.
+  return [
+    ...shuffle(items.filter((item) => !previous.has(item.id))),
+    ...shuffle(items.filter((item) => previous.has(item.id))),
+  ].slice(0, count);
+}
 
 export function localDate(now: Date = new Date()): string {
   const year = now.getFullYear();

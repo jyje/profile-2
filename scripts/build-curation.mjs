@@ -2,10 +2,18 @@ import fs from 'node:fs';
 import path from 'node:path';
 import * as yaml from 'js-yaml';
 import {contentMode, isDocIgnored, authorFile} from '../plugins/content-visibility.cjs';
+import {createLastUpdateReader} from './content-last-update.mjs';
 
 const ROOT = path.resolve(import.meta.dirname, '..');
 const CONFIG = path.join(ROOT, 'data/home-curation.yml');
 const OUTPUT = path.join(ROOT, 'src/generated/curation.json');
+const readLastUpdate = createLastUpdateReader(ROOT);
+
+function normalizeDate(value) {
+  if (value instanceof Date) return value.toISOString();
+  if (typeof value === 'string' && value) return value;
+  return null;
+}
 
 function assertId(id) {
   if (typeof id !== 'string' || !/^[a-z0-9][a-z0-9/_-]*$/.test(id)) {
@@ -54,6 +62,9 @@ function readItem(kind, id, locale) {
     description: String(meta.description ?? '').replace(/<[^>]*>/g, '').split(/\s*Photo by\s*/i)[0].trim(),
     tags: Array.isArray(meta.tags) ? meta.tags.slice(0, 3).map(String) : [],
     date: kind === 'blog' ? id.slice(0, 10) : null,
+    lastUpdatedAt: kind === 'wiki'
+      ? normalizeDate(meta.last_update?.date) ?? readLastUpdate(file) ?? null
+      : null,
     sourceLocale,
     url: (sourceLocale === 'en' ? '/en' : '') + route,
   };
