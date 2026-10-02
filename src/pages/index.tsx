@@ -26,6 +26,7 @@ type Copy = {
   about: string;
   recommendations: string;
   refreshRecommendations: string;
+  refreshTooltip: string;
   blog: string;
   wiki: string;
   korean: string;
@@ -45,6 +46,7 @@ const COPY: Record<string, Copy> = {
     about: '소개',
     recommendations: '오늘의 발견',
     refreshRecommendations: '새로고침',
+    refreshTooltip: 'Fisher-Yates 셔플: 현재 목록에 없는 글을 우선 섞어 다시 추천합니다.',
     blog: '블로그',
     wiki: '위키',
     korean: '한국어 원문',
@@ -61,6 +63,7 @@ const COPY: Record<string, Copy> = {
     about: 'About',
     recommendations: 'Today’s finds',
     refreshRecommendations: 'Refresh',
+    refreshTooltip: 'Fisher-Yates shuffle: reshuffles the pool, preferring items not shown.',
     blog: 'Blog',
     wiki: 'Wiki',
     korean: 'Korean original',
@@ -191,6 +194,7 @@ export default function Home(): ReactNode {
                 type="button"
                 onClick={refreshRecommendations}
                 aria-label={copy.refreshRecommendations}
+                title={copy.refreshTooltip}
               >
                 <IconRefresh size={18} stroke={1.8} aria-hidden="true" />
                 <span>{copy.refreshRecommendations}</span>
