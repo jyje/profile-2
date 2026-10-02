@@ -16,7 +16,7 @@ type Catalog = {
 
 type Recommendation = {
   item: CuratedItem;
-  role: 'daily-random' | 'recent-blog' | 'recent-update';
+  role: 'daily-random' | 'recent-blog' | 'recent-update' | 'random-selection';
 };
 
 type Copy = {
@@ -52,10 +52,10 @@ const COPY: Record<string, Copy> = {
     labs: '실험실',
     about: '소개',
     recommendations: '오늘의 추천',
-    randomRecommendationsIntro: '무작위 추천 글 입니다',
+    randomRecommendationsIntro: '무작위 추천 글입니다.',
     recommendationsFallback: '오늘 주목할 만한 글입니다.',
     refreshRecommendations: '새로고침',
-    refreshTooltip: 'Fisher-Yates 셔플: 오늘 날짜와 새로고침 횟수를 시드로 무작위 글 한 편을 고릅니다.',
+    refreshTooltip: 'Fisher-Yates 셔플: 새로고침할 때 오늘 날짜와 횟수를 시드로 글 네 편을 무작위 선택합니다.',
     blog: '블로그',
     wiki: '위키',
     korean: '한국어 원문',
@@ -74,7 +74,7 @@ const COPY: Record<string, Copy> = {
     randomRecommendationsIntro: 'A randomly selected recommendation.',
     recommendationsFallback: 'Noteworthy reads for today.',
     refreshRecommendations: 'Refresh',
-    refreshTooltip: 'Fisher-Yates shuffle: uses today’s date and refresh count to choose one random read.',
+    refreshTooltip: 'Fisher-Yates shuffle: each refresh uses today’s date and refresh count to choose four random reads.',
     blog: 'Blog',
     wiki: 'Wiki',
     korean: 'Korean original',
@@ -128,11 +128,26 @@ function recommendationsForDay(
   counts: Catalog['counts'],
   day: string | null,
   refreshCount: number,
-  previousRandomUrl?: string,
+  previousUrls: string[] = [],
 ): Recommendation[] {
+  if (day && refreshCount > 0) {
+    const allItems = [...pools.blog, ...pools.wiki];
+    const previous = new Set(previousUrls);
+    const withoutPrevious = allItems.filter((item) => !previous.has(item.url));
+    const candidates = withoutPrevious.length >= counts.dailyRandom + counts.latestBlog + counts.latestUpdated
+      ? withoutPrevious
+      : allItems;
+    return pickForDay(
+      candidates,
+      counts.dailyRandom + counts.latestBlog + counts.latestUpdated,
+      day,
+      `recommendation-refresh-${refreshCount}`,
+    ).map((item) => ({item, role: 'random-selection'}));
+  }
+
   const latest = latestRecommendations(pools, counts);
   if (!day) return latest;
-  const excluded = new Set([...latest.map(({item}) => item.url), previousRandomUrl].filter(Boolean));
+  const excluded = new Set(latest.map(({item}) => item.url));
   const candidates = [...pools.blog, ...pools.wiki].filter((item) => !excluded.has(item.url));
   const randomItem = pickForDay(candidates, counts.dailyRandom, day, `recommendation-${refreshCount}`)
     .map((item) => ({item, role: 'daily-random' as const}));
@@ -193,13 +208,11 @@ export default function Home(): ReactNode {
 
   const refreshRecommendations = () => {
     const nextDay = localDate();
-    const nextCount = nextDay === today ? refreshCount + 1 : 0;
-    const previousRandomUrl = nextDay === today
-      ? recommendations.find(({role}) => role === 'daily-random')?.item.url
-      : undefined;
+    const nextCount = nextDay === today ? refreshCount + 1 : 1;
+    const previousUrls = recommendations.map(({item}) => item.url);
     setToday(nextDay);
     setRefreshCount(nextCount);
-    setRecommendations(recommendationsForDay(pools, CATALOG.counts, nextDay, nextCount, previousRandomUrl));
+    setRecommendations(recommendationsForDay(pools, CATALOG.counts, nextDay, nextCount, previousUrls));
     setHasRefreshed(true);
   };
 
@@ -239,8 +252,9 @@ export default function Home(): ReactNode {
               <div>
                 <p className={styles.kicker}>01 / Discover</p>
                 <h2 id="home-recommendations">{copy.recommendations}</h2>
-                <p>{today ? formatRecommendationsIntro(today, locale) : copy.recommendationsFallback}</p>
-                {hasRefreshed && <p>{copy.randomRecommendationsIntro}</p>}
+                <p>{hasRefreshed
+                  ? copy.randomRecommendationsIntro
+                  : today ? formatRecommendationsIntro(today, locale) : copy.recommendationsFallback}</p>
               </div>
               <button
                 className={styles.refreshButton}

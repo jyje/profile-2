@@ -96,7 +96,8 @@ export function buildCuration() {
   for (const locale of ['ko', 'en']) {
     const blog = discoverItems('blog', locale).sort((a, b) => (b.date ?? '').localeCompare(a.date ?? ''));
     const wiki = discoverItems('wiki', locale).sort((a, b) => (b.lastUpdatedAt ?? '').localeCompare(a.lastUpdatedAt ?? ''));
-    if (blog.length < output.counts.latestBlog || (blog.length + wiki.length) < output.counts.latestUpdated + output.counts.dailyRandom) {
+    const requiredCount = output.counts.dailyRandom + output.counts.latestBlog + output.counts.latestUpdated;
+    if (blog.length < output.counts.latestBlog || (blog.length + wiki.length) < requiredCount) {
       throw new Error(`Not enough published content for ${locale} homepage recommendations`);
     }
     output.recommendations[locale] = {blog, wiki};
