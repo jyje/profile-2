@@ -86,14 +86,6 @@
   line-height: 1.65;
 }
 
-.recommendationDate {
-  flex: none;
-  color: var(--site-accent);
-  font-family: var(--site-font-utility);
-  font-size: 0.9rem;
-  font-variant-numeric: tabular-nums;
-}
-
 .recommendationList {
   margin: 0;
   padding: 0;
@@ -183,7 +175,4 @@
     flex-direction: column;
   }
 
-  .recommendationDate {
-    margin-top: -0.5rem;
-  }
 }

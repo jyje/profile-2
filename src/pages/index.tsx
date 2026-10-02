@@ -44,7 +44,7 @@ const COPY: Record<string, Copy> = {
     labs: '실험실',
     about: '소개',
     recommendations: '오늘의 발견',
-    recommendationsIntro: '블로그 글 두 편과 위키 문서 두 편을 매일 골라 보여드립니다.',
+    recommendationsIntro: '오늘 주목할 만한 글입니다.',
     blog: '블로그',
     wiki: '위키',
     korean: '한국어 원문',
@@ -60,7 +60,7 @@ const COPY: Record<string, Copy> = {
     labs: 'Labs',
     about: 'About',
     recommendations: 'Today’s finds',
-    recommendationsIntro: 'Two blog posts and two wiki notes selected each day.',
+    recommendationsIntro: 'Noteworthy reads for today.',
     blog: 'Blog',
     wiki: 'Wiki',
     korean: 'Korean original',
@@ -74,6 +74,33 @@ function formatDate(day: string, locale: string): string {
     month: 'short',
     day: 'numeric',
   }).format(new Date(day + 'T12:00:00+09:00'));
+}
+
+function formatRecommendationsIntro(day: string, locale: string): string {
+  const date = new Date(day + 'T12:00:00+09:00');
+  if (locale === 'ko') {
+    const parts = new Intl.DateTimeFormat('ko-KR', {
+      timeZone: 'Asia/Seoul',
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+    }).formatToParts(date);
+    const values = Object.fromEntries(parts.map(({type, value}) => [type, value]));
+    const weekday = new Intl.DateTimeFormat('ko-KR', {
+      timeZone: 'Asia/Seoul',
+      weekday: 'long',
+    }).format(date);
+    return `${values.year}.${values.month}.${values.day} ${weekday}, 오늘 주목할 만한 글입니다.`;
+  }
+
+  const dateLabel = new Intl.DateTimeFormat('en-US', {
+    timeZone: 'Asia/Seoul',
+    weekday: 'long',
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  }).format(date);
+  return `Noteworthy reads for ${dateLabel}.`;
 }
 
 function ItemMeta({item, locale, label}: {item: CuratedItem; locale: string; label: string}) {
@@ -147,13 +174,10 @@ export default function Home(): ReactNode {
           <section className={styles.recommendations} aria-labelledby="home-recommendations">
             <div className={styles.sectionHeading}>
               <div>
-                <p className={styles.kicker}>01 / Discover · KST</p>
+                <p className={styles.kicker}>01 / Discover</p>
                 <h2 id="home-recommendations">{copy.recommendations}</h2>
-                <p>{copy.recommendationsIntro}</p>
+                <p>{day ? formatRecommendationsIntro(day, locale) : copy.recommendationsIntro}</p>
               </div>
-              <time className={styles.recommendationDate} dateTime={day ?? undefined}>
-                {day ? formatDate(day, locale) : '···'}
-              </time>
             </div>
             <ul className={styles.recommendationList}>
               {recommendations.map((item) => (
