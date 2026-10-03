@@ -29,7 +29,6 @@
 
 .standalone { margin-top: 1rem; }
 .career { max-width: 52rem; margin: 1.5rem auto 0; padding: 0 1rem; }
-.summary { max-width: 54rem; padding-inline: 1.5rem; }
 
 @media print {
   .breadcrumbs, :global(.theme-doc-breadcrumbs) { display: none !important; }

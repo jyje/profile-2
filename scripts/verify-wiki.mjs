@@ -65,7 +65,7 @@ try {
     await page.goto(root + 'wiki/knowledge/argo-cd/?check=1#definition');
     await page.waitForURL(url => /\/wiki\/d\/argo-cd\/?$/.test(url.pathname), {timeout: 15000});
     assert.equal(new URL(page.url()).search, '?check=1'); assert.equal(new URL(page.url()).hash, '#definition');
-    assert.match(await page.locator('h1').innerText(), /^📄 Argo CD/);
+    assert.match(await page.locator('h1').innerText(), /^⚓ Argo CD/);
     assert.match(await page.locator('.breadcrumbs').innerText(), locale === 'en' ? /📚 Documents/ : /📚 문서/);
     const local = page.locator('[data-document-graph="local"]');
     await local.scrollIntoViewIfNeeded();

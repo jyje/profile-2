@@ -1,5 +1,5 @@
 ---
-title: 'Widearth: AR & Digital Twins Platforms at Maxst'
+title: "🏙️ Widearth: AR & Digital Twins Platforms at Maxst"
 slug: widearth-digital-twins-platforms-at-maxst
 description: A Fully Managed Platform for Real-World Space-Based AR & Digital Twin Services; I contributed to the development of the platform as a lead ML/Infra engineer.
 authors:

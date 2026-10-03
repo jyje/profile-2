@@ -1,5 +1,5 @@
 ---
-title: 'DevOps: 온프레미스 x AWS EKS 하이브리드 클러스터 사례'
+title: "☁️ DevOps: 온프레미스 x AWS EKS 하이브리드 클러스터 사례"
 slug: devops-hybrid-clusters-with-onpremise-baremetal-k8s-and-aws-eks
 description: 고가용성과 비용 최적화를 위해, 온프레미스와 퍼블릭 클라우드를 결합한 하이브리드 클러스터 구축 사례입니다. Photo by <a href="https://unsplash.com/@mike_kiev?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash">Photobank Kiev</a> on <a href="https://unsplash.com/photos/3-men-standing-on-rocky-shore-during-daytime-Opzk_hvwO9Q?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash">Unsplash</a>
 authors:

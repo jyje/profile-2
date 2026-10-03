@@ -1,5 +1,5 @@
 ---
-title: "📄 서비스 메시"
+title: "🕸️ 서비스 메시"
 tags:
   - devops
   - kubernetes

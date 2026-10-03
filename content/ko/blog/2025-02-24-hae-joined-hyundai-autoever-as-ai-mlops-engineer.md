@@ -1,5 +1,5 @@
 ---
-title: 🎉 현대오토에버에 AI/MLOps 엔지니어로 합류했습니다
+title: "🎉 현대오토에버에 AI/MLOps 엔지니어로 합류했습니다"
 slug: hae-joined-hyundai-autoever-as-ai-mlops-engineer
 description: 현대오토에버 AI/MLOps 엔지니어로 합류하여, 자동차 도메인을 위한 엔터프라이즈 AI 플랫폼과 ML 파이프라인을 담당합니다. <br/><b>2025년 2월 24일부터</b>
 authors:

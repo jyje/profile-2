@@ -1,5 +1,5 @@
 ---
-title: 'CKAD: Certified Kubernetes Application Developer (2024)'
+title: "🎓 CKAD: Certified Kubernetes Application Developer (2024)"
 slug: ckad-certified-kubernetes-application-developer
 description: Core skills for developing Kubernetes workloads.
 authors:

@@ -1,5 +1,5 @@
 ---
-title: "📄 Argo Rollouts"
+title: "🚀 Argo Rollouts"
 tags:
   - argo-proj
 type: Reference

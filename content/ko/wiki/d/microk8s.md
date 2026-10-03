@@ -1,5 +1,5 @@
 ---
-title: "📄 MicroK8s"
+title: "☸️ MicroK8s"
 tags:
   - kubernetes
 type: Reference

@@ -1,5 +1,5 @@
 ---
-title: 'MLOps: 오픈소스 프로젝트로 구축한 온프레미스 MLOps'
+title: "🤖 MLOps: 오픈소스 프로젝트로 구축한 온프레미스 MLOps"
 slug: mlops-onpremise-mlops-with-open-source-projects
 description: GPU 자원 효율을 높이기 위해, Kubeflow, Argo Workflows 등 오픈소스 프로젝트를 활용한 온프레미스 MLOps 클러스터 구축 사례입니다.
 authors:

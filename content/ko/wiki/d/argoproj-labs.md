@@ -1,5 +1,5 @@
 ---
-title: "📄 Argo Project: Labs"
+title: "🧪 Argo Project: Labs"
 tags:
   - argoproj-labs
 type: Reference

@@ -1,6 +1,6 @@
 ---
 sidebar_position: 2
-title: 🛠️ Portfolio design
+title: "🛠️ Portfolio design"
 ---
 
 # 🛠️ Portfolio design

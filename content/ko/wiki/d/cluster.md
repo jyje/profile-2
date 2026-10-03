@@ -1,5 +1,5 @@
 ---
-title: "📄 클러스터"
+title: "🖥️ 클러스터"
 tags:
   - devops
   - infra-base

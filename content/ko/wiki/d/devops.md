@@ -1,5 +1,5 @@
 ---
-title: "📄 DevOps"
+title: "⚙️ DevOps"
 tags:
   - devops
 type: Reference

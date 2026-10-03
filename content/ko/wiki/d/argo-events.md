@@ -1,5 +1,5 @@
 ---
-title: "📄 Argo Events"
+title: "🔔 Argo Events"
 tags:
   - argo-proj
 type: Reference

@@ -1,5 +1,5 @@
 ---
-title: GitHub Foundations (2024)
+title: "🐙 GitHub Foundations (2024)"
 slug: github-foundations
 description: Core skills for GitHub fundamentals and collaboration.
 authors:

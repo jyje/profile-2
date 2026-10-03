@@ -1,5 +1,5 @@
 ---
-title: GitHub Foundations (2024)
+title: "🐙 GitHub Foundations (2024)"
 slug: github-foundations
 description: GitHub 기본 구조와 협업을 위한 핵심 역량.
 authors:
