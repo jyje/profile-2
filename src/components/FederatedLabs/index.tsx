@@ -102,15 +102,17 @@ export default function FederatedLabs({copy}: {copy: Copy}) {
           onNavigate: handle.current?.navigate ? () => handle.current?.navigate?.(screen.id) : undefined})) : []),
       ]} />
     </div>
-    {state === 'loading' && <div className={styles.loading} role="status" aria-live="polite">
-      <span className={styles.spinner} aria-hidden="true" />
-      <p>{copy.loading}</p>
-    </div>}
-    {(state === 'error' || state === 'missing') && <div className={styles.placeholder} role="alert">
-      <h2>{copy.unavailable}</h2><p>{state === 'missing' ? copy.missing : copy.explanation}</p>
-      {state === 'error' && <Button type="button" variant="outline" onClick={() => setAttempt(value => value + 1)}>{copy.retry}</Button>}
-    </div>}
-    {state === 'ready' && <p className={styles.connection} role="status">{copy.connected}</p>}
-    <div ref={container} hidden={state !== 'ready'} />
+    <div className={styles.remoteRegion}>
+      {state === 'loading' && <div className={styles.loading} role="status" aria-live="polite">
+        <span className={styles.spinner} aria-hidden="true" />
+        <p>{copy.loading}</p>
+      </div>}
+      {(state === 'error' || state === 'missing') && <div className={styles.placeholder} role="alert">
+        <h2>{copy.unavailable}</h2><p>{state === 'missing' ? copy.missing : copy.explanation}</p>
+        {state === 'error' && <Button type="button" variant="outline" onClick={() => setAttempt(value => value + 1)}>{copy.retry}</Button>}
+      </div>}
+      {state === 'ready' && <p className={styles.connection} role="status">{copy.connected}</p>}
+      <div ref={container} hidden={state !== 'ready'} />
+    </div>
   </div>;
 }
