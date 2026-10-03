@@ -14,8 +14,8 @@ export const BreadcrumbContext = createContext<BreadcrumbItem[] | null>(null);
 export function useBreadcrumbLabels() {
   const {i18n: {currentLocale}} = useDocusaurusContext();
   return currentLocale === 'ko'
-    ? {home: '홈', nav: '탐색 경로', blog: '블로그', wiki: '🏠 위키 홈', about: '소개', labs: '실험실', tags: '전체 태그', authors: '작성자', archive: '아카이브', search: '검색'}
-    : {home: 'Home', nav: 'Breadcrumbs', blog: 'Blog', wiki: '🏠 Wiki Home', about: 'About', labs: 'Labs', tags: 'All tags', authors: 'Authors', archive: 'Archive', search: 'Search'};
+    ? {home: '홈', nav: '탐색 경로', blog: '블로그', wiki: '🏠 위키 홈', about: '소개', resume: '이력서', labs: '실험실', tags: '전체 태그', authors: '작성자', archive: '아카이브', search: '검색'}
+    : {home: 'Home', nav: 'Breadcrumbs', blog: 'Blog', wiki: '🏠 Wiki Home', about: 'About', resume: 'Resume', labs: 'Labs', tags: 'All tags', authors: 'Authors', archive: 'Archive', search: 'Search'};
 }
 
 export default function SiteBreadcrumbs({items, className}: {items: BreadcrumbItem[]; className?: string}): ReactNode {
