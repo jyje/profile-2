@@ -39,14 +39,15 @@ try {
     const blog = ko ? '블로그' : 'Blog', about = ko ? '소개' : 'About', tags = ko ? '전체 태그' : 'All tags';
     const routes = [
       ['wiki/', [ko ? '🏠 위키 홈' : '🏠 Wiki Home']],
-      ['wiki/d/argo-cd/', [ko ? '🏠 위키 홈' : '🏠 Wiki Home', ko ? '📚 문서' : '📚 Documents', '📄 Argo CD']],
+      ['wiki/d/argo-cd/', [ko ? '🏠 위키 홈' : '🏠 Wiki Home', ko ? '📚 문서' : '📚 Documents', '⚓ Argo CD']],
       ['wiki/_tag-archives/', [tags]], ['wiki/_tag-archives/kubernetes/', [tags, 'Kubernetes']],
       ['blog/', [blog]],
-      ['blog/kcsa-kubernetes-and-cloud-native-security-associate/', [blog, 'KCSA: Kubernetes and Cloud Native Security Associate (2025)']],
+      ['blog/kcsa-kubernetes-and-cloud-native-security-associate/', [blog, '🛡️ KCSA: Kubernetes and Cloud Native Security Associate (2025)']],
       ['blog/archive/', [blog, ko ? '아카이브' : 'Archive']],
       ['blog/authors/', [blog, ko ? '작성자' : 'Authors']],
       ['blog/_tag-archives/kubernetes/', [tags, 'Kubernetes']],
       ['about/', [about]],
+      ['about/resume/', [about, ko ? '이력서' : 'Resume']],
       ['about/selected-cv/', [about, ko ? '경력기술서' : 'Selected CV']],
       ['about/cv/', [about, ko ? '전체 CV' : 'Full CV']],
       ['about/portfolio/', [about, ko ? '포트폴리오' : 'Portfolio']],
@@ -93,7 +94,7 @@ try {
         await page.waitForURL(root + 'about/');
       }
     }
-    for (const route of ['', 'about/resume/', 'no-such-breadcrumb-page/']) {
+    for (const route of ['', 'no-such-breadcrumb-page/']) {
       await page.goto(root + route);
       assert.equal(await page.locator(selector).count(), 0, 'Home/404 must not gain a breadcrumb');
     }
