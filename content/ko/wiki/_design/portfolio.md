@@ -1,6 +1,6 @@
 ---
 sidebar_position: 2
-title: 🛠️ 포트폴리오 설계
+title: "🛠️ 포트폴리오 설계"
 ---
 
 # 🛠️ 포트폴리오 설계

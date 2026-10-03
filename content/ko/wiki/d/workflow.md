@@ -1,5 +1,5 @@
 ---
-title: "📄 워크플로"
+title: "🔄 워크플로"
 tags:
   - argo-workflows
 type: Reference

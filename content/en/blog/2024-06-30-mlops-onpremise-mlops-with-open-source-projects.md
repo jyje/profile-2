@@ -1,5 +1,5 @@
 ---
-title: 'MLOps: On-Premise MLOps with Open Source Projects'
+title: "🤖 MLOps: On-Premise MLOps with Open Source Projects"
 slug: mlops-onpremise-mlops-with-open-source-projects
 description: To enhance the efficiency of GPU resources, a case study of an on-premise cluster that provides MLOps services with Kubeflow, Argo Workflows, and more.
 authors:

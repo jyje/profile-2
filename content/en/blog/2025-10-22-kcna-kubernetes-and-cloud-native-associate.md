@@ -1,5 +1,5 @@
 ---
-title: 'KCNA: Kubernetes and Cloud Native Associate (2025)'
+title: "🎓 KCNA: Kubernetes and Cloud Native Associate (2025)"
 slug: kcna-kubernetes-and-cloud-native-associate
 description: Foundation knowledge for Kubernetes and cloud native technologies.
 authors:

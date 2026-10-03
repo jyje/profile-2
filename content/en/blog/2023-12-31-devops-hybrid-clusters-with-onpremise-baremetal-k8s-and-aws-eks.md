@@ -1,5 +1,5 @@
 ---
-title: 'DevOps: On-Premise x AWS EKS Hybrid Cluster Case Study'
+title: "☁️ DevOps: On-Premise x AWS EKS Hybrid Cluster Case Study"
 slug: devops-hybrid-clusters-with-onpremise-baremetal-k8s-and-aws-eks
 description: For high availability and cost optimization, a case study of a hybrid cluster that combines on-premise and public cloud. Photo by <a href="https://unsplash.com/@mike_kiev?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash">Photobank Kiev</a> on <a href="https://unsplash.com/photos/3-men-standing-on-rocky-shore-during-daytime-Opzk_hvwO9Q?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash">Unsplash</a>
 authors:

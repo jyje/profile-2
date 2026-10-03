@@ -1,5 +1,5 @@
 ---
-title: "📄 Argo Workflows"
+title: "⚙️ Argo Workflows"
 tags:
   - argo-proj
 type: Reference

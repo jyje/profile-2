@@ -1,5 +1,5 @@
 ---
-title: "📄 Linux Foundation"
+title: "🐧 Linux Foundation"
 tags:
   - org
 type: Reference

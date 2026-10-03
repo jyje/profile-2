@@ -1,5 +1,5 @@
 ---
-title: "📄 Obsidian authoring guide"
+title: "🧭 Obsidian authoring guide"
 sidebar_position: 1
 tags: [guide, obsidian]
 ---

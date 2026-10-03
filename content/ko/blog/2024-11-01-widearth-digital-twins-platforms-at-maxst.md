@@ -1,5 +1,5 @@
 ---
-title: 'Widearth: AR 및 디지털 트윈 플랫폼 @ MAXST'
+title: "🏙️ Widearth: AR 및 디지털 트윈 플랫폼 @ MAXST"
 slug: widearth-digital-twins-platforms-at-maxst
 description: 실제 공간 기반 AR 및 디지털 트윈 서비스를 위한 완전 관리형 플랫폼. ML/인프라 리드 엔지니어로서 플랫폼 개발에 기여했습니다.
 authors:

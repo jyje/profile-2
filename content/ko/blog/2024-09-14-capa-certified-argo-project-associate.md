@@ -1,5 +1,5 @@
 ---
-title: 'CAPA: Certified Argo Project Associate (2024)'
+title: "🎓 CAPA: Certified Argo Project Associate (2024)"
 slug: capa-certified-argo-project-associate
 description: 실무에서 쓰던 유용한 Argo 프로젝트, 정말 잘 알고 쓰는 게 맞는지 자격증으로 점검해봤습니다. CAPA 합격 후기와 함께, 실무에 바로 적용했던 공식 문서 링크들을 모았어요.
 authors:

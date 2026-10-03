@@ -1,5 +1,5 @@
 ---
-title: '🎉 New Role at Hyundai AutoEver: AI/MLOps Engineer'
+title: "🎉 New Role at Hyundai AutoEver: AI/MLOps Engineer"
 slug: hae-joined-hyundai-autoever-as-ai-mlops-engineer
 description: Excited to join Hyundai AutoEver as an AI/MLOps Engineer, focusing on enterprise AI platforms and ML pipelines for automotive domain. <br/><b>Since Feb 24, 2025</b>
 authors:

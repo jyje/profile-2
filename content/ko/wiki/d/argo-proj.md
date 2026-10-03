@@ -1,5 +1,5 @@
 ---
-title: "📄 Argo Project"
+title: "⚓ Argo Project"
 tags:
   - argo-proj
 type: Reference

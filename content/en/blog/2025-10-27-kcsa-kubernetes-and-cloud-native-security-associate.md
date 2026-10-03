@@ -1,5 +1,5 @@
 ---
-title: 'KCSA: Kubernetes and Cloud Native Security Associate (2025)'
+title: "🛡️ KCSA: Kubernetes and Cloud Native Security Associate (2025)"
 slug: kcsa-kubernetes-and-cloud-native-security-associate
 description: Foundation knowledge for securing Kubernetes and cloud native technologies.
 authors:

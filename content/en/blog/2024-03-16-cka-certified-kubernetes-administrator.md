@@ -1,5 +1,5 @@
 ---
-title: 'CKA: Certified Kubernetes Administrator (2024)'
+title: "🎓 CKA: Certified Kubernetes Administrator (2024)"
 slug: cka-certified-kubernetes-administrator
 description: Core skills for managing Kubernetes clusters.
 authors:

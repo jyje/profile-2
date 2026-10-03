@@ -1,5 +1,5 @@
 ---
-title: "📄 Istio"
+title: "🕸️ Istio"
 tags:
   - devops
   - kubernetes

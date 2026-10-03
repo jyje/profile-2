@@ -1,5 +1,5 @@
 ---
-title: 'CAPA: Certified Argo Project Associate (2024)'
+title: "🎓 CAPA: Certified Argo Project Associate (2024)"
 slug: capa-certified-argo-project-associate
 description: The Argo Project has been a genuinely useful part of my day-to-day work — so I decided to put that knowledge to the test with a certification. Here's my CAPA exam story, plus the official-docs links I actually put to use.
 authors:

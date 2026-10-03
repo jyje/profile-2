@@ -2,7 +2,7 @@
 sidebar_position: 1
 ---
 
-# 📄 Role-focused resume and Selected CV
+# 🛠️ Role-focused resume and Selected CV
 
 ## Document roles
 
