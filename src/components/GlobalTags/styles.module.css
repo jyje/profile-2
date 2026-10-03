@@ -82,6 +82,14 @@
   font-weight: 700;
 }
 
+.itemMeta a {
+  text-decoration: none;
+}
+
+.itemMeta a:hover {
+  text-decoration: underline;
+}
+
 .item h2 {
   margin: 0;
   font-size: 1.2rem;

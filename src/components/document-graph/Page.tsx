@@ -26,7 +26,7 @@ const COPY = {
     searchPlaceholder: '제목으로 찾기',
     noteCount: '문서',
     linkCount: '연결',
-    fallbackCount: '영문 대체 문서',
+    fallbackCount: '한국어 문서로 이동',
     zoomIn: '확대',
     zoomOut: '축소',
     reset: '초기화',
@@ -36,8 +36,8 @@ const COPY = {
     outgoing: '나가는 연결',
     related: '연결된 문서와 태그',
     open: '문서 열기',
-    openKorean: '한국어 원문 열기',
-    koreanOriginal: '한국어 원문',
+    openKorean: '한국어 문서 열기',
+    koreanOriginal: '한국어 문서 열기',
     browserTranslation: '브라우저 번역 권장',
     browse: '문서 목록으로 탐색하기',
     graphLabel: '문서와 태그의 상호작용 그래프',
@@ -53,7 +53,7 @@ const COPY = {
     searchPlaceholder: 'Find a title',
     noteCount: 'notes',
     linkCount: 'links',
-    fallbackCount: 'Korean originals',
+    fallbackCount: 'Open Korean pages',
     zoomIn: 'Zoom in',
     zoomOut: 'Zoom out',
     reset: 'Reset view',
@@ -63,8 +63,8 @@ const COPY = {
     outgoing: 'Outgoing connections',
     related: 'Connected notes and tags',
     open: 'Open note',
-    openKorean: 'Open Korean original',
-    koreanOriginal: 'Korean original',
+    openKorean: 'Open Korean page',
+    koreanOriginal: 'Open Korean page',
     browserTranslation: 'Browser translation recommended',
     browse: 'Browse notes as a list',
     graphLabel: 'Interactive graph of documents and tags',
@@ -156,7 +156,7 @@ export default function WikiGraphPage({graphData}: PageProps): ReactElement {
           <div className={styles.stats} aria-label={`${documents.length} ${copy.noteCount}, ${graph.edges.length} ${copy.linkCount}`}>
             <span><strong>{documents.length}</strong> {copy.noteCount}</span>
             <span><strong>{graph.edges.length}</strong> {copy.linkCount}</span>
-            {locale === 'en' && <span><strong>{fallbackCount}</strong> {copy.fallbackCount}</span>}
+            {locale === 'en' && <span aria-label={`${fallbackCount} ${copy.fallbackCount}`}><strong>{fallbackCount}</strong> 🇰🇷</span>}
           </div>
         </header>
 
@@ -218,7 +218,9 @@ export default function WikiGraphPage({graphData}: PageProps): ReactElement {
                 <div className={styles.nodeHeading}>
                   <span className={`${styles.detailDot} ${styles[`dot_${selectedNode.group}`] ?? styles.dot_home}`} />
                   <span>{displayGroup(selectedNode.group, copy)}</span>
-                  {selectedNode.koreanFallback && <span className={styles.fallbackBadge}>{copy.koreanOriginal}</span>}
+                  {selectedNode.koreanFallback && selectedNode.koreanPath && (
+                    <a className={styles.fallbackBadge} href={selectedNode.koreanPath} aria-label={copy.koreanOriginal} title={copy.koreanOriginal}>🇰🇷</a>
+                  )}
                 </div>
                 <h2>{selectedNode.title}</h2>
                 {selectedNode.koreanFallback && <p className={styles.fallbackHint}>{copy.browserTranslation}</p>}
@@ -228,8 +230,8 @@ export default function WikiGraphPage({graphData}: PageProps): ReactElement {
                 </div>
                 {selectedNode.path && <Button asChild className={styles.openLink}><Link to={selectedNode.path}>{copy.open}<span aria-hidden="true">↗</span></Link></Button>}
                 {locale === 'en' && selectedNode.koreanFallback && selectedNode.koreanPath && (
-                  <Button asChild variant="outline" className={styles.originalLink}><a href={selectedNode.koreanPath}>
-                    {copy.openKorean}<span aria-hidden="true">↗</span>
+                  <Button asChild variant="outline" className={styles.originalLink}><a href={selectedNode.koreanPath} aria-label={copy.openKorean} title={copy.openKorean}>
+                    🇰🇷
                   </a></Button>
                 )}
                 {selectedNeighbors.length > 0 && (
@@ -239,7 +241,7 @@ export default function WikiGraphPage({graphData}: PageProps): ReactElement {
                       {selectedNeighbors.slice(0, 7).map((node) => (
                         <li key={node.id}>
                           <Button type="button" variant="link" size="text" onClick={() => setSelectedId(node.id)}>{node.title}</Button>
-                          {node.koreanFallback && <span>{copy.koreanOriginal}</span>}
+                          {node.koreanFallback && node.koreanPath && <a href={node.koreanPath} aria-label={copy.koreanOriginal} title={copy.koreanOriginal}>🇰🇷</a>}
                         </li>
                       ))}
                     </ul>
@@ -256,7 +258,7 @@ export default function WikiGraphPage({graphData}: PageProps): ReactElement {
             {documents.map((node) => (
               <li key={node.id}>
                 {node.path && <Link to={node.path}>{node.title}</Link>}
-                {node.koreanFallback && <span>{copy.koreanOriginal}</span>}
+                {node.koreanFallback && node.koreanPath && <a href={node.koreanPath} aria-label={copy.koreanOriginal} title={copy.koreanOriginal}>🇰🇷</a>}
               </li>
             ))}
           </ul>

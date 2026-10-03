@@ -12,6 +12,7 @@ type TagItem = {
   date: string;
   route: string;
   koreanFallback?: boolean;
+  koreanPath?: string;
 };
 
 type Tag = {
@@ -70,7 +71,9 @@ function TagDetail({data, tag}: {data: TagData; tag: Tag}): ReactNode {
           <li className={styles.item} key={`${item.kind}:${item.route}:${item.title}`}>
             <div className={styles.itemMeta}>
               <span className={styles.type}>{typeLabels[item.kind]}</span>
-              {item.koreanFallback && <span>{isKorean ? '한국어 원문' : 'Korean source'}</span>}
+              {item.koreanFallback && item.koreanPath && (
+                <a href={item.koreanPath} aria-label={isKorean ? '한국어 문서 열기' : 'Open Korean page'} title={isKorean ? '한국어 문서 열기' : 'Open Korean page'}>🇰🇷</a>
+              )}
               {item.date && <time dateTime={item.date}>{item.date}</time>}
             </div>
             <h2><Link to={item.route}>{item.title}</Link></h2>

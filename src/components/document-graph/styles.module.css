@@ -276,10 +276,19 @@
 }
 
 .fallbackBadge {
-  padding: 0.15rem 0.38rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.08rem 0.2rem;
   border: 1px solid var(--site-border);
-  color: var(--site-accent);
+  color: inherit;
   font-size: 0.64rem;
+  text-decoration: none;
+}
+
+.fallbackBadge:hover {
+  border-color: var(--site-accent);
+  text-decoration: none;
 }
 
 .details h2 {
@@ -377,11 +386,17 @@
   text-overflow: ellipsis;
 }
 
-.neighborList li span,
-.pageIndex li span {
+.neighborList li > a,
+.pageIndex li > a:last-child {
   flex: 0 0 auto;
   color: var(--site-muted);
   font-size: 0.62rem;
+  text-decoration: none;
+}
+
+.neighborList li > a:hover,
+.pageIndex li > a:last-child:hover {
+  color: var(--site-accent);
 }
 
 .pageIndex {
