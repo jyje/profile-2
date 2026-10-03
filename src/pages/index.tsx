@@ -36,7 +36,6 @@ type Copy = {
   refreshTooltip: string;
   blog: string;
   wiki: string;
-  korean: string;
 };
 
 const CATALOG = curation as Catalog;
@@ -58,7 +57,6 @@ const COPY: Record<string, Copy> = {
     refreshTooltip: 'Fisher-Yates 셔플: 새로고침할 때 오늘 날짜와 횟수를 시드로 글 네 편을 무작위 선택합니다.',
     blog: '블로그',
     wiki: '위키',
-    korean: '한국어 원문',
   },
   en: {
     description: 'Notes on my knowledge and experience in AI and cloud.',
@@ -77,7 +75,6 @@ const COPY: Record<string, Copy> = {
     refreshTooltip: 'Fisher-Yates shuffle: each refresh uses today’s date and refresh count to choose four random reads.',
     blog: 'Blog',
     wiki: 'Wiki',
-    korean: 'Korean original',
   },
 };
 
@@ -165,7 +162,6 @@ function ItemMeta({item, locale, label, role}: {item: CuratedItem; locale: strin
         </span>
       )}
       {!showUpdated && item.date && <span>{formatDate(item.date, locale)}</span>}
-      {locale === 'en' && item.sourceLocale === 'ko' && <span>{COPY.en.korean}</span>}
     </span>
   );
 }
@@ -270,7 +266,10 @@ export default function Home(): ReactNode {
             <ul className={styles.recommendationList} aria-live="polite">
               {recommendations.map(({item, role}) => (
                 <li key={item.id}>
-                  <a href={rootBase + item.url.slice(1)}>
+                  <a
+                    className={styles.recommendationLink}
+                    href={rootBase + (locale === 'en' && item.sourceLocale === 'ko' ? `/en${item.url}` : item.url).slice(1)}
+                  >
                     <span className={styles.recommendationBody}>
                       <ItemMeta item={item} locale={locale} role={role} label={item.kind === 'blog' ? copy.blog : copy.wiki} />
                       <strong className={styles.recommendationTitle}>{item.title}</strong>
@@ -278,6 +277,9 @@ export default function Home(): ReactNode {
                     </span>
                     <span className={styles.arrow} aria-hidden="true">↗</span>
                   </a>
+                  {locale === 'en' && item.sourceLocale === 'ko' && (
+                    <a className={styles.sourceFlagLink} href={rootBase + item.url.slice(1)} aria-label="Open Korean page" title="Open Korean page">🇰🇷</a>
+                  )}
                 </li>
               ))}
             </ul>
