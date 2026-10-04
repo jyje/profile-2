@@ -31,7 +31,7 @@ image: ./assets/00ef7950-3bb3-4865-82b0-e160b092412c.png
     - **Service Launch**
         - 15 people total, 8 developers, 1 infrastructure manager participated in planning and development to contribute to the launch and operation of the platform
     - **High-Efficiency ML**
-        - Real-time execution of ML pipelines in the on-premises infrastructure of the hybrid cluster. Produced more than 300 space maps in the production environment, and saved about 150M KRW (70%) compared to the previous service
+        - Real-time execution of ML pipelines in the on-premises infrastructure of the hybrid cluster. Produced more than 300 space maps in the production environment, and reduced monthly cloud costs by 70%, saving approximately KRW 15 million per month compared to the previous service
     - **High-Availability Infrastructure**
         - Hybrid cluster and disaster response to implement a service with 96% annual availability and a downtime of 14 days
 - **Skills**
