@@ -24,7 +24,15 @@ content/
     └─ wiki/
 ```
 
-When a wiki page has no English counterpart, the build preparation step copies the Korean original and its assets to the same path on the English site. The generated page starts with an English callout explaining that no English version is available and recommending browser translation. The source under `content/ko/` is not modified.
+Every wiki document and blog post needs a file at the same path under `content/en/` with an English title, even when the body is not translated yet. The title comes from front matter `title` or the first `# Heading`, and it must not contain Korean text. A missing English file or title fails the build, including development-only notes.
+
+A document that has a title but an empty body borrows the body of the same document in another locale, English first and Korean second. The page keeps its own title and front matter, inherits fields it omits such as `slug` and `tags`, and starts with a callout that the article is only available in the other language. If neither locale has a body, the build fails. Korean assets without an English copy are mirrored to the English site. Sources under `content/` are not modified.
+
+```md
+---
+title: "☸️ Kubernetes"
+---
+```
 
 Explore wiki, blog and tag connections in the [graph at the bottom of Wiki Home](../index.md#document-graph). Each wiki document and blog post also receives a local graph automatically, showing direct links, backlinks and its own tags. No Markdown embed is required. Grab and shake a node to move its neighbors, or pan the background and use the zoom controls. The node selector and document link provide keyboard access.
 
@@ -84,7 +92,7 @@ Blog posts and wiki documents share the same tag registry. The connections secti
 
 Use relative Markdown links within a collection. Between blog and wiki collections, use the real site path, such as `/wiki/d/k8s`. Equal titles do not merge different routes. Code examples are not indexed as links. Computed JSX navigation is not indexed, so author important relationships as Markdown links.
 
-Missing English `.md` and `.mdx` wiki pages use the Korean original with a browser translation notice. Authored English translations are preserved. Pages marked `draft: true` or `unlisted: true` are excluded from the public graph and shared tag listings.
+Title-only English `.md` and `.mdx` pages show the Korean body with a browser translation notice; the staged page uses the body source's extension. Authored English translations are preserved. Pages marked `draft: true` or `unlisted: true` are excluded from the public graph and shared tag listings.
 
 - Use the `.md` extension. Use `.mdx` only when a React component is needed.
 - Blog files are named `YYYY-MM-DD-slug.md`, and the `slug` in the front matter becomes the URL.

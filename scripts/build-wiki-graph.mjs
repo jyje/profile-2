@@ -1,18 +1,12 @@
-// Fills missing English wiki pages with their Korean original and a browser-
-// translation notice before Docusaurus loads its localized docs plugin.
+// Copies Korean wiki assets that have no English counterpart before Docusaurus
+// loads its localized docs plugin. Documents never fall back here: every one has
+// an authored English file, and title-only files are filled in prepare-content.
 import fs from 'node:fs';
 import path from 'node:path';
-import {developmentNotice, splitDevelopmentNotice} from './development-notice.mjs';
 
 const ROOT = path.resolve(import.meta.dirname, '..');
 const KO_ROOT = path.join(ROOT, 'content/ko/wiki');
 const EN_BUILD_ROOT = path.join(ROOT, 'i18n/en/docusaurus-plugin-content-docs/current');
-const FALLBACK_CALLOUT = [
-  '> [!note] English version unavailable',
-  '> This article is currently available only in Korean. Use your browser’s built-in translation feature to read it in English.',
-  '',
-  '',
-].join('\n');
 
 function walk(dir, files = []) {
   if (!fs.existsSync(dir)) return files;
@@ -25,17 +19,6 @@ function walk(dir, files = []) {
   return files;
 }
 
-function splitFrontmatter(source) {
-  const match = source.match(/^(---\s*\r?\n[\s\S]*?\r?\n---\s*)(?:\r?\n|$)/);
-  if (!match) return {raw: '', data: {}, body: source};
-  const raw = match[1];
-  return {
-    raw,
-    data: {},
-    body: source.slice(match[0].length),
-  };
-}
-
 export function mergeKoreanFallbackDocs(koRoot = KO_ROOT, enBuildRoot = EN_BUILD_ROOT) {
   for (const source of walk(koRoot)) {
     const relative = path.relative(koRoot, source);
@@ -44,16 +27,9 @@ export function mergeKoreanFallbackDocs(koRoot = KO_ROOT, enBuildRoot = EN_BUILD
     if (/\.mdx?$/.test(destination)) {
       const otherExtension = destination.endsWith('.mdx') ? destination.slice(0, -1) : `${destination}x`;
       if (fs.existsSync(otherExtension)) continue;
+      throw new Error(`Missing English document with an English title: ${relative}`);
     }
-
     fs.mkdirSync(path.dirname(destination), {recursive: true});
-    if (/\.mdx?$/.test(source)) {
-      const {raw, body} = splitFrontmatter(fs.readFileSync(source, 'utf8'));
-      const notice = splitDevelopmentNotice(body);
-      const markdown = `${raw ? `${raw}\n\n` : ''}${notice.hasNotice ? developmentNotice('en') : ''}${FALLBACK_CALLOUT}${notice.body}`;
-      fs.writeFileSync(destination, markdown);
-    } else {
-      fs.copyFileSync(source, destination);
-    }
+    fs.copyFileSync(source, destination);
   }
 }

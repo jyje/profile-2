@@ -31,7 +31,7 @@ authored Markdown. Wiki title emoji rules also apply to excluded documents.
 
 ## Last updated dates
 
-Wiki documents and blog posts use Docusaurus's built-in last-updated footer. Staging reads the authored file's last Git commit, not build time or filesystem mtime. English fallback pages inherit the Korean source date. Uncommitted edits do not advance the date; new documents without Git history have no inferred date until committed.
+Wiki documents and blog posts use Docusaurus's built-in last-updated footer. Staging reads the authored file's last Git commit, not build time or filesystem mtime. Pages that borrow a body from the other locale use the date of the body source file. Uncommitted edits do not advance the date; new documents without Git history have no inferred date until committed.
 
 An explicit source front-matter date takes precedence:
 
