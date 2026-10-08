@@ -43,8 +43,9 @@ related links, and interactive document graphs. The wiki home provides the broad
 graph; individual posts and notes show the connections around that document.
 
 The home page introduces the site and provides direct links to Blog, Wiki, Labs,
-and About. Korean and English are supported; wiki notes without an English version
-show the Korean original with a browser-translation notice.
+and About. Korean and English are supported; every wiki note and blog post has an
+English title, and untranslated bodies show the Korean original with a
+browser-translation notice.
 
 ## Behind the Site
 

@@ -95,10 +95,12 @@ referrer navigation at its selected URL. Known crawler and automation user agent
 and `navigator.webdriver` skip this convenience behavior.
 
 This is client-side routing, not an HTTP redirect. API clients and visitors
-without JavaScript receive the requested URL. Missing English wiki translations
-are staged with Korean text/assets and an English browser-translation notice;
-authored English translations and Korean originals are not overwritten. This
-fallback is not a promise to translate all blog posts or page types automatically.
+without JavaScript receive the requested URL. Every wiki document and blog
+post must have an authored English file with an English title; staging fails
+otherwise. Title-only files borrow the body from English first, then Korean,
+with a localized browser-translation notice, and staging fails when neither
+locale has a body. `.content-build/locale-fallbacks.json` records borrowed
+pages for the document graph. Authored sources are never overwritten.
 
 ## Publication boundary
 

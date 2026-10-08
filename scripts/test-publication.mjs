@@ -30,14 +30,15 @@ function fixture(t) {
   const write = (file, value) => { fs.mkdirSync(path.dirname(path.join(root, file)), {recursive: true}); fs.writeFileSync(path.join(root, file), value); };
   write('.docignore', '# Both locales\ncontent/*/wiki/_guide/\ncontent/*/wiki/_design/\ncontent/*/blog/_internal/\ncontent/*/wiki/private.md\n');
   for (const locale of ['ko', 'en']) {
-    write(`content/${locale}/wiki/index.md`, 'public');
-    write(`content/${locale}/wiki/_guide/authoring.mdx`, 'development only');
+    write(`content/${locale}/wiki/index.md`, '# 📄 Home\n\npublic');
+    write(`content/${locale}/wiki/_guide/authoring.mdx`, '# 🧭 Authoring\n\ndevelopment only');
     write(`content/${locale}/wiki/_guide/assets/example.txt`, 'development asset');
-    write(`content/${locale}/wiki/_design/index.md`, 'design');
-    write(`content/${locale}/wiki/private.md`, 'private');
-    write(`content/${locale}/blog/_internal/test.md`, 'internal blog');
+    write(`content/${locale}/wiki/_design/index.md`, '# 🛠️ Design\n\ndesign');
+    write(`content/${locale}/wiki/private.md`, '# 📄 Private\n\nprivate');
+    write(`content/${locale}/blog/_internal/test.md`, '# Internal\n\ninternal blog');
   }
-  return {root, write, staged: file => path.join(root, '.content-build', file)};
+  const staged = file => path.join(root, '.content-build', file);
+  return {root, write, staged, read: file => fs.readFileSync(staged(file), 'utf8')};
 }
 
 test('publication defaults to public and invalid modes fail closed', () => {
@@ -88,7 +89,7 @@ test('development stages aliases and assets; subsequent public build removes the
 
 test('aliases cannot overwrite public content', t => {
   const f = fixture(t);
-  f.write('content/ko/wiki/guide/public.md', 'collision');
+  for (const locale of ['ko', 'en']) f.write(`content/${locale}/wiki/guide/public.md`, '# 📄 Public\n\ncollision');
   assert.throws(() => prepareContent(f.root, 'development'), /collision/);
 });
 
@@ -100,4 +101,50 @@ test('raw Docusaurus commands cannot publish development staging or stale polici
   assert.doesNotThrow(() => assertPreparedContent(f.root));
   f.write('.docignore', 'content/*/wiki/_other/');
   assert.throws(() => assertPreparedContent(f.root), /Content mode/);
+});
+
+test('every document needs an authored English title', t => {
+  const f = fixture(t);
+  f.write('content/ko/blog/post.md', '---\ntitle: 한국어 글\n---\n본문');
+  assert.throws(() => prepareContent(f.root, 'public'), /Missing English document with an English title: content\/en\/blog\/post\.md/);
+  f.write('content/en/blog/post.md', '---\nslug: post\n---\nEnglish body');
+  assert.throws(() => prepareContent(f.root, 'public'), /Missing English title: content\/en\/blog\/post\.md/);
+  f.write('content/en/blog/post.md', '---\ntitle: 한국어 글\n---\n');
+  assert.throws(() => prepareContent(f.root, 'public'), /English title contains Korean text/);
+  // Excluded development notes are validated before publication filtering.
+  fs.unlinkSync(path.join(f.root, 'content/en/blog/post.md')); fs.unlinkSync(path.join(f.root, 'content/ko/blog/post.md'));
+  f.write('content/en/wiki/_guide/authoring.mdx', '---\nsidebar_position: 1\n---\nNo title');
+  assert.throws(() => prepareContent(f.root, 'public'), /Missing English title/);
+});
+
+test('title-only documents borrow the English body first, then the Korean body', t => {
+  const f = fixture(t);
+  f.write('content/ko/blog/korean.md', '---\ntitle: 한국어 제목\nslug: korean\ntags: [ai]\n---\n# 한국어 제목\n\n한국어 본문');
+  f.write('content/en/blog/korean.md', '---\ntitle: English title\n---\n\n');
+  f.write('content/ko/wiki/english.md', '---\ntitle: 📄 한국어 제목\n---\n');
+  f.write('content/en/wiki/english.md', '# 📄 English title\n\nEnglish body');
+  f.write('content/ko/wiki/component.mdx', '---\ntitle: 📄 컴포넌트\n---\nimport A from "./a";\n\n<A />');
+  f.write('content/en/wiki/component.md', '---\ntitle: 📄 Component\n---\n<!-- translation pending -->\n');
+  prepareContent(f.root, 'public');
+  const english = f.read('en/blog/korean.md');
+  assert.match(english, /^---\ntitle: English title\nslug: korean\ntags:\n  - ai\n---/);
+  assert.match(english, /English version unavailable[\s\S]*\n한국어 본문$/);
+  assert.ok(!english.includes('# 한국어 제목'));
+  const korean = f.read('ko/wiki/english.md');
+  assert.match(korean, /title: 📄 한국어 제목/);
+  assert.match(korean, /한국어 번역 준비 중[\s\S]*\nEnglish body$/);
+  assert.equal(fs.existsSync(f.staged('en/wiki/component.md')), false);
+  assert.match(f.read('en/wiki/component.mdx'), /title: 📄 Component[\s\S]*import A/);
+  assert.deepEqual(JSON.parse(f.read('locale-fallbacks.json')), {
+    'content/en/blog/korean.md': 'ko',
+    'content/en/wiki/component.mdx': 'ko',
+    'content/ko/wiki/english.md': 'en',
+  });
+});
+
+test('a document without a body in any locale fails the build', t => {
+  const f = fixture(t);
+  f.write('content/ko/wiki/empty.md', '---\ntitle: 📄 빈 문서\n---\n');
+  f.write('content/en/wiki/empty.md', '# 📄 Empty\n');
+  assert.throws(() => prepareContent(f.root, 'public'), /No body in any locale for content\/ko\/wiki\/empty\.md[\s\S]*content\/en\/wiki\/empty\.md/);
 });

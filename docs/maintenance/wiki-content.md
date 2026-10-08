@@ -41,8 +41,8 @@ a public repository remain readable, and LAN development is not a private servic
 
 Last-update footers use official Docusaurus components. Preparation injects the
 authored file's latest Git commit date into generated front matter, preserving
-explicit `last_update.date` values. English fallback pages inherit the Korean
-source date. Dates are formatted in UTC by the upstream component; builds and
+explicit `last_update.date` values. Pages that borrow another locale's body
+inherit the body source's date. Dates are formatted in UTC by the upstream component; builds and
 uncommitted edits do not fabricate new dates. Both CI checkouts fetch full history.
 
 ## Graph behavior
