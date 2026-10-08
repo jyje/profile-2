@@ -49,7 +49,7 @@ test('development notice is idempotent and precedes translated fallback notices'
   assert.ok(english.indexOf('Development-only document') < english.indexOf('English version unavailable'));
   assert.ok(!english.includes('개발 전용 문서'));
   assert.equal(english.match(/\.docignore/g).length, 1);
-  assert.match(english, /date: 2020-01-01/);
+  assert.match(english, /date: '?2020-01-01/);
   assert.ok(english.endsWith('\nBody\n'));
 });
 
