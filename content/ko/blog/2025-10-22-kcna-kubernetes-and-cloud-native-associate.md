@@ -8,7 +8,7 @@ tags:
   - certifications
   - kubernetes
   - linux-foundation
-image: ./assets/CNCF-Certification_-KCNA.png
+image: ./assets/cncf-certification-kcna.png
 ---
 
 ## 1. 자격증 소개

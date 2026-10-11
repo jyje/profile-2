@@ -9,7 +9,7 @@ tags:
   - kubernetes
   - linux-foundation
   - security
-image: ./assets/CNCF-Certification_-KCSA.png
+image: ./assets/cncf-certification-kcsa.png
 ---
 
 ## 1. About the Certification

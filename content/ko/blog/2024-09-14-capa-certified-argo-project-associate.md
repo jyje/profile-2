@@ -8,7 +8,7 @@ tags:
   - certifications
   - kubernetes
   - linux-foundation
-image: ./assets/e396e8d4-7dfb-45b8-be12-84d9164a70ab.png
+image: ./assets/cncf-certification-capa.png
 ---
 
 지난 주말에 합격한 [CAPA (Certified Argo Project Associate)](https://training.linuxfoundation.org/certification/certified-argo-project-associate-capa/) 자격증 취득 후기를 공유드립니다. CAPA는 2024년 상반기에 신설된 따끈따끈한 자격증으로, [Argo 프로젝트](https://argoproj.github.io/)를 다루는 역량을 검증하는 Associate 수준의 시험입니다. 이 글은 Argo 프로젝트와 CAPA 자격증에 대한 간단한 소개, 그리고 제 취득 과정에 대한 기록입니다. CAPA에 도전하시거나 관심이 있는 분들에게 도움이 되기를 바랍니다 🚀

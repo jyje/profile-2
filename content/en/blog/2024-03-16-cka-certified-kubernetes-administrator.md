@@ -8,7 +8,7 @@ tags:
   - certifications
   - kubernetes
   - linux-foundation
-image: ./assets/d151aaa0-4523-4caa-bbb9-d6dd9ca02938.png
+image: ./assets/cncf-certification-cka.png
 ---
 
 ## 1. About the Certification

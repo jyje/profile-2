@@ -8,7 +8,7 @@ tags:
   - certifications
   - kubernetes
   - linux-foundation
-image: ./assets/e396e8d4-7dfb-45b8-be12-84d9164a70ab.png
+image: ./assets/cncf-certification-capa.png
 ---
 
 I'm sharing my experience passing the [CAPA (Certified Argo Project Associate)](https://training.linuxfoundation.org/certification/certified-argo-project-associate-capa/) exam last weekend. CAPA is a brand-new certification launched in the first half of 2024, an Associate-level exam that validates your ability to work with the [Argo Project](https://argoproj.github.io/). This post is a short introduction to the Argo Project and the CAPA certification, followed by a record of how I prepared and what I learned along the way. I hope it's useful to anyone considering or curious about CAPA 🚀
