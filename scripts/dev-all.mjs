@@ -8,6 +8,9 @@ import path from 'node:path';
 import {spawn} from 'node:child_process';
 import handler from 'serve-handler';
 import {shouldRebuild} from './source-watch.mjs';
+import bracesMitigation from './patch-braces.cjs';
+
+bracesMitigation.patchBraces(undefined, {check: true});
 
 const root = path.resolve(import.meta.dirname, '..');
 const ownedRoot = path.join(root, '.dev-all');

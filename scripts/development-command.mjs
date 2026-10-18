@@ -1,4 +1,7 @@
 import {spawn} from 'node:child_process';
+import bracesMitigation from './patch-braces.cjs';
+
+bracesMitigation.patchBraces(undefined, {check: true});
 
 if (process.argv.includes('start') || process.argv.some(arg => arg.includes('docusaurus start'))) {
   console.warn('[development] Single-locale HMR shares generated staging with builds. Do not run public build/typecheck concurrently; use npm run dev for isolated all-locale output.');

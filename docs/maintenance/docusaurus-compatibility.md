@@ -73,6 +73,22 @@ and regression test before approval.
 
 ## Dependency policy
 
+The version-update configuration is [`.github/dependabot.yaml`](../../.github/dependabot.yaml),
+not a second `.yml` file. It checks root npm dependencies and GitHub Actions every
+Monday at 09:00 Asia/Seoul and uses `🤖 ci(deps)` / `🤖 ci(deps-dev)` bot prefixes.
+Official Docusaurus packages, React and Tailwind each have a coordinated group;
+other minor/patch changes are split by production/development dependency type.
+Other majors remain separate PRs. Framework major groups are proposals, not
+approved migrations: the same-version and full compatibility gates below still
+apply. Grouping does not guarantee every unchanged official package is included.
+
+Security updates remain separate from the weekly version-update schedule and
+grouping. There are no blanket ignores, auto-merge rules, or alternate target
+branches. GitHub's repository security-update setting must also be enabled;
+this YAML alone does not enable it. Review the existing overrides and the local
+braces guard whenever Dependabot proposes related updates. `npm run test:security`
+checks the YAML naming, ecosystems, schedules, bot format and grouping policy.
+
 - Upgrade direct official `@docusaurus/*` packages together to one target release.
   Keep core, preset, faster, redirects, types, tsconfig, and module aliases aligned,
   and verify resolved versions in the lockfile. Use exact target versions when
@@ -102,6 +118,8 @@ version policies. Keep this inventory synchronized whenever an override changes.
 
 | Override | Current reason and removal gate |
 | --- | --- |
+| `@docusaurus/core` -> `tinypool` 2.1.2 | Fix GHSA-5gmw-xhrv-c9v3 and GHSA-85c8-ppgw-ccpr. This crosses core's declared 1.x range, so the worker contract test and a real two-worker bilingual SSG build are required. Remove when aligned official Docusaurus packages resolve a patched worker pool without this override. |
+| `postcss-selector-parser` -> 7.1.6 | Fix GHSA-rj75-hqrm-r3gf, including cssnano's remaining 6.x paths. Verify CSS modules, minification and static output. Remove when all upstream paths resolve patched versions. |
 | `@module-federation/dts-plugin` -> `adm-zip` 0.6.1 | Existing advisory mitigation described in the Labs integration guide. Remove only when the parent resolves a patched version without the override and federation tests/builds pass. |
 | `copy-webpack-plugin` and `css-minimizer-webpack-plugin` -> `serialize-javascript` 7.0.7 | Existing transitive security pin. Confirm the current advisory and the parent's supported fixed range; remove only after clean resolution and static build verification. |
 | `sockjs` -> `uuid` 11.1.1 | Existing transitive security pin in development transport. Confirm the advisory and API compatibility; remove only after upstream resolution and dev/HMR verification. |
@@ -110,6 +128,26 @@ For an override addition or revision, record the advisory URL/ID, affected depen
 path, runtime/build-only exposure, compatibility evidence, and removal condition
 in the upgrade PR. The legacy pins above do not substitute for a fresh advisory
 review and are not proof that the complete dependency tree is vulnerability-free.
+
+### Temporary braces depth mitigation
+
+GHSA-vfj7-8cjw-p6xm has no upstream fixed release as of 2026-10-18.
+`scripts/patch-braces.cjs` adds a 100-level parser stack bound and iterative AST
+validation to installed braces 3.0.3. It verifies the original SHA-256 of each
+modified file, checks every installed lockfile path, and rejects unknown sources
+or versions rather than guessing a new patch. The `postinstall` lifecycle applies
+it; build and development entrypoints refuse missing or changed patches.
+Always run `npm ci` with lifecycle scripts enabled. Raw Docusaurus CLI invocation
+is not a substitute for the guarded repository entrypoints.
+
+`npm run test:security` verifies the patch, ordinary glob semantics, hostile
+nesting/direct ASTs, worker compatibility, and all locked fixed-version pins.
+CI and Pages both run this gate. Do not dismiss the braces alert as fixed or
+renumber the dependency to hide it: npm audit and Dependabot still correctly
+report the unpatched upstream version and its dependent packages. Remove this
+mitigation only after an upstream fix is installed, its depth tests pass, and
+clean installs, file watching, content selection and bilingual builds pass.
+See [dependency security review](dependency-security.md) for evidence and scope.
 
 ## Upgrade workflow
 
