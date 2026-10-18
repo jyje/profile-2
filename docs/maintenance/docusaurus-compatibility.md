@@ -73,6 +73,22 @@ and regression test before approval.
 
 ## Dependency policy
 
+The version-update configuration is [`.github/dependabot.yaml`](../../.github/dependabot.yaml),
+not a second `.yml` file. It checks root npm dependencies and GitHub Actions every
+Monday at 09:00 Asia/Seoul and uses `🤖 ci(deps)` / `🤖 ci(deps-dev)` bot prefixes.
+Official Docusaurus packages, React and Tailwind each have a coordinated group;
+other minor/patch changes are split by production/development dependency type.
+Other majors remain separate PRs. Framework major groups are proposals, not
+approved migrations: the same-version and full compatibility gates below still
+apply. Grouping does not guarantee every unchanged official package is included.
+
+Security updates remain separate from the weekly version-update schedule and
+grouping. There are no blanket ignores, auto-merge rules, or alternate target
+branches. GitHub's repository security-update setting must also be enabled;
+this YAML alone does not enable it. Review the existing overrides and the local
+braces guard whenever Dependabot proposes related updates. `npm run test:security`
+checks the YAML naming, ecosystems, schedules, bot format and grouping policy.
+
 - Upgrade direct official `@docusaurus/*` packages together to one target release.
   Keep core, preset, faster, redirects, types, tsconfig, and module aliases aligned,
   and verify resolved versions in the lockfile. Use exact target versions when
