@@ -5,7 +5,7 @@ import path from 'node:path';
 import {createHash} from 'node:crypto';
 import handler from 'serve-handler';
 import {chromium} from 'playwright';
-import {breadcrumbRule as rule, breadcrumbViolations} from './ux-lint-contract.mjs';
+import {breadcrumbRule as rule, breadcrumbViolations, breadcrumbTrailViolations} from './ux-lint-contract.mjs';
 
 const prefix = process.env.VERIFY_BASE_PATH ?? '/profile-2/';
 const output = path.resolve(process.env.UX_LINT_OUTPUT ?? '.playwright-mcp/ux-lint/after');
@@ -38,6 +38,8 @@ async function geometry(page) {
     };
     const sidebars = [...document.querySelectorAll('.theme-doc-sidebar-container,.blog-wrapper .row > aside.col--3')]
       .filter(node => {const r = node.getBoundingClientRect(); return r.width > 0 && r.height > 0 && getComputedStyle(node).display !== 'none';});
+    const list = nav?.querySelector('ul.breadcrumbs');
+    const tops = [...(list?.children ?? [])].map(node => node.getBoundingClientRect().top);
     return {
       count: all.length, frames: document.querySelectorAll('[data-breadcrumb-frame]').length,
       nav: rect(nav), home: rect(nav?.querySelector('.breadcrumbs__item:first-child svg')),
@@ -45,6 +47,9 @@ async function geometry(page) {
       navbarBottom: document.querySelector('.navbar').getBoundingClientRect().bottom,
       overflow: document.documentElement.scrollWidth > innerWidth + 1,
       inHero: !!nav?.closest('.about-hero'),
+      trail: list && {singleRow: Math.max(...tops) - Math.min(...tops) <= 2,
+        scrollMode: getComputedStyle(list).overflowX,
+        labelsFit: [...list.querySelectorAll('.breadcrumbs__link')].every(node => node.getBoundingClientRect().width <= list.clientWidth)},
     };
   });
 }
@@ -102,6 +107,7 @@ try {
             const g = await geometry(page);
             entry.geometry = g;
             entry.errors.push(...breadcrumbViolations(g));
+            entry.errors.push(...breadcrumbTrailViolations(g.trail));
             const semantics = await page.evaluate(() => ({
               headings: document.querySelectorAll('main h1').length,
               unlabeledImages: document.querySelectorAll('main img:not([alt])').length,
@@ -126,6 +132,15 @@ try {
               entry.detailsCapture = `figure-${filename}`;
               await figure.screenshot({path:path.join(output, entry.detailsCapture), animations:'disabled'});
               assert.ok(await figure.evaluate(node => node.getBoundingClientRect().width <= document.documentElement.clientWidth), 'Media figure fits narrow screens');
+            }
+            if (route === 'wiki/d/portfolio/widearth-digital-twins-platforms-at-maxst/' && locale === 'ko' && width === 390 && theme === 'light') {
+              const style = await page.addStyleTag({content: '[data-breadcrumb-scroller] .breadcrumbs{flex-wrap:wrap!important;width:200px}'});
+              const changed = await geometry(page);
+              await page.screenshot({path: path.join(output, 'canary-wrapped-trail.png'), clip: {x: 0, y: 0, width, height: 240}, animations: 'disabled'});
+              const errors = breadcrumbTrailViolations(changed.trail);
+              canaries.push({name: 'wrapped trail', detected: errors.length > 0, errors});
+              assert.ok(errors.length, 'UX-002 failed to catch wrapping');
+              await style.evaluate(node => node.remove());
             }
             if (route === 'about/portfolio/' && locale === 'ko' && width === 1222 && theme === 'light') {
               for (const [name, css] of [
@@ -184,6 +199,6 @@ finally {
   if (server) await new Promise(resolve => server.close(resolve));
   for (const entry of failed) console.error(`${entry.locale}/${entry.width}/${entry.theme}/${entry.route}: ${entry.errors.join('; ')}`);
   if (fatal) console.error(fatal);
-  if (fatal || failed.length || canaries.length !== 3 || canaries.some(c => !c.detected)) process.exitCode = 1;
-  console.log(`UX-001: ${entries.length - failed.length}/${entries.length} passed; report ${path.join(output, 'index.html')}`);
+  if (fatal || failed.length || canaries.length !== 4 || canaries.some(c => !c.detected)) process.exitCode = 1;
+  console.log(`UX-001/UX-002: ${entries.length - failed.length}/${entries.length} passed; report ${path.join(output, 'index.html')}`);
 }

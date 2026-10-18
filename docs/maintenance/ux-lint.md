@@ -19,8 +19,29 @@ This preserves wiki/Infima's 0.8 breadcrumb scale at the default root font size.
 The test values are independent of implementation tokens, so changing all pages
 together cannot silently pass. An intentional typography change requires review.
 Exactly one breadcrumb and shared frame must exist. Home, 404 and redirect-only
-pages omit them. No hero nesting or horizontal overflow; long labels wrap and
-print hides navigation.
+pages omit them. No hero nesting or document-level horizontal overflow; UX-002
+allows scrolling inside the breadcrumb only. Print hides navigation.
+
+## UX-002: single-line scroll trail
+
+Breadcrumbs stay on one row in both locales and all viewport sizes. Long labels
+use CSS ellipsis with their full text retained in accessible names, tooltips and
+structured data. The original Home item is sticky at UX-001's unchanged origin.
+The list scrolls natively, initially toward the current document; directional
+ellipsis buttons appear only when there is more content in that direction.
+
+`BreadcrumbFrame/ScrollTrail` decorates the existing list without cloning links,
+replacing the wiki renderer, or moving DOM nodes after hydration. Touch swipes,
+trackpad/Shift-wheel, desktop mouse drag, ordinary link clicks and keyboard focus
+are distinct interactions. Dragging never activates a link. Font loading, resize,
+locale/route changes and Labs labels update the measured edges. No animated
+scroll is required, including when reduced motion is enabled. Without JavaScript,
+the original links remain in the single-line native scroll area.
+
+The capture gate checks row geometry, bounded labels and native overflow mode
+for every representative route. A deliberate wrapping canary must be detected.
+`test:breadcrumbs` additionally exercises real swipe/drag/wheel/focus and ellipsis
+controls, long nested paths and titles, schema, print, and no-JavaScript output.
 
 ## Common placement template
 
@@ -58,8 +79,8 @@ Default input is `build/` served under `/profile-2/`. `VERIFY_BUILD_DIR`,
 `VERIFY_BASE_PATH`, and `UX_LINT_OUTPUT` select another explicit build/report.
 Use a local or CI build, not a production remote for mutation canaries.
 
-The current matrix covers 20 breadcrumb routes plus the breadcrumb-free Home,
-two locales, 390/864/920/1222/1728px and light/dark: 420 cases. CAPA's media figure
+The current matrix covers 21 breadcrumb routes plus the breadcrumb-free Home,
+two locales, 390/864/920/1222/1728px and light/dark: 440 cases. CAPA's media figure
 also receives 20 detail captures. The 920px sidebar boundary and wide desktop are explicit
 cases, not extrapolated from a small laptop. Cases include every About destination, wiki home/document
 and tag archives, blog list/post/archive/authors/tagged pages, global tags, search,

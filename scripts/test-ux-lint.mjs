@@ -2,7 +2,16 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs/promises';
 import * as yaml from 'js-yaml';
-import {breadcrumbRule as rule, breadcrumbViolations} from './ux-lint-contract.mjs';
+import {breadcrumbRule as rule, breadcrumbViolations, breadcrumbTrailViolations} from './ux-lint-contract.mjs';
+
+test('UX-002 rejects wrapping, clipped-only navigation and unbounded labels', () => {
+  const trail = {singleRow: true, scrollMode: 'auto', labelsFit: true};
+  assert.deepEqual(breadcrumbTrailViolations(trail), []);
+  for (const change of [{singleRow: false}, {scrollMode: 'hidden'}, {labelsFit: false}]) {
+    assert.ok(breadcrumbTrailViolations({...trail, ...change}).length);
+  }
+  assert.ok(breadcrumbTrailViolations(null).length);
+});
 
 function fixture(paneLeft = 0) {
   return {count: 1, frames: 1, paneLeft, navbarBottom: 60,

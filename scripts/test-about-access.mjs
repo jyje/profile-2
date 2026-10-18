@@ -52,6 +52,8 @@ test('output scan checks compressed and normal representations', t => {
 });
 
 test('retired private source and public export artifacts cannot re-enter the app', () => {
+  const typeConfig = fs.readFileSync('tsconfig.json', 'utf8');
+  assert.match(typeConfig, /"exclude":\s*\[[^\]]*"hidden"/, 'Local-only retained sources must not enter the public typecheck');
   for (const file of ['plugins/career-data.cjs', 'src/components/Resume/index.tsx',
     'src/components/ResumeSummary/index.tsx', 'src/components/SelectedCV/index.tsx',
     'src/components/CareerDocuments/profiles.ts', 'scripts/export-career-pdfs.mjs']) {

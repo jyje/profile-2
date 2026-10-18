@@ -40,7 +40,7 @@ dates, assets and canonical routes, not just produce a successful compilation.
 | Surface | Review on upgrade |
 | --- | --- |
 | `src/theme/` wrappers | Original component names, aliases, props, metadata providers, breadcrumb structured data, dropdown/sidebar behavior, and layout hooks |
-| Breadcrumb placement (UX-001) | `BreadcrumbFrame`, MDX front-matter placement context, BlogPostPage metadata, DocItem/Layout + DocBreadcrumbs duplicate guard, native reading widths, Infima container tokens, and screenshot/coordinate/pixel regression gate. See [UX lint](ux-lint.md). |
+| Breadcrumb placement and scrolling (UX-001/UX-002) | `BreadcrumbFrame` + `ScrollTrail` decorate the original list, sticky Home geometry, one-row ellipsis/scroll/focus/drag, MDX placement context, BlogPostPage metadata, DocItem/Layout duplicate guard, native reading widths, Infima tokens and screenshot/coordinate/pixel/wrap regression gate. See [UX lint](ux-lint.md). |
 | Content synchronization and visibility | Front matter, locale mirrors, Git-derived dates, exclusions, generated indexes, and canonical metadata without source/body leakage |
 | Content templates | Remark/MDX transforms, YAML validation, localized labels, and static rendering |
 | Content network, document graph, global tags, redirects, and llms-txt plugins | Public plugin lifecycle/data shape, canonical permalinks, local/global graphs, and excluded content |
