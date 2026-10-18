@@ -21,6 +21,10 @@ problems, and I explore the technologies behind AI-native development.
 
 ## Explore
 
+Contributors: after `nvm use && npm ci`, run `npm run hooks:install`. Versioned
+scaffolds, safe autofix and screenshot gates are documented in the
+[project design system](docs/maintenance/design-system.md).
+
 | Section | What you will find |
 | --- | --- |
 | [Blog](https://jyje.github.io/profile-2/en/blog/) | Engineering experiences, project write-ups, and retrospectives. |
@@ -31,10 +35,12 @@ problems, and I explore the technologies behind AI-native development.
 ## Experience & Work
 
 - [Portfolio](https://jyje.github.io/profile-2/en/about/portfolio/): selected projects and their context.
-- [Resume](https://jyje.github.io/profile-2/en/about/resume/): a one-page career summary.
-- [Detailed CV](https://jyje.github.io/profile-2/en/about/cv/): a longer account of experience and skills.
+- [Resume](https://jyje.github.io/profile-2/en/about/resume/): get in touch on LinkedIn for more about my experience.
 
-The resume and CV are available in Korean and English, with print layouts for PDF export.
+Resume, Selected CV, and Full CV are no longer rendered by this public site.
+Inquiries are handled manually through LinkedIn; there is no login, request
+storage, or automatic document issuance yet. Previous public copies and Git
+history are not erased by this change.
 
 ## Connected Knowledge
 

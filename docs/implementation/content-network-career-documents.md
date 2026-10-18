@@ -1,5 +1,9 @@
 # Content network and career documents
 
+> Historical record: public Resume/CV rendering and export behavior described below
+> was retired by the About access-boundary refactor. See
+> [current About behavior](../maintenance/about-access.md). This record is not a current public export guide.
+
 Status: completed on 2026-09-27 KST. Implementation, independent review, merge
 and deployment verification are complete. This document is a closed delivery
 record, not an active execution loop.
