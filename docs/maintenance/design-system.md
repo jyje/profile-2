@@ -95,12 +95,14 @@ Existing list-type blocks retain their schema and layout contracts.
 
 ## Native Git hook and index isolation
 
-`hooks:install` sets **local** `core.hooksPath=.githooks`, makes the hook executable
-and refuses to overwrite another hook setup. Fresh clones need explicit install.
-Use Node 26+, including GUI/editor commits. The hook:
+`hooks:install` sets **local** `core.hooksPath=.githooks`, makes the tracked hooks
+executable and refuses to overwrite another hook setup. Fresh clones need explicit install.
+Use Node 26+, including GUI/editor commits.
 
 Chromium must be installed explicitly before rendering-related commits; the hook
 does not download browsers or modify global tooling during a commit.
+
+The pre-commit hook:
 
 1. Rejects staged hidden/generated/retired career additions.
 2. Exports the index to a disposable directory with `git checkout-index`.
@@ -115,6 +117,25 @@ does not download browsers or modify global tooling during a commit.
 6. Rejects an index changed during validation. Evidence is retained by tree ID
    under `.playwright-mcp/precommit/<tree>/`, including index-source.json.
 
+Git then runs `.githooks/commit-msg`. The versioned
+`design-system/commit-contract.json` owns the approved Gitmoji/type pairs and
+syntax: `<gitmoji> <type>(<scope>): <summary>`. Scope is required and uses lowercase
+kebab-case (slash-separated component paths are supported); the English summary
+starts with a lowercase letter. In particular, `⬆️ dep(...)`, `📝 article(...)`,
+`🔨 build(...)` and `🚀 release(...)` are supported. `🚀 ci(...)` is not valid.
+The local commit helper follows the same policy. Existing history is not rewritten.
+
+Only a Git-style merge subject during an actual `MERGE_HEAD` state gets a merge
+exception. A normal commit beginning with `Merge` does not bypass the policy.
+The hook checks syntax, not author identity: `🤖 ci(...)` is reserved by policy for
+automation but is not proof that an authenticated bot authored the commit.
+
+The bootstrap pins both hooks, the validator and the policy JSON to staged bytes.
+Stage them coherently when adopting/updating this feature; an unstaged hook or
+policy cannot silently validate a different index. Installation changes local
+`core.hooksPath` only. GitHub UI commits and unconfigured clones do not run local
+hooks; CI's `test:design` checks the implementation, not every remote subject.
+
 Rendering inputs include source, content, locales, plugins, templates, design
 contracts, scripts, manifests and workflows. Documentation-only commits still
 receive static checks without repeating the browser matrix. There is no CLI skip
@@ -126,6 +147,10 @@ copies current non-ignored source to a disposable repository and exercises an
 actual Git commit/hook there. It never stages or commits this checkout; ignored
 evidence is copied to `.playwright-mcp/hook-integration/`. Unit tests separately
 prove partial-stage, unstaged/untracked isolation and negative/version cases.
+The fixture runs the full staged build once, then rejects an invalid empty commit
+without repeating that build. Fast native tests also verify accepted/rejected
+subjects, unchanged HEAD/index on rejection, real merge handling, paths containing
+spaces, both hook permissions and refusal to overwrite another hooksPath.
 
 `hooks:check` can safely autofix/restage fully staged files just like the commit
 hook; it is not a read-only status command. For first adoption, stage tooling,

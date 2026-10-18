@@ -164,9 +164,18 @@ test('hook prevents generated/private index additions and rendering changes cann
 });
 test('native bootstrap cannot silently use an unstaged hook driver',async t=>{
   const {root,write}=await fixture(t);
-  for(const file of ['.githooks/pre-commit','scripts/design-system/precommit.mjs']) await write(file,await fs.readFile(path.join(project,file)));
-  git(root,'add','.githooks/pre-commit','scripts/design-system/precommit.mjs');
+  const bootstrap=['.githooks/pre-commit','.githooks/commit-msg','scripts/validate-commit-message.mjs','design-system/commit-contract.json','scripts/design-system/precommit.mjs'];
+  for(const file of bootstrap) await write(file,await fs.readFile(path.join(project,file)));
+  git(root,'add',...bootstrap);
   await assertBootstrapMatchesIndex(root);
   await fs.appendFile(path.join(root,'scripts/design-system/precommit.mjs'),'\n// Unstaged driver change\n');
+  await assert.rejects(assertBootstrapMatchesIndex(root),/Unstaged hook bootstrap/);
+});
+test('native bootstrap also pins the staged commit policy',async t=>{
+  const {root,write}=await fixture(t);
+  const bootstrap=['.githooks/pre-commit','.githooks/commit-msg','scripts/validate-commit-message.mjs','design-system/commit-contract.json','scripts/design-system/precommit.mjs'];
+  for(const file of bootstrap) await write(file,await fs.readFile(path.join(project,file)));
+  git(root,'add',...bootstrap);
+  await fs.appendFile(path.join(root,'design-system/commit-contract.json'),'\n');
   await assert.rejects(assertBootstrapMatchesIndex(root),/Unstaged hook bootstrap/);
 });

@@ -13,7 +13,7 @@ export const affectsRendering = file => /^(?:src\/|i18n\/|content\/|plugins\/|de
 export async function assertBootstrapMatchesIndex(root) {
   // Git starts a working-tree hook. Reject accidental unstaged changes to that
   // bootstrap/driver rather than pretending they were part of the checked tree.
-  for (const file of ['.githooks/pre-commit', 'scripts/design-system/precommit.mjs']) {
+  for (const file of ['.githooks/pre-commit', '.githooks/commit-msg', 'scripts/validate-commit-message.mjs', 'design-system/commit-contract.json', 'scripts/design-system/precommit.mjs']) {
     let staged;
     try {staged = git(root, ['show', `:${file}`], {stdio:['ignore','pipe','pipe']});}
     catch {throw new Error(`Stage the design gate coherently before committing: missing ${file} in the index`);}
