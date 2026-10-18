@@ -1,5 +1,9 @@
 # Independent review and verification
 
+<!-- TODO: Once the remaining guidance is resolved or generalized, absorb its
+     enduring content into current maintenance documentation and remove this
+     historical record. Preserve verification evidence through Git and the PR. -->
+
 > Historical record: public Resume/CV rendering and export behavior described below
 > was retired by the About access-boundary refactor. See
 > [current About behavior](../maintenance/about-access.md). This record is not a current public export guide.

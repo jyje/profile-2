@@ -1,5 +1,9 @@
 # About public-access refactor
 
+<!-- TODO: Once these issues are resolved or the guidance is generalized, absorb
+     the enduring content into the relevant maintenance documentation and remove
+     this temporary record. Keep historical evidence in Git and the PR. -->
+
 Date: 2026-10-18. Tracking: [issue #37](https://github.com/jyje/profile-2/issues/37).
 
 ## Authorized scope
