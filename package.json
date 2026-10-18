@@ -3,6 +3,8 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
+    "postinstall": "node scripts/patch-braces.cjs",
+    "test:security": "node --test scripts/test-security-dependencies.mjs",
     "docusaurus": "docusaurus",
     "start": "node scripts/development-command.mjs exec -- docusaurus start",
     "build": "node scripts/build-site.mjs",
@@ -81,6 +83,10 @@
     "typescript": "~6.0.2"
   },
   "overrides": {
+    "@docusaurus/core": {
+      "tinypool": "2.1.2"
+    },
+    "postcss-selector-parser": "7.1.6",
     "@module-federation/dts-plugin": {
       "adm-zip": "0.6.1"
     },
