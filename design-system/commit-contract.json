@@ -1,0 +1,25 @@
+{
+  "version": 1,
+  "gitmojiTypes": {
+    "🎉": "init",
+    "🔧": "chore",
+    "🛠️": "fix",
+    "✨": "feat",
+    "✏️": "typo",
+    "🐛": "bug",
+    "⬆️": "dep",
+    "🔐": "security",
+    "🗑️": "remove",
+    "♻️": "refactor",
+    "📄": "docs",
+    "📝": "article",
+    "🎨": "style",
+    "⚡": "perf",
+    "✅": "test",
+    "🔨": "build",
+    "🚀": "release",
+    "🤖": "ci"
+  },
+  "scopePattern": "[a-z0-9]+(?:-[a-z0-9]+)*(?:/[a-z0-9]+(?:-[a-z0-9]+)*)*",
+  "summaryPattern": "[a-z].*"
+}

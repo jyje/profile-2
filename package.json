@@ -28,7 +28,7 @@
     "content:new": "node scripts/content-new.mjs",
     "hooks:install": "node scripts/design-system/install-hook.mjs",
     "hooks:check": "node scripts/design-system/precommit.mjs",
-    "test:design": "node --test scripts/test-design-system.mjs",
+    "test:design": "node --test scripts/test-design-system.mjs scripts/test-commit-message.mjs",
     "test:hook:integration": "node scripts/design-system/verify-hook-fixture.mjs",
     "test:content": "node --test scripts/test-content-network.mjs scripts/test-about-access.mjs scripts/test-publication.mjs scripts/test-content-last-update.mjs scripts/test-document-graph.mjs",
     "test:publication": "node scripts/verify-publication.mjs",
