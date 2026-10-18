@@ -1,0 +1,10 @@
+# Only canonical authored content is handled by content:format.
+node_modules/
+build/
+.dev-all/
+.content-build/
+src/generated/
+i18n/en/docusaurus-plugin-content-blog/
+i18n/en/docusaurus-plugin-content-docs/
+hidden/
+.playwright-mcp/
