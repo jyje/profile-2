@@ -59,14 +59,18 @@ test('source dates survive staging, aliases, locale fallback and repeat builds w
   const ko = 'content/ko/wiki/shared.md';
   const en = 'content/en/wiki/shared.md';
   f.write(ko, '---\ntitle: 한국어\n---\nBody');
-  f.write('content/ko/wiki/fallback.md', '# Fallback');
-  f.write('content/ko/wiki/_guide/test.md', '# Guide');
+  f.write('content/ko/wiki/fallback.md', '# 대체\n\nKorean body');
+  f.write('content/en/wiki/fallback.md', '# Fallback');
+  f.write('content/ko/wiki/_guide/test.md', '# 가이드\n\nGuide');
+  f.write('content/en/wiki/_guide/test.md', '# Guide\n\nGuide');
   f.write('content/ko/blog/post.mdx', '---\ntitle: Blog\n---\n<Component />');
+  f.write('content/en/blog/post.mdx', '---\ntitle: Blog\n---\n<Component />');
   f.commit(initial);
   f.write(en, '---\ntitle: English\n---\nEnglish body');
   f.commit(updated);
   const original = fs.readFileSync(path.join(f.root, ko), 'utf8');
   f.write('content/ko/wiki/new.md', '# Uncommitted');
+  f.write('content/en/wiki/new.md', '# Uncommitted\n\nEnglish body');
   f.write(ko, `${original}\nUncommitted edit`);
   prepareContent(f.root, 'development');
   const read = file => fs.readFileSync(path.join(f.root, '.content-build', file), 'utf8');
@@ -74,11 +78,13 @@ test('source dates survive staging, aliases, locale fallback and repeat builds w
     assert.equal(frontmatter(read(file)).last_update.date, initial);
   }
   assert.equal(frontmatter(read('en/wiki/shared.md')).last_update.date, updated);
-  assert.equal(read('ko/wiki/new.md'), '# Uncommitted');
+  assert.match(read('ko/wiki/new.md'), /한국어 번역 준비 중[\s\S]*English body$/);
+  assert.equal(frontmatter(read('ko/wiki/new.md')).last_update, undefined);
   const enRoot = path.join(f.root, '.content-build/en/wiki');
   mergeKoreanFallbackDocs(path.join(f.root, '.content-build/ko/wiki'), enRoot);
   assert.equal(frontmatter(read('en/wiki/fallback.md')).last_update.date, initial);
-  assert.match(read('en/wiki/fallback.md'), /English version unavailable/);
+  assert.equal(frontmatter(read('en/wiki/fallback.md')).title, 'Fallback');
+  assert.match(read('en/wiki/fallback.md'), /English version unavailable[\s\S]*Korean body/);
   assert.equal(frontmatter(read('en/wiki/shared.md')).last_update.date, updated);
   const staged = read('ko/wiki/shared.md');
   prepareContent(f.root, 'development');

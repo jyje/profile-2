@@ -3,12 +3,15 @@ import path from 'node:path';
 import {contentMode, ignorePatterns, isDocIgnored, publicationContext} from '../plugins/content-visibility.cjs';
 import {createLastUpdateReader, withLastUpdate} from './content-last-update.mjs';
 import {withDevelopmentNotice} from './development-notice.mjs';
+import {planLocaleFallbacks, withLocaleFallback, writeFallbackManifest} from './locale-fallback.mjs';
 
 // Stage authored content without mutating it. Underscored development sections get
 // their old public-shaped paths only in the local development build.
 export function prepareContent(root, mode = contentMode()) {
   const patterns = ignorePatterns(root);
   const readDate = createLastUpdateReader(root);
+  const fallbacks = planLocaleFallbacks(root);
+  const borrowed = new Map();
   const output = path.join(root, '.content-build');
   fs.rmSync(output, {recursive: true, force: true});
   for (const locale of ['ko', 'en']) {
@@ -24,12 +27,20 @@ export function prepareContent(root, mode = contentMode()) {
           const ignored = isDocIgnored(relative, patterns);
           if (entry.name.startsWith('.') || (ignored && mode === 'public')) continue;
           const development = top && entry.isDirectory() && ignored && entry.name.startsWith('_');
-          const destination = path.join(to, development ? entry.name.slice(1) : entry.name);
+          const authored = path.join(from, entry.name);
+          const fallback = fallbacks.get(authored);
+          // A borrowed body keeps its own extension so .md stays CommonMark and .mdx stays MDX.
+          const name = fallback ? entry.name.replace(/\.mdx?$/, path.extname(fallback.file)) : entry.name;
+          const destination = path.join(to, development ? name.slice(1) : name);
           if (fs.existsSync(destination)) throw new Error(`Development content alias collision: ${relative}`);
-          if (entry.isDirectory()) copy(path.join(from, entry.name), destination);
+          if (entry.isDirectory()) copy(authored, destination);
           else if (/\.mdx?$/.test(entry.name)) {
-            const authored = path.join(from, entry.name);
-            const markdown = withLastUpdate(fs.readFileSync(authored, 'utf8'), authored, readDate);
+            const text = fs.readFileSync(authored, 'utf8');
+            // Borrowed bodies show the date of the file whose text is displayed.
+            const markdown = fallback
+              ? withLastUpdate(withLocaleFallback(text, authored, fallback, locale), fallback.file, readDate)
+              : withLastUpdate(text, authored, readDate);
+            if (fallback) borrowed.set(`content/${path.relative(output, destination).replaceAll('\\', '/')}`, fallback.locale);
             fs.writeFileSync(destination, mode === 'development' && ignored ? withDevelopmentNotice(markdown, locale) : markdown);
           } else fs.copyFileSync(path.join(from, entry.name), destination);
         }
@@ -38,5 +49,6 @@ export function prepareContent(root, mode = contentMode()) {
     }
   }
   fs.mkdirSync(output, {recursive: true});
+  writeFallbackManifest(output, borrowed);
   fs.writeFileSync(path.join(output, 'publication-context.json'), JSON.stringify(publicationContext(root, mode)));
 }

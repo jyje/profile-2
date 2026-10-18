@@ -71,6 +71,7 @@ test('project base, English fallback, unlisted and draft exclusions', async t =>
   const f = fixture(t, 'en', '/profile-2/en/');
   f.write('i18n/en/docusaurus-plugin-content-docs/current/a.md', '[post](/blog/post)');
   f.write('content/en/blog/post.md', '[wiki](/profile-2/en/wiki/a)');
+  f.write('.content-build/locale-fallbacks.json', JSON.stringify({'content/en/wiki/a.md': 'ko'}));
   const docs = [f.metadata('i18n/en/docusaurus-plugin-content-docs/current/a.md', '/profile-2/en/wiki/a')];
   const posts = [f.metadata('content/en/blog/post.md', '/profile-2/en/blog/post'), f.metadata('missing.md', '/hidden', {unlisted: true}), f.metadata('missing.md', '/draft', {frontMatter: {draft: true}})];
   const result = await buildNetwork(f.context, f.content(docs, posts));
@@ -99,19 +100,18 @@ test('relative route links fail before slash-dependent navigation can ship', asy
   )), /ambiguous with trailing slashes/);
 });
 
-test('fallback supports MDX, preserves front matter and authored translations', t => {
+test('Korean wiki assets are mirrored, while documents without English files fail', t => {
   const f = fixture(t);
-  f.write('ko/page.mdx', '---\ntitle: Test\n---\nimport A from "./a";\n\n# 한국어');
+  f.write('ko/assets/diagram.png', 'png'); f.write('en/assets/shared.png', 'english');
+  f.write('ko/assets/shared.png', 'korean');
   f.write('ko/translated.md', '# 한국어'); f.write('en/translated.md', '# English');
   f.write('ko/switched.mdx', '# 한국어'); f.write('en/switched.md', '# English extension switch');
   const ko = path.join(f.context.siteDir, 'ko'); const en = path.join(f.context.siteDir, 'en');
   mergeKoreanFallbackDocs(ko, en);
-  const result = fs.readFileSync(path.join(en, 'page.mdx'), 'utf8');
-  assert.ok(result.startsWith('---\ntitle: Test\n---'));
-  assert.match(result, /English version unavailable/);
-  assert.match(result, /import A/);
+  assert.equal(fs.readFileSync(path.join(en, 'assets/diagram.png'), 'utf8'), 'png');
+  assert.equal(fs.readFileSync(path.join(en, 'assets/shared.png'), 'utf8'), 'english');
   assert.equal(fs.readFileSync(path.join(en, 'translated.md'), 'utf8'), '# English');
   assert.equal(fs.existsSync(path.join(en, 'switched.mdx')), false);
-  mergeKoreanFallbackDocs(ko, en);
-  assert.equal(fs.readFileSync(path.join(en, 'page.mdx'), 'utf8'), result);
+  f.write('ko/missing.mdx', '# 한국어');
+  assert.throws(() => mergeKoreanFallbackDocs(ko, en), /Missing English document/);
 });

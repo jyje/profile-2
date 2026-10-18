@@ -1,7 +1,12 @@
 const fs = require('node:fs');
 const path = require('node:path');
 const yaml = require('js-yaml');
-const {authorFile} = require('./content-visibility.cjs');
+
+// Written by scripts/locale-fallback.mjs: staged path -> locale whose body it shows.
+function readFallbackManifest(siteDir) {
+  const file = path.join(siteDir, '.content-build/locale-fallbacks.json');
+  return fs.existsSync(file) ? JSON.parse(fs.readFileSync(file, 'utf8')) : {};
+}
 
 const cleanPath = value => {
   try { return decodeURI(value).replace(/\/$/, '') || '/'; }
@@ -46,11 +51,12 @@ async function computeNetwork(context, allContent) {
   const {siteDir, siteConfig, i18n} = context;
   const locale = i18n.currentLocale;
   const base = siteConfig.baseUrl;
+  const fallbacks = readFallbackManifest(siteDir);
   const registry = yaml.load(fs.readFileSync(path.join(siteDir, 'data/tags.yml'), 'utf8')).tags;
   const entries = metadataEntries(allContent).map(({kind, metadata: m}) => {
     const source = m.source.replace(/^@site\//, '');
     const authored = authorSource(source);
-    const fallback = locale === 'en' && kind === 'wiki' && !fs.existsSync(path.join(siteDir, authorFile(authored, siteDir)));
+    const fallback = locale === 'en' && fallbacks[authored] === 'ko';
     const tags = [...new Set((m.tags ?? []).map(tagSlug).filter(Boolean))];
     for (const tag of tags) {
       if (!registry[tag]?.label?.[locale]) throw new Error(`Unregistered ${locale} tag '${tag}' in ${source}`);
