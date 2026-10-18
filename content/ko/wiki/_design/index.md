@@ -1,6 +1,8 @@
 ---
 title: "🛠️ 설계"
 description: 이력서와 포트폴리오 페이지의 설계 기록입니다.
+profile_template: {kind: wiki, version: 1}
+profile_format: 1
 ---
 
 사이트의 이력서와 포트폴리오 페이지에서 사용하는 정보 구조와 시각적 규칙을 정리합니다.

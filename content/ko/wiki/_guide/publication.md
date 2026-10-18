@@ -2,6 +2,8 @@
 title: "🧭 개발 문서와 공개 배포"
 sidebar_position: 2
 tags: [guide]
+profile_template: {kind: wiki, version: 1}
+profile_format: 1
 ---
 
 ## 작성 위치

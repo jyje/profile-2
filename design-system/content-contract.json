@@ -1,0 +1,10 @@
+{
+  "version": 1,
+  "formatter": {"version": 1, "engine": "prettier", "engineVersion": "3.9.10", "config": "design-system/format-v1.json"},
+  "blocks": {"version": 1, "schema": "plugins/content-templates/schemas/v1.cjs"},
+  "templates": {
+    "blog": {"version": 1, "file": "content/_templates/v1/{locale}/blog.md"},
+    "wiki": {"version": 1, "file": "content/_templates/v1/{locale}/wiki.md"},
+    "page": {"version": 1, "file": "content/_templates/v1/{locale}/page.mdx"}
+  }
+}

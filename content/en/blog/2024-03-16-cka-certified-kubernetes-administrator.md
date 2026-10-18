@@ -9,6 +9,8 @@ tags:
   - kubernetes
   - linux-foundation
 image: ./assets/cncf-certification-cka.png
+profile_template: {kind: blog, version: 1}
+profile_format: 1
 ---
 
 ## 1. About the Certification
@@ -23,9 +25,10 @@ The CKA exam is a hands-on, proctored, performance-based test that requires solv
 
 ![CKA Certification](./assets/925c52cf-4e04-4992-82b4-faa372fcb139.svg)
 
-*My CKA certification 2024. Issued on March 16, 2024. Expires on March 15, 2027. You can verify my certification [here](https://www.credly.com/badges/d944bde7-222a-4ce5-b4e6-4e6c84df0ef8).*
+_My CKA certification 2024. Issued on March 16, 2024. Expires on March 15, 2027. You can verify my certification [here](https://www.credly.com/badges/d944bde7-222a-4ce5-b4e6-4e6c84df0ef8)._
 
 <!-- Overview -->
+
 I took the CKA exam on March 15, 2024, and passed it successfully. The exam was challenging, but I was able to pass it on my first attempt. I prepared for the exam by studying the official Kubernetes documentation, taking online courses, and practicing with Kubernetes clusters.
 
 To aid my preparation, I enrolled in the [Certified Kubernetes Administrator (CKA) with Practice Tests](https://www.udemy.com/course/certified-kubernetes-administrator-with-practice-tests) course on Udemy, which helped me understand the core concepts of Kubernetes. I also utilized the [KodeKloud](https://learn.kodekloud.com/user/courses/udemy-labs-certified-kubernetes-administrator-with-practice-tests) platform to practice with Kubernetes clusters and complete hands-on labs. Below is my course completion certificate from KodeKloud:

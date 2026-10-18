@@ -25,7 +25,7 @@ test('base-path switches invalidate only generated caches', t => {
 test('authored locale changes rebuild without generated mirror loops', () => {
   for (const file of ['en/docusaurus-plugin-content-pages/about.mdx', 'ko/docusaurus-theme-classic/navbar.json', 'en/code.json']) assert.ok(shouldRebuild('i18n', file));
   for (const file of ['en/docusaurus-plugin-content-blog/a.md', 'en/docusaurus-plugin-content-docs/current/a.mdx']) assert.equal(shouldRebuild('i18n', file), false);
-  assert.equal(shouldRebuild('src', 'generated/resume.ko.json'), false);
+  assert.equal(shouldRebuild('src', 'generated/tags.json'), false);
   assert.equal(shouldRebuild('content', '.obsidian/workspace.json'), false);
 });
 

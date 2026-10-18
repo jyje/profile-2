@@ -1,5 +1,5 @@
+@import './design-tokens.css';
 @import './about-page.css';
-@import './career-print.css';
 
 /* App pages use the complete host surface; document pages keep their reading width.
  * wrapperClassName is Docusaurus MDX front matter, so no theme fork is needed.
@@ -165,7 +165,7 @@
     flex-grow: 1;
     min-height: 0;
     overflow-y: auto;
-    padding: 0.5rem;
+    padding: var(--site-space-2);
   }
 
   .theme-doc-sidebar-container + main {
@@ -272,7 +272,7 @@
   flex-wrap: wrap;
   align-items: center;
   justify-content: center;
-  gap: 0.25rem 1rem;
+  gap: var(--site-space-1) var(--site-space-4);
 }
 
 .footer__link-item {

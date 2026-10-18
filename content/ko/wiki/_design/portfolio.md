@@ -1,6 +1,8 @@
 ---
 sidebar_position: 2
 title: "🛠️ 포트폴리오 설계"
+profile_template: {kind: wiki, version: 1}
+profile_format: 1
 ---
 
 # 🛠️ 포트폴리오 설계
@@ -183,7 +185,7 @@ It verifies the same three invariants as Resume (no wrapped rows, level-3 rows a
 Project's reference `.resume-role-row`, level-4 rows indented deeper than level-3), across
 every `.resume-meta-row` on the page — including Portfolio's `Work` section, which is why the
 `work.html` regression described in the changelog below was caught. It does not check label
-*language correctness* (e.g. an English word appearing on the Korean page reads as "no
+_language correctness_ (e.g. an English word appearing on the Korean page reads as "no
 wrapping issue" to the lint, since layout is unaffected) — that must still be checked
 visually or with a dedicated content assertion. In two-column print mode it verifies a
 successful, non-empty card render but permits natural wrapping because each column is
@@ -192,11 +194,11 @@ single-column print.
 
 ## Known limitations / alternatives considered
 
-- `resume-lint` does not assert label *language* correctness (see previous section); it only
+- `resume-lint` does not assert label _language_ correctness (see previous section); it only
   measures layout. A missing `labels:` block silently renders English defaults on the Korean
   page without failing the lint.
 - `Projects → roles.items` (used heavily in Portfolio) is still an unstyled `<ul
-  class="work">` list, not promoted to the level-3/level-4 `.resume-meta-row` +
+class="work">` list, not promoted to the level-3/level-4 `.resume-meta-row` +
   `.resume-detail-list` contract that `Work`'s legacy shape now uses. Because Portfolio
   relies on it more than Resume, promoting it would benefit Portfolio the most if undertaken.
 - We considered giving Portfolio a denser, portfolio-specific card variant (e.g. smaller type

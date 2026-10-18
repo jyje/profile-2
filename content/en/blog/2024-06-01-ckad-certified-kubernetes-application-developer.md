@@ -9,6 +9,8 @@ tags:
   - kubernetes
   - linux-foundation
 image: ./assets/cncf-certification-ckad.png
+profile_template: {kind: blog, version: 1}
+profile_format: 1
 ---
 
 ## 1. About the Certification
@@ -23,7 +25,7 @@ Similar to the CKA exam, the CKAD exam is a hands-on, proctored, performance-bas
 
 ![CKAD Certification](./assets/87b974ec-14cc-4f82-b252-c71deef28ee8.svg)
 
-*My CKAD certification 2024. Issued on June 1, 2024. Expires on May 31, 2026. You can verify my certification [here](https://www.credly.com/badges/9e072a3a-57d0-403e-8bef-5831d618675c).*
+_My CKAD certification 2024. Issued on June 1, 2024. Expires on May 31, 2026. You can verify my certification [here](https://www.credly.com/badges/9e072a3a-57d0-403e-8bef-5831d618675c)._
 
 I took the CKAD exam on May 31, 2024, and passed it successfully. The exam was challenging, and I achieved a score that met the passing requirements. I prepared for the exam by studying the official Kubernetes documentation, taking online courses, and practicing with Kubernetes clusters in KodeKloud.
 

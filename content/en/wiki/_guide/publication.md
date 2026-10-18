@@ -2,6 +2,8 @@
 title: "🧭 Development documents and public deployment"
 sidebar_position: 2
 tags: [guide]
+profile_template: {kind: wiki, version: 1}
+profile_format: 1
 ---
 
 ## Authoring locations

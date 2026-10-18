@@ -2,6 +2,8 @@
 title: "🏠 사이트"
 description: 소프트웨어 엔지니어 전제영 입니다. 저의 지식을 정리한 문서들과 포트폴리오를 소개합니다.
 tags: []
+profile_template: {kind: wiki, version: 1}
+profile_format: 1
 ---
 
 <br>
@@ -22,8 +24,10 @@ tags: []
 여러분에게 도움이 되길 바랍니다. 좋은 하루 되세요! 😊
 
 ### 📑 정보
+
 - 이 사이트의 글은 기본적으로 [MIT license](https://github.com/jyje/blog/blob/main/LICENSE.txt)를 준수하고 있습니다. 필요한 경우 별도의 크레딧을 표기할 예정입니다.
 
 ---
+
 > [!info]
 > 🌏 If you are not familiar with Korean, please visit [jyje.online](https://jyje.online) for more information. Or, you can use browser translation tools to read my article.

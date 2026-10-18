@@ -8,6 +8,8 @@ tags:
   - certifications
   - github
 image: ./assets/440abbf4-b6db-48ab-87cf-77d2e3cc616b.png
+profile_template: {kind: blog, version: 1}
+profile_format: 1
 ---
 
 ## 1. 자격증 소개
@@ -27,7 +29,7 @@ GitHub Foundations 자격증은 기본 Git 작업부터 CodeSpaces 같은 엔터
 
 ![GitHub Foundations 자격증](./assets/587c064f-166f-4a37-8cd6-ac21c080b40c.png)
 
-*GitHub Foundations 자격증 2024. 2024년 11월 19일 발급. 2027년 11월 18일 만료. 자격증 확인은 [여기](https://www.credly.com/badges/876fa6b3-0b27-4ddf-bbb3-a9d853918566)에서 할 수 있습니다.*
+_GitHub Foundations 자격증 2024. 2024년 11월 19일 발급. 2027년 11월 18일 만료. 자격증 확인은 [여기](https://www.credly.com/badges/876fa6b3-0b27-4ddf-bbb3-a9d853918566)에서 할 수 있습니다._
 
 주로 두 가지 자료를 활용해 시험을 준비했습니다:
 
@@ -62,6 +64,7 @@ GitHub Foundations 자격증은 기본 Git 작업부터 CodeSpaces 같은 엔터
 GitHub Foundations 자격증은 GitHub 역량을 검증하고 싶은 개발자에게 좋은 출발점입니다. 경험 많은 사용자에게는 기초적으로 느껴질 수도 있지만, GitHub Copilot, CodeSpaces, 엔터프라이즈 협업 도구처럼 많은 개발자가 놓치기 쉬운 GitHub의 최신 기능들을 폭넓게 다룹니다.
 
 이 자격증을 준비하는 분들에게 권합니다:
+
 - Microsoft Learn 무료 리소스를 최대한 활용하세요
 - GitHub Skills 핸즈온 랩으로 실습하세요
 - 엔터프라이즈 기능과 팀 관리 개념에 집중하세요

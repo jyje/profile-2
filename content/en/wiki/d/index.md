@@ -6,6 +6,8 @@ tags:
   - kubernetes
   - ai
   - cv
+profile_template: {kind: wiki, version: 1}
+profile_format: 1
 ---
 
 This section collects technical notes and project knowledge, including cloud-native infrastructure, AI, and computer vision.

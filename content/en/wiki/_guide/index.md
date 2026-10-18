@@ -1,6 +1,8 @@
 ---
 title: "🧭 Guides"
 description: Guidance for writing and maintaining the wiki and blog.
+profile_template: {kind: wiki, version: 1}
+profile_format: 1
 ---
 
 Use these guides to write and maintain the wiki and blog consistently.

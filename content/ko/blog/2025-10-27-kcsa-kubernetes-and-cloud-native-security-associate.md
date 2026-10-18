@@ -10,6 +10,8 @@ tags:
   - linux-foundation
   - security
 image: ./assets/cncf-certification-kcsa.png
+profile_template: {kind: blog, version: 1}
+profile_format: 1
 ---
 
 ## 1. 자격증 소개
@@ -32,11 +34,12 @@ CKS(Certified Kubernetes Security Specialist)처럼 실제로 클러스터 보�
 
 ![KCSA 자격증](./assets/8f52ead9-2648-4bac-a881-ef8e8bf866dd.png)
 
-*KCSA 자격증 2025. 2025년 10월 27일 발급. 2027년 10월 27일 만료. 자격증 확인은 [여기](https://www.credly.com/badges/1206ad1c-e348-4328-934d-72e44ca434be)에서 할 수 있습니다.*
+_KCSA 자격증 2025. 2025년 10월 27일 발급. 2027년 10월 27일 만료. 자격증 확인은 [여기](https://www.credly.com/badges/1206ad1c-e348-4328-934d-72e44ca434be)에서 할 수 있습니다._
 
 2025년 10월 27일에 KCSA 시험을 보고 합격했습니다. 이미 CKA와 CKAD를 취득한 상태였는데, KCSA는 그동안 실무에서 접했던 보안 관련 지식을 이론적으로 정리해볼 수 있는 좋은 기회였습니다.
 
 시험 형식은 생각보다 단순합니다:
+
 - 60문제 전부 4지선다형 객관식 (터미널 작업 없음)
 - 실제 구현보다는 보안 개념, 원칙, 모범 사례 위주
 - Kubernetes뿐 아니라 클라우드 네이티브 보안 전반을 다룸
@@ -50,6 +53,7 @@ CKS(Certified Kubernetes Security Specialist)처럼 실제로 클러스터 보�
 직접 시험을 치르면서 느낀 점들을 정리해봤습니다.
 
 **꼭 챙겨야 할 리소스:**
+
 - **공식 CNCF 커리큘럼**: 시험 영역별 비중이 명확하게 나와 있으니 반드시 확인하세요
 - **CNCF 보안 랜드스케이프**: [CNCF Landscape](https://landscape.cncf.io/)에서 보안 관련 프로젝트를 훑어보세요. 각 보안 도구가 무슨 역할을 하는지, Graduated/Incubating/Sandbox 중 어디에 속하는지 파악해두면 좋습니다
 - **CNCF 블로그**: [CNCF 블로그](https://www.cncf.io/blog/)는 정기적으로 확인하는 게 좋아요. 최신 보안 업데이트나 새로운 프로젝트 발표가 시험에 출제되기도 합니다
@@ -57,6 +61,7 @@ CKS(Certified Kubernetes Security Specialist)처럼 실제로 클러스터 보�
 - **Kubernetes 보안 문서**: 공식 문서에서 Pod 보안, 네트워크 정책, RBAC, 시크릿 관리 부분은 꼭 읽어보세요
 
 **학습 전략:**
+
 - CKS가 있거나 보안 관련 실무 경험이 있다면 준비 시간을 단축할 수 있습니다
 - "어떻게 구성하는가"보다 "왜 이렇게 하는가", "이게 뭔가"에 집중하세요. KCSA는 보안 개념 이해를 묻는 시험입니다
 - 모의 시험을 꼭 풀어보세요. 실제 시험에는 핸즈온이 없고 객관식뿐이라 형식에 익숙해지는 게 중요합니다
@@ -71,6 +76,7 @@ KCSA는 Kubernetes 보안 시험이 아니라 클라우드 네이티브 보안 �
 KCSA는 클라우드 네이티브 보안의 큰 그림을 잡기에 좋은 자격증입니다. 저처럼 CKA/CKAD/CKS를 먼저 딴 경우에는 흩어져 있던 보안 지식을 정리하는 계기가 되고, 처음 시작하는 분들에게는 체계적인 보안 학습 로드맵이 되어줍니다.
 
 KCSA의 특징을 정리하면:
+
 - **입문 수준**: 클라우드 네이티브 보안을 처음 접해도 도전할 수 있음
 - **넓은 범위**: Kubernetes만이 아니라 클라우드 네이티브 보안 생태계 전체를 다룸
 - **이론 중심**: 보안 개념과 원칙에 대한 이해를 평가

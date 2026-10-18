@@ -3,3 +3,5 @@
 content/*/wiki/_guide/
 content/*/wiki/_design/
 content/*/blog/_internal/
+# Authoring scaffolds are outside locale source roots and never staged as pages.
+content/_templates/

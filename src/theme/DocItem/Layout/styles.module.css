@@ -1,0 +1,11 @@
+/* Let the navigation use the entire sidebar-excluded pane. Restore the native
+ * reading container around OriginalLayout, so prose and TOC keep their widths.
+ */
+@layer docusaurus.infima {
+  :global(main:has(> .container [data-breadcrumb-frame]) > .container) {
+    max-width: none !important;
+    padding: 0 !important;
+  }
+}
+
+.reading { padding-inline: var(--ifm-spacing-horizontal); }

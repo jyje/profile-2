@@ -12,6 +12,8 @@ tags:
   - llm
   - linkedin
 image: ./assets/aa741efb-1c90-4af0-821c-02bc78fd3dad.png
+profile_template: {kind: blog, version: 1}
+profile_format: 1
 ---
 
 ## 1. About the AI/MLOps Engineer Role

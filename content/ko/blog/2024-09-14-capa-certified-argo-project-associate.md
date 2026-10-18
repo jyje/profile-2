@@ -9,6 +9,8 @@ tags:
   - kubernetes
   - linux-foundation
 image: ./assets/cncf-certification-capa.png
+profile_template: {kind: blog, version: 1}
+profile_format: 1
 ---
 
 지난 주말에 합격한 [CAPA (Certified Argo Project Associate)](https://training.linuxfoundation.org/certification/certified-argo-project-associate-capa/) 자격증 취득 후기를 공유드립니다. CAPA는 2024년 상반기에 신설된 따끈따끈한 자격증으로, [Argo 프로젝트](https://argoproj.github.io/)를 다루는 역량을 검증하는 Associate 수준의 시험입니다. 이 글은 Argo 프로젝트와 CAPA 자격증에 대한 간단한 소개, 그리고 제 취득 과정에 대한 기록입니다. CAPA에 도전하시거나 관심이 있는 분들에게 도움이 되기를 바랍니다 🚀
@@ -19,14 +21,20 @@ image: ./assets/cncf-certification-capa.png
 
 ### Argo 프로젝트란?
 
-<figure class="figure" style="float: right; width: 330px; max-width: 68%; margin: 0.25rem 1.0rem">
-  <img src="/img/legacy/capa-octopus-mascot.jpg" alt="공식 마스코트는 아니에요 — 닮은꼴인 문어 인형 사진입니다" loading="lazy" style="width: 100%; height: auto; border-radius: 8px; margin: 0;" />
-  <figcaption class="figcaption" style="margin-top: 0.5rem; font-size: 0.75em; color: var(--gray);">공식 마스코트는 아니에요 — 문어(혹은 쭈꾸미)를 닮은 인형 사진이에요.<br/>Photo by <a href="https://unsplash.com/@cosiela?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash">Cosiela Borta</a> on <a href="https://unsplash.com/photos/a-pink-octopus-stuffed-animal-sitting-on-top-of-a-table-S3VKHlvBfMA?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash">Unsplash</a></figcaption>
-</figure>
+```media-figure
+- image: /img/legacy/capa-octopus-mascot.jpg
+  alt: 공식 마스코트는 아니에요 - 닮은꼴인 문어 인형 사진입니다
+  caption: 공식 마스코트는 아니에요 - 문어(혹은 쭈꾸미)를 닮은 인형 사진이에요.
+  credit_label: Photo by
+  credit_name: Cosiela Borta
+  credit_url: https://unsplash.com/@cosiela?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash
+  source_label: on
+  source_name: Unsplash
+  source_url: https://unsplash.com/photos/a-pink-octopus-stuffed-animal-sitting-on-top-of-a-table-S3VKHlvBfMA?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash
+```
 
 [Argo 프로젝트](https://argoproj.github.io/)는 쿠버네티스 클러스터와 결합해 클러스터를 하나의 DevOps 플랫폼처럼 동작하게 만드는 도구 모음으로, 쿠버네티스 활용 사례가 늘어나면서 점점 더 주목받고 있습니다. 4개의 구성 요소로 이루어져 있습니다:
 
-<div style="clear: both;"></div>
 - **Argo Workflows**: ML 파이프라인, CI/CD 파이프라인 등 범용 워크플로우를 위한 오케스트레이션 엔진
 - **Argo CD**: 선언형 지속적 배포 도구 (4개 도구 중 가장 유명합니다)
 - **Argo Rollouts**: 다양한 배포 전략을 지원하는 업데이트 관리 도구
@@ -50,7 +58,7 @@ CKA, CKAD, CKS 같은 쿠버네티스 자격증에 응시해보신 분들에게�
 
 ![CAPA 자격증](./assets/capa-certificate.png)
 
-*CAPA 자격증 2024. 2024년 9월 14일 발급, 2026년 9월 15일 만료. 자격증 확인은 [여기](https://www.credly.com/badges/ee42c2c7-2ac3-411f-8713-cc26cbec8022)에서 할 수 있습니다.*
+_CAPA 자격증 2024. 2024년 9월 14일 발급, 2026년 9월 15일 만료. 자격증 확인은 [여기](https://www.credly.com/badges/ee42c2c7-2ac3-411f-8713-cc26cbec8022)에서 할 수 있습니다._
 
 ### 왜 취득했나요?
 
@@ -96,7 +104,7 @@ CKA, CKAD, CKS 같은 쿠버네티스 자격증에 응시해보신 분들에게�
 
 ![시험 준비 체크리스트](./assets/capa-exam-portal-checklist.jpg)
 
-*Linux Foundation Training & Certification 대시보드의 CAPA 시험 준비 체크리스트 화면.*
+_Linux Foundation Training & Certification 대시보드의 CAPA 시험 준비 체크리스트 화면._
 
 진행 방식에서 기억해둘 만한 점들:
 

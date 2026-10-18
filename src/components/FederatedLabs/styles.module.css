@@ -1,6 +1,6 @@
 .frame {margin: 0; min-width: 0; width: 100%; --labs-min-height: max(0px, calc(100dvh - var(--ifm-navbar-height) - var(--labs-breadcrumb-height, 0px)));}
-.breadcrumbBar {padding: 1rem 1rem 0.01px;}
-.remoteRegion {box-sizing: border-box; width: 100%; min-width: 0; min-height: calc(var(--labs-min-height) + 2px); border: 1px solid var(--site-border); border-radius: var(--ifm-global-radius); overflow: hidden;}
+.breadcrumbBar {display: flow-root;}
+.remoteRegion {box-sizing: border-box; width: 100%; min-width: 0; min-height: var(--labs-min-height); border: 0; overflow: hidden;}
 @media print { .breadcrumbBar {display: none;} }
 .connection {position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap;}
 .placeholder {padding: clamp(1rem, 3vw, 2rem); background: var(--site-surface); min-height: var(--labs-min-height);}
@@ -12,9 +12,9 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 1rem;
+  gap: var(--site-space-4);
   min-height: var(--labs-min-height);
-  padding: 1.5rem;
+  padding: var(--site-space-6);
   text-align: center;
   color: var(--site-muted);
 }

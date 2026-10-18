@@ -1,0 +1,39 @@
+---
+title: Resume
+breadcrumbs:
+  - {label: About, href: /about/}
+  - {label: Resume}
+description: Get in touch on LinkedIn for more about my experience.
+wrapperClassName: site-about-page
+hide_table_of_contents: true
+profile_template: {kind: page, version: 1}
+profile_format: 1
+---
+
+import Link from '@docusaurus/Link';
+import AboutSectionNav from '@site/src/components/AboutSectionNav';
+
+<header className="about-hero">
+  <div className="container">
+    <AboutSectionNav label="About sections" current="/about/resume/" items={[
+  {href: '/about/', label: 'Overview'},
+  {href: '/about/portfolio/', label: 'Portfolio'},
+  {href: '/about/resume/', label: 'Resume'},
+]} />
+    <p className="about-eyebrow">ABOUT / RESUME</p>
+    <h1 className="about-name">Resume</h1>
+  </div>
+</header>
+
+<main className="container about-main" data-about-access>
+  <section className="about-section">
+
+I keep a separate resume with more detail about my work and projects. Feel free to contact me on LinkedIn.
+
+    <div className="about-request-actions">
+      <a className="button button--primary" href="https://www.linkedin.com/in/jyje" target="_blank" rel="noreferrer">Get in touch on LinkedIn</a>
+      <Link to="/about/portfolio/">View portfolio</Link>
+    </div>
+
+  </section>
+</main>

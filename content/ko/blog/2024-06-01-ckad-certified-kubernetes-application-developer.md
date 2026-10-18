@@ -9,6 +9,8 @@ tags:
   - kubernetes
   - linux-foundation
 image: ./assets/cncf-certification-ckad.png
+profile_template: {kind: blog, version: 1}
+profile_format: 1
 ---
 
 ## 1. 자격증 소개
@@ -23,7 +25,7 @@ CKA 시험과 마찬가지로, CKAD 시험도 Kubernetes가 실행 중인 커맨
 
 ![CKAD 자격증](./assets/87b974ec-14cc-4f82-b252-c71deef28ee8.svg)
 
-*CKAD 자격증 2024. 2024년 6월 1일 발급. 2026년 6월 1일 만료. 자격증 확인은 [여기](https://www.credly.com/badges/9e072a3a-57d0-403e-8bef-5831d618675c)에서 할 수 있습니다.*
+_CKAD 자격증 2024. 2024년 6월 1일 발급. 2026년 6월 1일 만료. 자격증 확인은 [여기](https://www.credly.com/badges/9e072a3a-57d0-403e-8bef-5831d618675c)에서 할 수 있습니다._
 
 2024년 5월 31일에 CKAD 시험을 보고 합격했습니다. 쉽지 않은 시험이었지만 합격 기준을 충족했습니다. Kubernetes 공식 문서를 꼼꼼히 읽고, 온라인 강좌를 수강하면서 KodeKloud에서 Kubernetes 클러스터를 직접 다루며 준비했습니다.
 

@@ -179,21 +179,19 @@ const config: Config = {
         src: 'img/logo-128.png',
       },
       items: [
+        {to: '/blog', label: 'Blog', position: 'left'},
+        {type: 'docSidebar', sidebarId: 'wikiSidebar', position: 'left', label: 'Wiki'},
+        {to: '/labs', label: 'Labs', position: 'left'},
         {
           to: '/about',
           label: 'About',
           position: 'left',
           items: [
             {to: '/about', label: 'Overview'},
-            {to: '/about/resume', label: 'Resume'},
-            {to: '/about/selected-cv', label: 'Selected CV'},
-            {to: '/about/cv', label: 'Full CV'},
             {to: '/about/portfolio', label: 'Portfolio'},
+            {to: '/about/resume', label: 'Resume'},
           ],
         },
-        {to: '/blog', label: 'Blog', position: 'left'},
-        {type: 'docSidebar', sidebarId: 'wikiSidebar', position: 'left', label: 'Wiki'},
-        {to: '/labs', label: 'Labs', position: 'left'},
         {
           type: 'localeDropdown',
           className: 'site-locale-compact',

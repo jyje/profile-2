@@ -131,7 +131,7 @@ function ViewModeIcon({mode}: {mode: ViewMode}): ReactNode {
 }
 
 export default function BlogListPage(props: Props): ReactNode {
-  const {items, sidebar} = props;
+  const {items} = props;
   const {
     i18n: {currentLocale},
   } = useDocusaurusContext();
@@ -183,7 +183,8 @@ export default function BlogListPage(props: Props): ReactNode {
       )}>
       <BlogListPageMetadata {...props} />
       <BlogListPageStructuredData {...props} />
-      <BlogLayout sidebar={sidebar}>
+      {/* The listing is the navigator; keep Posts only on article layouts. */}
+      <BlogLayout>
         <div className={styles.controls}>
           <div className={styles.toggle} role="group" aria-label={labels.group}>
             <Button

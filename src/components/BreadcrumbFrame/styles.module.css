@@ -1,0 +1,24 @@
+.frame {
+  --site-breadcrumb-gutter: 1rem;
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  padding: var(--site-breadcrumb-gutter) var(--site-breadcrumb-gutter) 0;
+}
+
+/* Match the native BlogLayout sidebar column, not the article's reading width.
+ * These container tokens are owned by Infima; the breakpoint is the site's
+ * existing sidebar exception. UX lint compares against the actual aside edge.
+ */
+@media (min-width: 920px) {
+  .blogSidebar {
+    --site-blog-container: min(100%, var(--ifm-container-width));
+    padding-inline-start: calc((100% - var(--site-blog-container)) / 2 + var(--site-blog-container) / 4 + var(--site-breadcrumb-gutter));
+  }
+}
+
+@media (min-width: 1440px) {
+  .blogSidebar { --site-blog-container: min(100%, var(--ifm-container-width-xl)); }
+}
+
+@media print { .frame { display: none !important; } }
