@@ -4,6 +4,7 @@
 
 - Once a plan is completed, reconcile its status and checklist with the actual result. Record verification, review, commit/PR references, and deployment evidence when deployment was in scope. Distinguish remaining limitations from unfinished deliverables.
 - Close the plan with a focused cleanup commit, or an explicitly requested local-only commit. Preserve the decision and review history; do not leave completed work described as pending approval, review, merge or deployment.
+- Avoid accumulating chronological closeout/history documents. Put durable decisions and generalized guidance in the relevant maintenance documentation; keep historical verification evidence in Git and the PR. Any temporary tracking or closeout document must have a TODO comment stating that, once its issues are resolved or generalized, its enduring content must be absorbed into the appropriate documentation and the redundant temporary record removed. A cleanup commit should consolidate content rather than create another permanent history file.
 - Respect the user's commit and push authorization. A local completion commit does not imply permission to push or deploy again.
 - Write GitHub issues, PR descriptions, reviews and comments in English. This does not change the site's bilingual content requirements.
 

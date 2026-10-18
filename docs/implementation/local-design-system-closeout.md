@@ -1,5 +1,10 @@
 # Local About and design-system closeout
 
+<!-- TODO: Once these issues are resolved or the guidance is generalized, fold
+     the enduring decisions and rules into the relevant maintenance documentation
+     and remove this temporary closeout record. Keep historical verification and
+     commit/run evidence in Git and the PR, not as a permanent chronology here. -->
+
 Date: 2026-10-18. Status: completed locally with owner-authorized commits.
 
 ## Delivery sequence
