@@ -2,6 +2,8 @@
 title: "🏠 Wiki Home"
 slug: /
 sidebar_position: 1
+profile_template: {kind: wiki, version: 1}
+profile_format: 1
 ---
 
 This wiki is my **personal knowledge base**, collecting what I learn and refer to. The blog is a chronological stream of posts, while the wiki collects notes that keep being revised.

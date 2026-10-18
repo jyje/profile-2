@@ -2,6 +2,10 @@
 
 This is the maintainer companion to the [site overview](../../README.md).
 For framework changes, follow the [compatibility and upgrade policy](docusaurus-compatibility.md).
+For the planned approval-gated Resume/CV portal on Raspberry Pi, see the
+[private career access roadmap](../roadmap/private-career-access.md). This is
+future work. The public About pages currently provide a LinkedIn inquiry gateway,
+not authenticated document hosting. See [About isolation](about-access.md).
 
 ## Source of truth
 
@@ -10,18 +14,17 @@ For framework changes, follow the [compatibility and upgrade policy](docusaurus-
 | Blog posts and wiki notes | `content/ko/{blog,wiki}/` and their matching `content/en/{blog,wiki}/` translations |
 | About overview | `src/pages/about.mdx` and `i18n/en/docusaurus-plugin-content-pages/about.mdx` |
 | Portfolio and Labs page copy | Matching MDX pages under `src/pages/` and `i18n/en/docusaurus-plugin-content-pages/` |
-| Career facts | `data/career/**/*.yaml` (shared metadata and bilingual prose) |
-| Role profiles and resume/Selected CV selections | `data/career/profiles/*.yaml` |
-| Retained curation configuration, not displayed on the home page | `data/home-curation.yml` |
+| Resume access instructions | Localized `about/resume.mdx`, `about/cv.mdx`, and `about/selected-cv.mdx` |
+| Private career facts and exports | Separate private career-application workspace; never required by this site's build |
+| Homepage recommendation catalog configuration | `data/home-curation.yml` |
+| Versioned non-published scaffolds and formatter | `content/_templates/v1/`, `design-system/content-contract.json` and `scripts/content-format/v1.mjs` |
 | Structured content templates | One component entrypoint and CSS module per template under `src/components/ContentTemplates/` |
 
-The site home is `/`; the About overview is `/about/`. Resume, Selected CV, Full CV, and portfolio
-are separate pages under `/about/`. Blog listings are generated from post metadata,
-not a second hand-maintained list. All career documents render the shared career data. See the
-[record authoring contract](../../data/career/README.md) for IDs, short/detail text
-selection, dates, contribution and stable CV anchors. Role-specific views use `?role=platform`,
-`?role=agents`, or `?role=inference`; absent or unknown roles use `platform`.
-Full CV always shows every source record, while its document links retain the role query.
+The site home is `/`; the About overview is `/about/`. Portfolio is public at
+`/about/portfolio/`; `/about/resume/` explains how to inquire through LinkedIn.
+Old Selected CV and Full CV routes contain compatibility instructions only.
+Role query parameters no longer select a document. Public tags use blog/wiki
+metadata, not private career records. Blog listings remain metadata-driven.
 
 Open [content/](../../content/) as an Obsidian vault. Use relative Markdown links
 instead of `[[wikilinks]]`, and `> [!note]` syntax for callouts. Use Markdown for
@@ -70,18 +73,24 @@ An unconfigured or unavailable remote displays a fallback, not a working AI back
 
 ## Home page, retained curation, and preferences
 
-The current home page contains an introduction and four text links to Blog, Wiki,
-Labs, and About. Its localized copy lives in `src/pages/index.tsx`. It does not
-render featured pieces, a reading list, or daily picks.
+The shared navbar order is Blog, Wiki, Labs, About in both locales and the native
+mobile menu. About retains Overview, Portfolio, Resume. Configure the order in
+`docusaurus.config.ts`, not in theme wrappers or translation files. The homepage's
+grouped quick links are separate from this navbar order.
+`scripts/verify-navbar-order.mjs` checks both locales, desktop and mobile ordering,
+and the native About submenu as part of built-site verification.
 
-[home-curation.yml](../../data/home-curation.yml), the catalog generator, and the
-daily-selection utility are retained but have no consumer on the current home
-page. Editing that configuration does not change the visible homepage.
-`npm run sync` still validates it and generates the catalog, so referenced sources
-must remain valid until that build-time dependency is explicitly removed.
-IDs are source-relative paths under each locale's blog/wiki without `.md`; blog
-IDs retain the date prefix. Reintroducing curated content requires an explicit
-UI change rather than a configuration-only edit.
+The current home page contains an introduction, grouped icon navigation and
+date-based recommendations with a refresh control. Localized copy lives in
+`src/pages/index.tsx`; it consumes generated `curation.json` and daily-curation
+utilities. The separate navbar order does not reorder these authored quick-link
+groups. `npm run sync` validates [home-curation.yml](../../data/home-curation.yml)
+and regenerates the recommendation catalog. IDs are source-relative locale
+blog/wiki paths without `.md`; blog IDs retain the date prefix.
+
+Use the [design-system commands and pre-commit gate](design-system.md) to format
+canonical sources and create new documents. Never edit generated curation or
+locale mirrors directly.
 
 Light is the default theme. `jyje_color_mode` remembers a visitor's selection;
 Docusaurus also maintains its own namespaced local-storage preference.
@@ -149,6 +158,9 @@ HTTP status without JavaScript; client navigation is not proof of static routing
 
 ## Verification and career exports
 
+Career exports are private-workspace responsibilities, not public-site commands.
+The heading is retained for existing maintenance links.
+
 After `npm ci`, run the following sequentially in a free worktree, without a
 single-locale HMR process sharing its staging directories:
 
@@ -166,19 +178,12 @@ npm run test:homepage
 ```
 
 Linux runners may need `npx playwright install --with-deps chromium`, as CI uses.
-`verify-built-site.mjs` serves that project-path build and exports both locales'
-career PDFs. With an already running all-locale server, `npm run export:pdf`
-exports from `http://127.0.0.1:3000/`; `PDF_BASE_URL` can select another served
-base URL, including `/profile-2/`. Merely building does not start that server.
-
-PDF outputs live in ignored `output/pdf/`. The summary must be exactly one A4
-page for each role; Full CV must remain multi-page. Selected CV has no page cap.
-The exporter creates 14 PDFs: three roles in two formats and two locales, plus
-one Full CV per locale. Role-specific filenames include the role key.
-Browser review screenshots are ignored under `output/career-review/`. Render and inspect every page for clipping,
-font loading, skill-chip wrapping, and hidden navigation/breadcrumbs. Automated
-counts are not a substitute for visual review. Do not silently truncate facts or
-shrink text to satisfy page counts.
+`verify-built-site.mjs` checks public navigation, localized About instructions,
+compatibility routes, keyboard/touch behavior, and responsive light/dark screens.
+`test:publication` also scans output for retired career payloads. The public CI
+must not export or upload private PDFs. In the private workspace, preserve the
+one-page A4 Resume and multi-page Full CV requirements and inspect every changed
+PDF page. No private document layout is changed by this site migration.
 
 Run `npm run test:labs-breadcrumbs` separately against an all-locale development
 host configured for the local remote. It intercepts remote loading with fixtures;

@@ -16,7 +16,7 @@
 }
 
 .site-about-page .about-name {
-  margin: 1rem 0 0.5rem;
+  margin: var(--site-space-4) 0 var(--site-space-2);
   font-size: clamp(3.25rem, 8vw, 6.5rem);
   font-weight: 800;
   letter-spacing: -0.065em;
@@ -25,7 +25,7 @@
 
 .site-about-page .about-lead {
   max-width: 52rem;
-  margin: 1.5rem 0;
+  margin: var(--site-space-6) 0;
   font-size: clamp(1.35rem, 2.5vw, 2rem);
   font-weight: 600;
   line-height: 1.4;
@@ -45,14 +45,14 @@
 .site-about-page .about-contact {
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
-  margin-top: 1rem;
+  gap: var(--site-space-2);
+  margin-top: var(--site-space-4);
   font-weight: 650;
 }
 
 .site-about-page .about-main {
   max-width: 72rem;
-  padding-top: 1rem;
+  padding-top: var(--site-space-4);
   padding-bottom: 5rem;
 }
 
@@ -66,10 +66,34 @@
   letter-spacing: -0.035em;
 }
 
+.site-about-page .about-case {
+  padding-top: var(--site-space-8);
+  border-top: 1px solid var(--site-border);
+}
+
+.site-about-page .about-case p,
+.site-about-page .about-case ul {
+  max-width: 52rem;
+  line-height: 1.8;
+  overflow-wrap: anywhere;
+}
+
+.site-about-page .about-case li {
+  margin-bottom: 0.65rem;
+}
+
+.site-about-page .about-request-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--site-space-4) var(--site-space-8);
+  margin-top: var(--site-space-8);
+}
+
 .site-about-page .about-links {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 1rem;
+  gap: var(--site-space-4);
 }
 
 .site-about-page .about-links > a {

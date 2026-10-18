@@ -1,15 +1,6 @@
 const yaml = require('js-yaml');
 
-const templates = {
-  'list-type-2x2': {
-    required: ['name', 'description'],
-    allowed: ['name', 'description'],
-  },
-  'list-type-image-header': {
-    required: ['name'],
-    allowed: ['name', 'image', 'description', 'start', 'end'],
-  },
-};
+const templates = require('./schemas/v1.cjs');
 
 function validateItems(items, template, language) {
   if (!Array.isArray(items) || items.length === 0) {
@@ -36,6 +27,15 @@ function validateItems(items, template, language) {
     for (const key of ['image', 'description']) {
       if (item[key] !== undefined && item[key] !== null && typeof item[key] !== 'string') {
         throw new Error(`Field "${key}" must be text in ${language} item ${index + 1}`);
+      }
+    }
+    if (language === 'media-figure') {
+      if (!/^(?:\/(?!\/)|https:\/\/)/.test(item.image)) throw new Error('image must be a root-relative static asset or HTTPS URL');
+      const credits = ['credit_label', 'credit_name', 'credit_url', 'source_label', 'source_name', 'source_url'];
+      if (credits.some(key => item[key] !== undefined) && !credits.every(key => typeof item[key] === 'string' && item[key].trim())) throw new Error('Media credits must include both author and source labels/names/URLs');
+      for (const key of Object.keys(item)) {
+        if (typeof item[key] !== 'string') throw new Error(`${key} must be text`);
+        if (key.endsWith('_url') && !/^https:\/\//.test(item[key])) throw new Error(`${key} must be an HTTPS credit link`);
       }
     }
 
@@ -82,3 +82,5 @@ module.exports = function remarkContentTemplates() {
     visit(tree);
   };
 };
+module.exports.validateItems = validateItems;
+module.exports.schemas = templates;

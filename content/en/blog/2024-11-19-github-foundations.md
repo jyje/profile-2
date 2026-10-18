@@ -8,6 +8,8 @@ tags:
   - certifications
   - github
 image: ./assets/440abbf4-b6db-48ab-87cf-77d2e3cc616b.png
+profile_template: {kind: blog, version: 1}
+profile_format: 1
 ---
 
 ## 1. About the Certification
@@ -27,7 +29,7 @@ The exam consists of 75 multiple-choice questions to be completed within 120 min
 
 ![GitHub Foundations Certification](./assets/587c064f-166f-4a37-8cd6-ac21c080b40c.png)
 
-*My GitHub Foundations certification 2024. Issued on November 19, 2024. Expires on November 18, 2027. You can verify my certification [here](https://www.credly.com/badges/876fa6b3-0b27-4ddf-bbb3-a9d853918566).*
+_My GitHub Foundations certification 2024. Issued on November 19, 2024. Expires on November 18, 2027. You can verify my certification [here](https://www.credly.com/badges/876fa6b3-0b27-4ddf-bbb3-a9d853918566)._
 
 I prepared for the certification using two main resources:
 
@@ -62,6 +64,7 @@ I found the enterprise and team management sections particularly challenging, as
 The GitHub Foundations certification is an excellent starting point for developers looking to validate their GitHub skills. While it may seem basic for experienced users, the certification covers important aspects of modern GitHub features that many developers might have overlooked, such as GitHub Copilot, CodeSpaces, and enterprise collaboration tools.
 
 For those preparing for this certification, I recommend:
+
 - Taking advantage of the free Microsoft Learn resources
 - Practicing with GitHub Skills hands-on labs
 - Focusing on enterprise features and team management concepts

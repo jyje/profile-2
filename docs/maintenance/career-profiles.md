@@ -1,5 +1,9 @@
 # Role-focused career documents
 
+> Historical record: public Resume/CV rendering and export behavior described below
+> was retired by the About access-boundary refactor. See
+> [current About behavior](about-access.md). This record is not a current public export guide.
+
 ## Accepted decisions
 
 - Add Selected CV between the one-page Resume and unfiltered Full CV.

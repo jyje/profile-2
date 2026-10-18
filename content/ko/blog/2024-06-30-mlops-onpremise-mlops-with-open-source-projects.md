@@ -11,6 +11,8 @@ tags:
   - kubernetes
   - onpremise
 image: ./assets/ea4da371-fd3a-4a66-b5fe-45b07205c159.jpg
+profile_template: {kind: blog, version: 1}
+profile_format: 1
 ---
 
 > Photo by <a href="https://unsplash.com/@nampoh?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash">Maxim Hopman</a> on <a href="https://unsplash.com/photos/a-group-of-people-standing-around-a-display-of-video-screens-IayKLkmz6g0?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash">Unsplash</a>
@@ -132,9 +134,9 @@ TensorFlow, PyTorch, scikit-learn 등 ML 연구에 필요한 라이브러리와 
 - [JupyterHub]
 - [Grafana]
 
-[Argo Workflows]: https://argoproj.github.io/workflows "Workflow Engine in Argo Projects"
-[Kubeflow]: https://www.kubeflow.org "Kubeflow: Machine Learning Toolkit for Kubernetes"
-[Kubeflow/Katib]: https://www.kubeflow.org/docs/components/katib/overview "Kubeflow Katib: Hyperparameter Tuning"
-[Kubeflow/Training Operator]: https://www.kubeflow.org/docs/components/training/overview "Kubeflow Training Operator: Distributed Training"
-[JupyterHub]: https://jupyter.org/hub "JupyterHub: Multi-user Jupyter Notebook Server"
-[Grafana]: https://grafana.com/grafana "Grafana: The Observability Platform for Metrics and Logs"
+[Argo Workflows]: https://argoproj.github.io/workflows 'Workflow Engine in Argo Projects'
+[Kubeflow]: https://www.kubeflow.org 'Kubeflow: Machine Learning Toolkit for Kubernetes'
+[Kubeflow/Katib]: https://www.kubeflow.org/docs/components/katib/overview 'Kubeflow Katib: Hyperparameter Tuning'
+[Kubeflow/Training Operator]: https://www.kubeflow.org/docs/components/training/overview 'Kubeflow Training Operator: Distributed Training'
+[JupyterHub]: https://jupyter.org/hub 'JupyterHub: Multi-user Jupyter Notebook Server'
+[Grafana]: https://grafana.com/grafana 'Grafana: The Observability Platform for Metrics and Logs'

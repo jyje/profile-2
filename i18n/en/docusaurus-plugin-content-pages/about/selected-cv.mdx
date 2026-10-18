@@ -1,0 +1,42 @@
+---
+title: Selected CV
+breadcrumbs:
+  - {label: About, href: /about/}
+  - {label: Resume, href: /about/resume/}
+  - {label: Selected CV}
+description: Get in touch on LinkedIn for more about my experience.
+wrapperClassName: site-about-page
+hide_table_of_contents: true
+noindex: true
+profile_template: {kind: page, version: 1}
+profile_format: 1
+---
+
+import Link from '@docusaurus/Link';
+import AboutSectionNav from '@site/src/components/AboutSectionNav';
+
+<header className="about-hero">
+  <div className="container">
+    <AboutSectionNav label="About sections" current="/about/resume/" items={[
+  {href: '/about/', label: 'Overview'},
+  {href: '/about/portfolio/', label: 'Portfolio'},
+  {href: '/about/resume/', label: 'Resume'},
+]} />
+    <p className="about-eyebrow">ABOUT / DOCUMENT ACCESS</p>
+    <h1 className="about-name">Selected CV</h1>
+    <p className="about-lead">Get in touch for more about my experience.</p>
+  </div>
+</header>
+
+<main className="container about-main" data-about-access>
+  <section className="about-section">
+
+This page is no longer public. Visit the resume page to get in touch for more about my experience.
+
+    <div className="about-request-actions">
+      <Link className="button button--primary" to="/about/resume/">Resume</Link>
+      <Link to="/about/portfolio/">View portfolio</Link>
+    </div>
+
+  </section>
+</main>

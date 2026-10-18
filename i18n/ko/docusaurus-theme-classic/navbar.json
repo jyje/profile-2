@@ -17,12 +17,6 @@
   "item.label.Resume": {
     "message": "이력서"
   },
-  "item.label.Selected CV": {
-    "message": "경력기술서"
-  },
-  "item.label.Full CV": {
-    "message": "전체 CV"
-  },
   "item.label.Portfolio": {
     "message": "포트폴리오"
   }

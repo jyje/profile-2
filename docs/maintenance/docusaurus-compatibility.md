@@ -32,9 +32,15 @@ See [Docusaurus's swizzling guidance](https://docusaurus.io/docs/swizzling).
 
 ### Compatibility inventory
 
+The [versioned design-system gate](design-system.md) also covers pinned
+Prettier/config, template/block schemas, staged-index hook execution and public
+build preflight. Upgrades must preserve MDX, Obsidian callouts/links, authored
+dates, assets and canonical routes, not just produce a successful compilation.
+
 | Surface | Review on upgrade |
 | --- | --- |
 | `src/theme/` wrappers | Original component names, aliases, props, metadata providers, breadcrumb structured data, dropdown/sidebar behavior, and layout hooks |
+| Breadcrumb placement (UX-001) | `BreadcrumbFrame`, MDX front-matter placement context, BlogPostPage metadata, DocItem/Layout + DocBreadcrumbs duplicate guard, native reading widths, Infima container tokens, and screenshot/coordinate/pixel regression gate. See [UX lint](ux-lint.md). |
 | Content synchronization and visibility | Front matter, locale mirrors, Git-derived dates, exclusions, generated indexes, and canonical metadata without source/body leakage |
 | Content templates | Remark/MDX transforms, YAML validation, localized labels, and static rendering |
 | Content network, document graph, global tags, redirects, and llms-txt plugins | Public plugin lifecycle/data shape, canonical permalinks, local/global graphs, and excluded content |
@@ -42,6 +48,7 @@ See [Docusaurus's swizzling guidance](https://docusaurus.io/docs/swizzling).
 | `@easyops-cn/docusaurus-search-local` | Declared peer compatibility, both-locale indexing, public-content filtering, and search UI in static output |
 | Selective shadcn/Tailwind integration | Public PostCSS hook, `tw:` prefix, no Preflight/global reset, Infima tokens, dark-mode inheritance, and SSR |
 | Vue Labs federation | Browser-only loading, optional v1 navigation, update/unmount cleanup, locale/theme synchronization, timeout/retry, and full-width layout |
+| About access boundary | Authored MDX, shared ordinary-link section navigation, safe legacy routes, no private data imports, and public-output/CI artifact checks |
 
 Use the [UI integration guide](../../src/components/ui/README.md),
 [document graph guide](../../plugins/document-graph/README.md),
@@ -151,12 +158,11 @@ additional results in the PR:
   old/new v1 remotes, nested fixture navigation, translated labels, stale callbacks,
   errors/retries, and unmount cleanup. Inspect the actual Vue remote too; fixtures
   do not certify production remote deployment or API services.
-- Regenerate Korean/English career exports and render every PDF page. Each resume
-  stays one A4 page for every role; Full CVs stay multi-page without content loss.
-  Selected CV has no page limit. Career files under `data/career/` use shared
-  bilingual `.yaml` records; the source compiler preserves immutable CV anchors
-  consumed by the global tag plugin. Confirm hidden
-  breadcrumbs/tools, font loading, page breaks, and normal skill-chip height.
+- Check localized About navigation and LinkedIn access instructions. Legacy
+  document routes must not render private payloads; public tags must not recreate
+  CV anchors. Private PDF rendering is maintained separately and is not a public
+  build or CI dependency. Preserve its existing page-quality requirements when
+  changing private exports, without uploading them to public CI.
 
 Use [Docusaurus release notes](https://github.com/facebook/docusaurus/releases)
 and [official migration guidance](https://docusaurus.io/docs/migration) as upstream

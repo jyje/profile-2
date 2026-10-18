@@ -1,11 +1,28 @@
 import assert from 'node:assert/strict';
 import {chromium} from 'playwright';
+import fs from 'node:fs/promises';
+import {breadcrumbViolations} from './ux-lint-contract.mjs';
 
 // Run against the default all-locale dev host, whose configured remote is local.
 const origin = process.env.VERIFY_ORIGIN ?? 'http://127.0.0.1:3000';
 const prefix = process.env.VERIFY_BASE_PATH ?? '/';
 const browser = await chromium.launch();
 const errors = [];
+const captures = '.playwright-mcp/ux-lint/labs';
+await fs.mkdir(captures, {recursive: true});
+async function capturePlacement(page, name) {
+  const g = await page.evaluate(async () => {
+    await document.fonts.ready;
+    const navs = document.querySelectorAll('.site-breadcrumbs,.theme-doc-breadcrumbs');
+    const nav = navs[0];
+    const rect = node => {const r = node.getBoundingClientRect(); return {x:r.x,y:r.y,width:r.width,height:r.height};};
+    return {count:navs.length, frames:document.querySelectorAll('[data-breadcrumb-frame]').length,
+      paneLeft:0, navbarBottom:document.querySelector('.navbar').getBoundingClientRect().bottom,
+      nav:rect(nav),home:rect(nav.querySelector('svg')),overflow:document.documentElement.scrollWidth>innerWidth+1};
+  });
+  await page.screenshot({path:`${captures}/${name}.png`,clip:{x:0,y:0,width:390,height:240},animations:'disabled'});
+  assert.deepEqual(breadcrumbViolations(g), [], `Labs placement: ${name}`);
+}
 const fixture = legacy => `
 export function init() {}
 export async function get() {return () => ({contractVersion: 1, mount(container, initial) {
@@ -36,6 +53,7 @@ try {
     await page.route(entry, respond(false));
     await page.goto(root + 'labs/');
     await page.locator('[data-fixture="ready"]').waitFor();
+    await capturePlacement(page, `${locale}-ready`);
     const nav = page.locator('.site-breadcrumbs');
     assert.equal(await nav.count(), 1);
     assert.equal(await nav.locator('li').count(), 4);
@@ -43,6 +61,7 @@ try {
     assert.equal(schema.itemListElement.length, 2, 'Remote IDs must not become fabricated public URLs');
     await nav.getByRole('button', {name: locale === 'ko' ? '대화 데모' : 'Chat demo', exact: true}).tap();
     assert.equal(await nav.locator('li').count(), 3);
+    await capturePlacement(page, `${locale}-ancestor`);
     await page.evaluate(() => window.__fixtureLocale('en'));
     assert.equal(await nav.locator('[aria-current="page"]').innerText(), 'Chat demo');
     const bounds = await page.locator('[data-fixture="ready"]').evaluate(node => {
@@ -54,6 +73,8 @@ try {
     assert.ok(bounds.available.includes('calc') || bounds.available.includes('max'));
     await nav.locator('a').first().click();
     await page.waitForURL(root);
+    // Client-side history updates before React commits the route unmount.
+    await nav.waitFor({state: 'detached'});
     await page.evaluate(() => window.__lateNavigation?.([{id:'stale',label:'Stale callback'}]));
     assert.equal(await page.locator('.site-breadcrumbs').count(), 0);
     await page.unroute(entry);
@@ -61,16 +82,19 @@ try {
     await page.goto(root + 'labs/');
     await page.locator('[data-fixture="ready"]').waitFor();
     assert.equal(await nav.locator('li').count(), 2, 'Old remote retains Labs root only');
+    await capturePlacement(page, `${locale}-legacy`);
     await page.unroute(entry);
     await page.route(entry, route => route.abort());
     await page.goto(root + 'labs/');
     await page.getByRole('alert').waitFor();
     assert.equal(await nav.locator('li').count(), 2);
+    await capturePlacement(page, `${locale}-error`);
     await page.unroute(entry);
     await page.route(entry, respond(false));
     await page.getByRole('button', {name: locale === 'ko' ? '다시 연결' : 'Reconnect'}).click();
     await page.locator('[data-fixture="ready"]').waitFor();
     assert.equal(await nav.locator('li').count(), 4);
+    await capturePlacement(page, `${locale}-retry`);
     await ctx.close();
   }
   assert.deepEqual(errors, []);

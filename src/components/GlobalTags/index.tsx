@@ -1,12 +1,12 @@
 import type {ReactNode} from 'react';
 import Link from '@docusaurus/Link';
 import Layout from '@theme/Layout';
-import SiteBreadcrumbs from '@site/src/components/SiteBreadcrumbs';
+import BreadcrumbFrame from '@site/src/components/BreadcrumbFrame';
 
 import styles from './styles.module.css';
 
 type TagItem = {
-  kind: 'blog' | 'wiki' | 'portfolio' | 'resume';
+  kind: 'blog' | 'wiki' | 'portfolio';
   title: string;
   description: string;
   date: string;
@@ -30,18 +30,18 @@ type TagData = {
 };
 
 const TYPE_LABELS: Record<string, Record<TagItem['kind'], string>> = {
-  ko: {blog: '블로그', wiki: '위키', portfolio: '포트폴리오', resume: '이력서'},
-  en: {blog: 'Blog', wiki: 'Wiki', portfolio: 'Portfolio', resume: 'Resume'},
+  ko: {blog: '블로그', wiki: '위키', portfolio: '포트폴리오'},
+  en: {blog: 'Blog', wiki: 'Wiki', portfolio: 'Portfolio'},
 };
 
 function TagIndex({data}: {data: TagData}): ReactNode {
   const isKorean = data.locale === 'ko';
   return (
+    <><BreadcrumbFrame items={[{label: isKorean ? '전체 태그' : 'All tags'}]} />
     <main className={`container ${styles.page}`}>
-      <SiteBreadcrumbs items={[{label: isKorean ? '전체 태그' : 'All tags'}]} />
       <header className={styles.heading}>
         <h1>{isKorean ? '전체 태그' : 'All tags'}</h1>
-        <p>{isKorean ? '블로그, 위키, 이력서, 포트폴리오의 주제를 한곳에서 찾아보세요.' : 'Explore topics across blog posts, wiki pages, the résumé, and portfolio.'}</p>
+        <p>{isKorean ? '블로그, 위키, 포트폴리오의 공개 주제를 한곳에서 찾아보세요.' : 'Explore public topics across blog posts, wiki pages, and the portfolio.'}</p>
       </header>
       <div className={styles.tagGrid}>
         {data.tagList.map((tag) => (
@@ -52,7 +52,7 @@ function TagIndex({data}: {data: TagData}): ReactNode {
           </Link>
         ))}
       </div>
-    </main>
+    </main></>
   );
 }
 
@@ -60,8 +60,8 @@ function TagDetail({data, tag}: {data: TagData; tag: Tag}): ReactNode {
   const isKorean = data.locale === 'ko';
   const typeLabels = TYPE_LABELS[data.locale] ?? TYPE_LABELS.en;
   return (
+    <><BreadcrumbFrame items={[{label: isKorean ? '전체 태그' : 'All tags', href: '/tags/'}, {label: tag.label}]} />
     <main className={`container ${styles.page}`}>
-      <SiteBreadcrumbs items={[{label: isKorean ? '전체 태그' : 'All tags', href: '/tags/'}, {label: tag.label}]} />
       <header className={styles.heading}>
         <h1>{tag.label}</h1>
         <p>{tag.description || (isKorean ? `${tag.count}개 항목` : `${tag.count} items`)}</p>
@@ -82,7 +82,7 @@ function TagDetail({data, tag}: {data: TagData; tag: Tag}): ReactNode {
         ))}
       </ol>
       {tag.items.length === 0 && <p>{isKorean ? '아직 연결된 항목이 없습니다.' : 'No content is connected to this tag yet.'}</p>}
-    </main>
+    </main></>
   );
 }
 

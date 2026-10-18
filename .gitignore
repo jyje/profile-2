@@ -40,3 +40,6 @@ yarn-error.log*
 
 # Career browser review artifacts
 /output/career-review/
+
+# Private interview notes and unpublished drafts: local only
+/hidden/

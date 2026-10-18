@@ -1,5 +1,5 @@
-.section { margin-bottom: 1.5rem; }
+.section { margin-bottom: var(--site-space-6); }
 .frame { border: 1px solid var(--site-border); border-radius: 5px; overflow: hidden; }
-.selection { display: flex; flex-wrap: wrap; gap: .5rem .75rem; align-items: center; margin-top: .75rem; font-size: .85rem; }
+.selection { display: flex; flex-wrap: wrap; gap: var(--site-space-2) var(--site-space-3); align-items: center; margin-top: var(--site-space-3); font-size: .85rem; }
 .selection select { min-width: 0; max-width: 100%; padding: .4rem; color: var(--ifm-font-color-base); background: var(--ifm-background-color); border: 1px solid var(--site-border); border-radius: 4px; }
 @media (max-width: 480px) { .selection select { flex: 1; } }

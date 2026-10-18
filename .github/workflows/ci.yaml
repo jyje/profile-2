@@ -38,10 +38,16 @@ jobs:
       - name: Typecheck
         run: npm run typecheck
 
+      - name: Verify versioned design and content contracts
+        run: |
+          npm run lint:design
+          npm run content:check
+          npm run test:design
+
       - name: Verify UI compatibility boundaries
         run: npm run test:ui
 
-      - name: Verify content network and career selections
+      - name: Verify public content and About isolation
         run: npm run test:content
 
       - name: Build all locales for GitHub Pages
@@ -50,13 +56,13 @@ jobs:
           SITE_URL: https://jyje.github.io
           SITE_BASE_URL: /profile-2/
 
-      - name: Install browser for career exports
+      - name: Install browser for public navigation checks
         run: npx playwright install --with-deps chromium
 
       - name: Verify static routes and publication boundaries
         run: npm run test:publication
 
-      - name: Verify browser navigation and bilingual PDFs
+      - name: Verify browser navigation and public About boundaries
         run: node scripts/verify-built-site.mjs
 
       - name: Verify wiki graphs and publication behavior
@@ -65,14 +71,19 @@ jobs:
       - name: Verify bilingual breadcrumbs
         run: npm run test:breadcrumbs
 
-      - name: Verify homepage intro, curation and navigation
-        run: npm run test:homepage
+      - name: UX-001 screenshot and coordinate lint
+        id: ux_lint
+        run: npm run lint:ux
 
-      - name: Upload career document review artifacts
-        if: always()
+      - name: Upload UX lint captures and report
+        if: ${{ always() && (steps.ux_lint.outcome == 'success' || steps.ux_lint.outcome == 'failure') }}
         uses: actions/upload-artifact@v6
         with:
-          name: career-documents
-          path: output/pdf/
-          if-no-files-found: warn
+          name: ux-lint-captures
+          path: .playwright-mcp/ux-lint/after/
+          include-hidden-files: true
+          if-no-files-found: error
           retention-days: 7
+
+      - name: Verify homepage intro, curation and navigation
+        run: npm run test:homepage

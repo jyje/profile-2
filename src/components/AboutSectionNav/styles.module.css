@@ -1,0 +1,24 @@
+.nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--site-space-2) var(--site-space-6);
+  margin-bottom: var(--site-space-10);
+  padding-bottom: var(--site-space-4);
+  border-bottom: 1px solid var(--site-border);
+}
+
+.nav a {
+  padding: 0.35rem 0;
+  color: var(--site-muted);
+  overflow-wrap: anywhere;
+}
+
+.nav a[aria-current='page'] {
+  color: var(--site-accent);
+  font-weight: 700;
+}
+
+.nav a:focus-visible {
+  outline: 2px solid var(--site-accent);
+  outline-offset: 4px;
+}

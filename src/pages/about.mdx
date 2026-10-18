@@ -1,14 +1,24 @@
 ---
 title: 소개
+breadcrumbs:
+  - label: 소개
 description: AI 플랫폼 엔지니어 전제영을 소개합니다.
 wrapperClassName: site-about-page
 hide_table_of_contents: true
+profile_template: {kind: page, version: 1}
+profile_format: 1
 ---
 
 import Link from '@docusaurus/Link';
+import AboutSectionNav from '@site/src/components/AboutSectionNav';
 
 <header className="about-hero">
   <div className="container">
+    <AboutSectionNav label="소개 하위 탐색" current="/about/" items={[
+      {href: '/about/', label: '개요'},
+      {href: '/about/portfolio/', label: '포트폴리오'},
+      {href: '/about/resume/', label: '이력서'},
+    ]} />
     <p className="about-eyebrow">ABOUT / JEAYOUNG JEON</p>
     <h1 className="about-name">전제영</h1>
     <p className="about-lead">AI 플랫폼 엔지니어입니다.</p>
@@ -36,6 +46,7 @@ import Link from '@docusaurus/Link';
 - name: 기술지식
   description: 컴퓨터 비전과 차량 기술 연구 경험을 기술 의사 결정에 활용합니다.
 ```
+
   </section>
 
   <section className="about-section">
@@ -62,6 +73,7 @@ import Link from '@docusaurus/Link';
   start: 2008
   end: 2012
 ```
+
   </section>
 
   <section className="about-section">
@@ -73,7 +85,7 @@ import Link from '@docusaurus/Link';
       </Link>
       <Link to="/about/resume">
         <span>이력서 <span aria-hidden="true">↗</span></span>
-        <small>경력과 역량을 간결하게 정리했습니다.</small>
+        <small>자세한 이력이 필요하시면 연락해주세요.</small>
       </Link>
     </div>
   </section>

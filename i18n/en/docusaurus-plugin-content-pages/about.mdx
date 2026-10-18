@@ -1,14 +1,24 @@
 ---
 title: Overview
+breadcrumbs:
+  - label: About
 description: About Jeayoung Jeon, an AI platform engineer.
 wrapperClassName: site-about-page
 hide_table_of_contents: true
+profile_template: {kind: page, version: 1}
+profile_format: 1
 ---
 
 import Link from '@docusaurus/Link';
+import AboutSectionNav from '@site/src/components/AboutSectionNav';
 
 <header className="about-hero">
   <div className="container">
+    <AboutSectionNav label="About sections" current="/about/" items={[
+      {href: '/about/', label: 'Overview'},
+      {href: '/about/portfolio/', label: 'Portfolio'},
+      {href: '/about/resume/', label: 'Resume'},
+    ]} />
     <p className="about-eyebrow">ABOUT / JEAYOUNG JEON</p>
     <h1 className="about-name">Jeayoung Jeon</h1>
     <p className="about-lead">I am an AI platform engineer.</p>
@@ -36,6 +46,7 @@ import Link from '@docusaurus/Link';
 - name: Technical depth
   description: Applying computer vision and automotive research experience.
 ```
+
   </section>
 
   <section className="about-section">
@@ -62,6 +73,7 @@ import Link from '@docusaurus/Link';
   start: 2008
   end: 2012
 ```
+
   </section>
 
   <section className="about-section">
@@ -73,7 +85,7 @@ import Link from '@docusaurus/Link';
       </Link>
       <Link to="/about/resume">
         <span>Resume <span aria-hidden="true">↗</span></span>
-        <small>A concise overview of my experience and skills.</small>
+        <small>Get in touch for more about my experience.</small>
       </Link>
     </div>
   </section>
