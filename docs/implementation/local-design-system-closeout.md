@@ -46,5 +46,41 @@ entry is not authentication, request storage, approval or protected hosting.
   state. Documentation/editor/skill follow-ups passed the static staged gate.
 - Existing Obsidian local settings remain unchanged and uncommitted.
 
-Only local commits were authorized. No push, remote CI execution, independent
-review, merge or deployment is claimed. The live site is unchanged by this work.
+At the initial delivery only local commits were authorized. That record did not
+claim push, remote CI execution, independent review, merge or deployment. The
+subsequent owner-authorized PR work is recorded below.
+
+## PR #38 integration hardening
+
+The owner subsequently authorized push and completion of
+[PR #38](https://github.com/jyje/profile-2/pull/38), including Draft-to-Ready
+transitions after verification, but not merge. The PR was made Draft before fixes.
+
+Merging main introduced 27 authored English title-only wiki files without the new
+format/template stamps, a design fixture incompatible with mandatory English
+titles, and an outdated About instruction. The original CI stopped at content
+validation and its unconditional artifact upload then failed without captures.
+
+Implementation `3623c90` reconciles those contracts without relaxing validators:
+
+- The 27 files retain their exact titles and empty bodies; only version metadata
+  was added. Borrowed content still belongs to staging, not the formatter.
+- Bilingual fixtures and migration regression tests cover public and development
+  staging without copying content into authored title-only files.
+- CI/Pages upload only after the named UX step runs, preserve failure diagnostics,
+  include the exact hidden capture directory and still fail for missing evidence.
+  Negative tests reject broader paths, unconditional upload and weakened checks.
+- Local unit/contract tests: 57 passed. Fresh staged public build, typecheck,
+  420/420 UX cases, three canaries, 517 slash/slashless HTML routes and 901 public
+  output files passed. Public About/blog navigation, wiki graphs and homepage
+  browser checks passed against the copied fresh public build. Fresh English wiki
+  and Korean portfolio captures were visually inspected.
+- [Remote CI for the implementation](https://github.com/jyje/profile-2/actions/runs/39104289166)
+  passed all stages on Ubuntu ARM/Node 26, including clean dependency install,
+  browser checks, captures, artifact upload and homepage verification.
+
+This documentation-only cleanup closes the integration record. Final-head checks
+and readiness are reported on the PR; an earlier successful implementation run
+is not presented as a check of a later commit. No independent review, merge or
+production deployment is claimed. Private source preservation and the existing
+uncommitted Obsidian settings remain unchanged.
