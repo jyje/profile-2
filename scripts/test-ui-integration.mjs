@@ -39,6 +39,16 @@ test('theme behavior stays upstream, with only site-specific label and link wrap
   }
 });
 
+test('About Overview is active only on its exact route', async () => {
+  const config = await fs.readFile(path.join(root, 'docusaurus.config.ts'), 'utf8');
+  const match = config.match(/\{to: '\/about', label: 'Overview', activeBaseRegex: '([^']+)'\}/);
+  assert.ok(match, 'Overview needs an explicit exact-route matcher');
+  const isOverviewRoute = new RegExp(match[1]);
+  assert.equal(isOverviewRoute.test('/profile-2/en/about/'), true);
+  assert.equal(isOverviewRoute.test('/profile-2/en/about/resume/'), false);
+  assert.equal(isOverviewRoute.test('/profile-2/en/about/portfolio/'), false);
+});
+
 test('prefixed utilities merge without consuming existing CSS-module classes', () => {
   assert.equal(cn('tw:px-4', 'tw:px-8', false, 'documentLayout'), 'tw:px-8 documentLayout');
   assert.equal(cn('tw:hover:bg-primary', 'tw:hover:bg-accent'), 'tw:hover:bg-accent');
