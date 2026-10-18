@@ -43,10 +43,19 @@ test('About Overview is active only on its exact route', async () => {
   const config = await fs.readFile(path.join(root, 'docusaurus.config.ts'), 'utf8');
   const match = config.match(/\{to: '\/about', label: 'Overview', activeBaseRegex: '([^']+)'\}/);
   assert.ok(match, 'Overview needs an explicit exact-route matcher');
+  const parent = config.match(/to: '\/about',[\s\S]*?label: 'About',[\s\S]*?className: 'site-about-dropdown',[\s\S]*?activeBaseRegex: '([^']+)'/);
+  assert.ok(parent, 'About dropdown trigger needs an exact-route matcher');
   const isOverviewRoute = new RegExp(match[1]);
+  const isAboutParentRoute = new RegExp(parent[1]);
   assert.equal(isOverviewRoute.test('/profile-2/en/about/'), true);
   assert.equal(isOverviewRoute.test('/profile-2/en/about/resume/'), false);
   assert.equal(isOverviewRoute.test('/profile-2/en/about/portfolio/'), false);
+  assert.equal(isAboutParentRoute.test('/profile-2/en/about/'), true);
+  assert.equal(isAboutParentRoute.test('/profile-2/en/about/resume/'), false);
+  assert.equal(isAboutParentRoute.test('/profile-2/en/about/portfolio/'), false);
+
+  const css = await fs.readFile(path.join(root, 'src/css/custom.css'), 'utf8');
+  assert.match(css, /\.site-about-dropdown ~ \.dropdown__menu \.dropdown__link:hover:not\(\.dropdown__link--active\):not\(:focus-visible\)\s*\{[^}]*background-color:\s*transparent/);
 });
 
 test('prefixed utilities merge without consuming existing CSS-module classes', () => {

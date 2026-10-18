@@ -77,6 +77,12 @@
   border-bottom: 1px solid var(--site-border);
 }
 
+/* Keep pointer hover distinct from the current page in the About dropdown. */
+.site-about-dropdown ~ .dropdown__menu .dropdown__link:hover:not(.dropdown__link--active):not(:focus-visible) {
+  background-color: transparent;
+  color: var(--ifm-color-primary);
+}
+
 .site-github-compact::before {
   content: '';
   display: inline-block;
