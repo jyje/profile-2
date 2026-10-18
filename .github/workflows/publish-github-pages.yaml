@@ -74,7 +74,7 @@ jobs:
 
       - name: Upload UX lint captures and report
         if: ${{ always() && (steps.ux_lint.outcome == 'success' || steps.ux_lint.outcome == 'failure') }}
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: pages-ux-lint-captures
           path: .playwright-mcp/ux-lint/after/
