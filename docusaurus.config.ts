@@ -185,6 +185,8 @@ const config: Config = {
         {
           to: '/about',
           label: 'About',
+          className: 'site-about-dropdown',
+          activeBaseRegex: '/about/?$',
           position: 'left',
           items: [
             {to: '/about', label: 'Overview', activeBaseRegex: '/about/?$'},
