@@ -187,7 +187,7 @@ const config: Config = {
           label: 'About',
           position: 'left',
           items: [
-            {to: '/about', label: 'Overview'},
+            {to: '/about', label: 'Overview', activeBaseRegex: '/about/?$'},
             {to: '/about/portfolio', label: 'Portfolio'},
             {to: '/about/resume', label: 'Resume'},
           ],
