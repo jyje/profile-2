@@ -37,16 +37,38 @@ test('authored pages declare navigation data instead of placing breadcrumbs insi
   }
 });
 
-test('PR and Pages workflows gate publication on screenshot UX lint', async () => {
+function assertCaptureWorkflow(workflow,name){
+  const steps=workflow.jobs.build.steps;
+  const lint=steps.findIndex(step=>step.run==='npm run lint:ux');
+  assert.ok(lint>steps.findIndex(step=>/npm run build/.test(step.run??'')),name);
+  assert.equal(steps[lint].id,'ux_lint');
+  const upload=steps.find(step=>step.uses?.startsWith('actions/upload-artifact@')&&/ux-lint/.test(step.with?.name??''));
+  assert.ok(upload,name);
+  assert.ok(steps.indexOf(upload)>lint);
+  // Skip uploads when an earlier gate prevented captures. If the gate ran,
+  // preserve diagnostics on failure and still require real evidence files.
+  assert.equal(upload.if,"${{ always() && (steps.ux_lint.outcome == 'success' || steps.ux_lint.outcome == 'failure') }}");
+  assert.equal(upload.with.path,'.playwright-mcp/ux-lint/after/');
+  assert.equal(upload.with['include-hidden-files'],true);
+  assert.equal(upload.with['if-no-files-found'],'error');
+  if(name.startsWith('publish')){
+    assert.ok(lint<steps.findIndex(step=>step.uses?.startsWith('actions/upload-pages-artifact@')));
+    assert.ok(steps[lint].env.VERIFY_BASE_PATH.includes('steps.pages.outputs.base_path'));
+  }
+}
+test('PR and Pages workflows gate publication and narrowly upload evidence only after UX lint runs', async () => {
   for (const name of ['ci.yaml', 'publish-github-pages.yaml']) {
     const workflow = yaml.load(await fs.readFile(`.github/workflows/${name}`, 'utf8'));
-    const steps = workflow.jobs.build.steps;
-    const lint = steps.findIndex(step => step.run === 'npm run lint:ux');
-    assert.ok(lint > steps.findIndex(step => /npm run build/.test(step.run ?? '')), name);
-    assert.ok(steps.some(step => step.if === 'always()' && /ux-lint/.test(step.with?.path ?? '')), name);
-    if (name.startsWith('publish')) {
-      assert.ok(lint < steps.findIndex(step => step.uses?.startsWith('actions/upload-pages-artifact@')));
-      assert.ok(steps[lint].env.VERIFY_BASE_PATH.includes('steps.pages.outputs.base_path'));
+    assertCaptureWorkflow(workflow,name);
+    for(const corrupt of [
+      step=>step.if='always()',
+      step=>step.with.path='.',
+      step=>step.with['include-hidden-files']=false,
+      step=>step.with['if-no-files-found']='warn',
+    ]){
+      const broken=structuredClone(workflow);
+      corrupt(broken.jobs.build.steps.find(step=>step.uses?.startsWith('actions/upload-artifact@')&&/ux-lint/.test(step.with?.name??'')));
+      assert.throws(()=>assertCaptureWorkflow(broken,name));
     }
   }
 });

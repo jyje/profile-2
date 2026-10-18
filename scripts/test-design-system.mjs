@@ -10,6 +10,7 @@ import {cssDesign, jsxDesign} from './design-system/rules.mjs';
 import {runPrecommit, affectsRendering, assertBootstrapMatchesIndex} from './design-system/precommit.mjs';
 import {prepareContent} from './prepare-content.mjs';
 import {ignorePatterns, isDocIgnored} from '../plugins/content-visibility.cjs';
+import {parseDocument, planLocaleFallbacks} from './locale-fallback.mjs';
 
 const project = path.resolve(import.meta.dirname, '..');
 function git(root, ...args) {return execFileSync('git', ['-C', root, ...args], {encoding:'utf8', env:{...process.env,GIT_CONFIG_GLOBAL:os.devNull,GIT_CONFIG_SYSTEM:os.devNull}});}
@@ -22,7 +23,9 @@ async function fixture(t) {
   }
   for (const dir of ['src/pages','src/components/ContentTemplates','content/en','i18n/en/docusaurus-plugin-content-pages']) await write(`${dir}/.keep`, '');
   await write('README.md','Original\n');
+  await write('.docignore','content/_templates/\n');
   await write('content/ko/wiki/d/note.md',await formatContent('---\ntitle: 📄 Note\n---\n\nA note.\n','content/ko/wiki/d/note.md',{migrate:true,root}));
+  await write('content/en/wiki/d/note.md',await formatContent('---\ntitle: 📄 English note\n---\n','content/en/wiki/d/note.md',{migrate:true,root}));
   git(root,'init','-q'); git(root,'add','.');
   await fs.symlink(path.join(project,'node_modules'),path.join(root,'node_modules'),'dir');
   return {root,write};
@@ -101,6 +104,31 @@ test('templates are excluded in both publication modes, including colocated asse
     prepareContent(root,mode);
     const files=await fs.readdir(path.join(root,'.content-build'),{recursive:true});
     assert.ok(!files.some(f=>f.includes('_templates')));
+  }
+});
+test('title-only locale documents migrate without copying or changing the borrowed body',async t=>{
+  const {root,write}=await fixture(t);
+  const relative='content/en/wiki/d/note.md';
+  const target=path.join(root,relative);
+  const source=path.join(root,'content/ko/wiki/d/note.md');
+  const before=await fs.readFile(source,'utf8');
+  await write(relative,'---\ntitle: 📄 English note\n---\n');
+  assert.ok((await runContentFormat({root})).failures.some(e=>e.includes(relative)&&e.includes('CONTENT-001')));
+  assert.deepEqual((await runContentFormat({root,write:true,migrate:true})).failures,[]);
+  const migrated=await fs.readFile(target,'utf8');
+  assert.equal(parseDocument(migrated,target).empty,true);
+  assert.equal(parseDocument(migrated,target).title,'📄 English note');
+  assert.equal(await fs.readFile(source,'utf8'),before);
+  assert.equal(planLocaleFallbacks(root).get(target).file,source);
+  assert.deepEqual((await runContentFormat({root})).failures,[]);
+  for(const mode of ['public','development']){
+    prepareContent(root,mode);
+    const staged=parseDocument(await fs.readFile(path.join(root,'.content-build/en/wiki/d/note.md'),'utf8'),target);
+    assert.equal(staged.title,'📄 English note');
+    assert.equal(staged.data.profile_format,1);
+    assert.match(staged.body,/English version unavailable/);
+    assert.match(staged.body,/A note\./);
+    assert.equal(await fs.readFile(target,'utf8'),migrated);
   }
 });
 test('hook safely autofixes fully staged files and validates the index, not unstaged or untracked edits',async t=>{

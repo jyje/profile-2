@@ -56,8 +56,15 @@ A document that has a title but an empty body borrows the body of the same docum
 ```md
 ---
 title: "☸️ Kubernetes"
+profile_template: {kind: wiki, version: 1}
+profile_format: 1
 ---
 ```
+
+Title-only locale files are authored sources too: keep their template and formatter
+versions, and run `npm run content:migrate` after adding legacy files or merging
+content from a branch without these stamps. Migration must leave the body empty
+so staging, not the authoring formatter, supplies the borrowed text.
 
 Explore wiki, blog and tag connections in the [graph at the bottom of Wiki Home](../index.md#document-graph). Each wiki document and blog post also receives a local graph automatically, showing direct links, backlinks and its own tags. No Markdown embed is required. Grab and shake a node to move its neighbors, or pan the background and use the zoom controls. The node selector and document link provide keyboard access.
 

@@ -72,14 +72,16 @@ jobs:
         run: npm run test:breadcrumbs
 
       - name: UX-001 screenshot and coordinate lint
+        id: ux_lint
         run: npm run lint:ux
 
       - name: Upload UX lint captures and report
-        if: always()
+        if: ${{ always() && (steps.ux_lint.outcome == 'success' || steps.ux_lint.outcome == 'failure') }}
         uses: actions/upload-artifact@v6
         with:
           name: ux-lint-captures
           path: .playwright-mcp/ux-lint/after/
+          include-hidden-files: true
           if-no-files-found: error
           retention-days: 7
 

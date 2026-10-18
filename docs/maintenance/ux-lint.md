@@ -85,6 +85,12 @@ deployment base path, so direct main pushes do not bypass this check. Explicit
 human/agent inspection remains required for sign-off. Do not weaken tolerances or
 replace expectations to accept a regression. Reports are ignored, not content.
 
+The gate has step ID `ux_lint`. Its upload step runs only when that step's outcome
+is success or failure; an earlier failure that skips captures does not trigger a
+second misleading artifact error. An executed gate still requires evidence files.
+The action explicitly includes hidden files only within the exact public capture
+directory, never the entire hidden parent or checkout.
+
 ## Initial audit
 
 At 1222px, Korean light-mode Home SVG positions before normalization were:

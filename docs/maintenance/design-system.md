@@ -49,6 +49,11 @@ and layout redesigns require judgment. `content:format` does not upgrade metadat
 heading hierarchy. Neither replaces articles with scaffold prose nor changes
 dates, slugs, publication flags or facts. Home remains its interactive React page.
 
+Title-only locale files are authored sources and obey the same version contract.
+When merging new files from an older branch, run the explicit migration and
+review that only missing stamps/formatting changed. Keep their bodies empty:
+locale staging owns borrowed content. Tests cover this in both publication modes.
+
 Canonical inputs are `content/{ko,en}/{blog,wiki}` and authored Korean/English
 page MDX, including `.docignore` guides/design notes. Generated mirrors, hidden
 drafts, build output and private repositories are not inputs. Token changes retain
@@ -130,6 +135,13 @@ does not validate an unstaged formatter against an old staged tree.
 Git options can bypass local hooks, so they are not authorization boundaries.
 PR CI, public-build preflight, and Pages pre-upload checks independently enforce
 the rules. Repository branch-protection settings were not changed.
+
+CI and Pages upload diagnostics only after the named UX gate has actually run,
+on success or failure, not after an earlier skipped gate. Missing output after a
+run remains an error. `include-hidden-files: true` is restricted to the exact
+`.playwright-mcp/ux-lint/after/` directory because its parent is hidden. Never
+widen that path to the checkout, hidden drafts or other local artifacts. Workflow
+tests reject unconditional uploads, broader paths and relaxed missing-file checks.
 
 ## Local completion evidence: 2026-10-18
 
