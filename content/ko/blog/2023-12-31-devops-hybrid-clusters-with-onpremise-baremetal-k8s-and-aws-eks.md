@@ -9,7 +9,7 @@ tags:
   - devops
   - kubernetes
   - aws
-  - onpremise
+  - on-premise
 image: ./assets/286a79d6-5433-4315-9309-61f6a6235f4c.jpg
 profile_template: {kind: blog, version: 1}
 profile_format: 1

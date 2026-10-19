@@ -59,7 +59,7 @@ async function computeNetwork(context, allContent) {
     const fallback = locale === 'en' && fallbacks[authored] === 'ko';
     const tags = [...new Set((m.tags ?? []).map(tagSlug).filter(Boolean))];
     for (const tag of tags) {
-      if (!registry[tag]?.label?.[locale]) throw new Error(`Unregistered ${locale} tag '${tag}' in ${source}`);
+      if (!registry[tag]?.label) throw new Error(`Unregistered tag '${tag}' in ${source}`);
     }
     return {
       id: `${kind}:${m.permalink}`, kind, title: m.title, description: m.description ?? '',
@@ -125,7 +125,7 @@ async function computeNetwork(context, allContent) {
     for (const slug of entry.tags) {
       const id = `tag:${slug}`;
       if (!nodeById.has(id)) {
-        const node = {id, title: `#${registry[slug].label[locale]}`, path: joinRoute(base, `tags/${slug}`),
+        const node = {id, title: `#${registry[slug].label}`, path: joinRoute(base, `tags/${slug}`),
           group: 'tag', isTag: true, koreanFallback: false, incoming: 0, outgoing: 0};
         nodes.push(node); nodeById.set(id, node);
       }
