@@ -26,6 +26,46 @@ export function loadLayouts(root) {
   return registry;
 }
 
+const KEBAB = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
+const TAG_LABEL = /^[A-Za-z0-9]+(?:_[A-Za-z0-9]+)*$/;
+
+// Tags are one identity in every language: an English kebab-case slug, shown as one English label like
+// `Raspberry_Pi`. These rules only report. There is deliberately no autofix: renaming a tag changes URLs.
+export function loadTagRegistry(root) {
+  const file = path.join(root, 'data/tags.yml');
+  if (!fs.existsSync(file)) return undefined;
+  const text = fs.readFileSync(file, 'utf8');
+  const tags = yaml.load(text)?.tags ?? {};
+  const aliases = new Map();
+  for (const [slug, entry] of Object.entries(tags)) for (const alias of entry?.aliases ?? []) aliases.set(alias, slug);
+  return {text, tags, slugs: new Set(Object.keys(tags)), aliases};
+}
+
+export function lintTagRegistry(registry) {
+  const out = [];
+  if (!registry) return out;
+  const lines = registry.text.split('\n');
+  const lineOf = slug => Math.max(1, lines.findIndex(line => line.startsWith(`  ${slug}:`)) + 1);
+  const add = (rule, slug, message) => out.push({severity: 'error', rule, file: 'data/tags.yml', line: lineOf(slug), message});
+  const labels = new Map();
+  for (const [slug, entry] of Object.entries(registry.tags)) {
+    if (!KEBAB.test(slug)) add('tag-slug-format', slug, `Tag slug must be English kebab-case: ${slug}`);
+    const label = entry?.label;
+    if (typeof label !== 'string') { add('tag-label-type', slug, `Tag "${slug}" needs one label that is the same in every language, not a per-locale map`); continue; }
+    if (!TAG_LABEL.test(label)) add('tag-label-format', slug, `Label "${label}" must be English words joined by "_", like Raspberry_Pi`);
+    else if (label.toLowerCase().replaceAll('_', '-') !== slug) add('tag-label-slug', slug, `Label "${label}" must spell the slug "${slug}" (lowercase, "_" for "-")`);
+    const key = label.toLowerCase();
+    if (labels.has(key)) add('tag-label-duplicate', slug, `Label "${label}" is already used by "${labels.get(key)}"`);
+    else labels.set(key, slug);
+    for (const alias of entry.aliases ?? []) {
+      if (!KEBAB.test(alias)) add('tag-alias-format', slug, `Alias "${alias}" must be English kebab-case`);
+      if (alias in registry.tags) add('tag-alias-collision', slug, `Alias "${alias}" is also a registered tag`);
+      else if (registry.aliases.get(alias) !== slug) add('tag-alias-collision', slug, `Alias "${alias}" is claimed by "${registry.aliases.get(alias)}" too`);
+    }
+  }
+  return out;
+}
+
 export function parseDocument(source) {
   const match = source.match(/^---\r?\n([\s\S]*?)\r?\n---[ \t]*(?:\r?\n|$)/);
   let frontMatter = {};
@@ -78,7 +118,7 @@ export function introKinds(document) {
   return kinds;
 }
 
-export function lintDocument(root, file, source, registry, {assets = true} = {}) {
+export function lintDocument(root, file, source, registry, {assets = true, tags} = {}) {
   const relative = path.relative(root, file).replaceAll('\\', '/');
   const out = [];
   const add = (severity, rule, line, message) => out.push({severity, rule, file: relative, line, message});
@@ -94,6 +134,18 @@ export function lintDocument(root, file, source, registry, {assets = true} = {})
   for (const heading of document.headings.filter(item => item.level === 2)) {
     if (seen.has(heading.text)) add('warn', 'heading-duplicate-h2', heading.line, `Duplicate H2: ${heading.text}`);
     seen.add(heading.text);
+  }
+  if (tags && document.frontMatter?.tags !== undefined) {
+    const list = [].concat(document.frontMatter.tags ?? []);
+    const front = source.split('\n').slice(0, document.offset);
+    const lineOfTag = tag => Math.max(1, front.findIndex(line => line.includes(String(tag))) + 1);
+    const seenTags = new Set();
+    for (const tag of list) {
+      if (typeof tag !== 'string' || !KEBAB.test(tag)) { add('error', 'tag-format', lineOfTag(tag), `Tags must be English kebab-case slugs, got ${JSON.stringify(tag)}`); continue; }
+      if (seenTags.has(tag)) add('error', 'tag-duplicate', lineOfTag(tag), `Duplicate tag "${tag}"`);
+      seenTags.add(tag);
+      if (!tags.slugs.has(tag)) add('error', 'tag-unregistered', lineOfTag(tag), tags.aliases.has(tag) ? `"${tag}" is an old alias; use "${tags.aliases.get(tag)}"` : `Tag "${tag}" is not registered in data/tags.yml`);
+    }
   }
   const image = document.frontMatter?.image;
   if (assets && typeof image === 'string' && image.startsWith('/') && !fs.existsSync(path.join(root, 'static', image))) {
@@ -163,7 +215,8 @@ export function lintDocument(root, file, source, registry, {assets = true} = {})
 
 export function lintContent(root, options = {}) {
   const registry = loadLayouts(root);
-  const diagnostics = [];
+  const tags = loadTagRegistry(root);
+  const diagnostics = lintTagRegistry(tags);
   const parsed = new Map();
   for (const locale of LOCALES) {
     for (const kind of KINDS) {
@@ -172,11 +225,21 @@ export function lintContent(root, options = {}) {
       for (const relative of fs.readdirSync(directory, {recursive: true}).sort()) {
         if (!/\.mdx?$/.test(relative) || relative.split(path.sep).some(part => part.startsWith('.'))) continue;
         const file = path.join(directory, relative);
-        const result = lintDocument(root, file, fs.readFileSync(file, 'utf8'), registry, options);
+        const result = lintDocument(root, file, fs.readFileSync(file, 'utf8'), registry, {...options, tags});
         diagnostics.push(...result.diagnostics);
         parsed.set(`${locale}/${kind}/${relative.replace(/\.mdx?$/, '')}`, {...result, file});
       }
     }
+  }
+  // The same document carries the same tags in every language.
+  for (const [key, korean] of parsed) {
+    if (!key.startsWith('ko/')) continue;
+    const english = parsed.get(key.replace(/^ko\//, 'en/'));
+    const a = korean.document.frontMatter?.tags;
+    const b = english?.document.frontMatter?.tags;
+    if (a === undefined || b === undefined) continue;
+    const norm = list => [...new Set([].concat(list ?? []).map(String))].sort().join(', ');
+    if (norm(a) !== norm(b)) diagnostics.push({severity: 'error', rule: 'tag-locale-parity', file: path.relative(root, english.file).replaceAll('\\', '/'), line: 1, message: `Tags differ from ko: [${norm(b)}] vs [${norm(a)}]`});
   }
   // Both locales must agree on structure once both have a body.
   for (const [key, korean] of parsed) {
