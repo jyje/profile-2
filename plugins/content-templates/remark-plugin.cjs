@@ -45,6 +45,14 @@ function validateItems(items, template, language) {
       }
     }
 
+    if (template.single && items.length !== 1) {
+      throw new Error(`Expected exactly one item for ${language}`);
+    }
+
+    if (template.single && !/^[a-z0-9-]+$/.test(item.name)) {
+      throw new Error(`Field "name" must be a lowercase directory name in ${language} item ${index + 1}`);
+    }
+
     return item;
   });
 }

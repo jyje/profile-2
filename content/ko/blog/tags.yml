@@ -103,9 +103,9 @@ hyundai-autoever:
   label: Hyundai AutoEver
   permalink: /hyundai-autoever
   description: Works at [Hyundai AutoEver](https://www.linkedin.com/company/hyundai-autoever).
-infra-base:
-  label: 기반 인프라
-  permalink: /infra-base
+infra:
+  label: 인프라
+  permalink: /infra
 k8s:
   label: Kubernetes
   permalink: /k8s
@@ -140,6 +140,9 @@ maxst:
   label: MAXST
   permalink: /maxst
   description: Works at [MAXST](https://www.linkedin.com/company/maxst).
+mini-pc:
+  label: 미니 PC
+  permalink: /mini-pc
 mlops:
   label: MLOps
   permalink: /mlops
@@ -180,9 +183,9 @@ posts:
 python:
   label: Python
   permalink: /python
-raspberrypi:
+raspberry-pi:
   label: Raspberry Pi
-  permalink: /raspberrypi
+  permalink: /raspberry-pi
   description: >-
     Raspberry Pi is a arm based single board computer that is popular among hobbyists and educators. It is used in a
     wide range of projects from home automation to robotics. I use pies for various projects and will be sharing my

@@ -114,6 +114,15 @@ Repeated structured data in blog posts, wiki documents, and pages can use YAML c
   start: 2025
 ```
 
+### Anatomy figure
+
+`anatomy-figure` embeds an interactive figure made with the [Anatomy skill](https://github.com/wheresryan22/anatomy). It takes exactly one item. `name` is a folder under `static/anatomy/`, and the light version lives in the `<name>-light/` folder. Both folders need an `index.html`. `title` is the figure's accessible name. The version that matches the site's light or dark mode is shown.
+
+```anatomy-figure
+- name: raspberry-pi
+  title: Interactive figure of the Raspberry Pi 4 Model B
+```
+
 Keep ordinary prose, tables, and lists as Markdown. Each visual template has one dedicated component; do not combine multiple template renderers into one component.
 
 ## Writing rules

@@ -219,10 +219,10 @@ tags:
     description:
       ko: Works at [Hyundai AutoEver](https://www.linkedin.com/company/hyundai-autoever).
       en: Works at [Hyundai AutoEver](https://www.linkedin.com/company/hyundai-autoever).
-  infra-base:
+  infra:
     label:
-      ko: 기반 인프라
-      en: Infrastructure Base
+      ko: 인프라
+      en: Infrastructure
     description:
       ko: ''
       en: ''
@@ -289,6 +289,13 @@ tags:
     description:
       ko: Works at [MAXST](https://www.linkedin.com/company/maxst).
       en: Works at [MAXST](https://www.linkedin.com/company/maxst).
+  mini-pc:
+    label:
+      ko: 미니 PC
+      en: Mini PC
+    description:
+      ko: ''
+      en: ''
   mlops:
     label:
       ko: MLOps
@@ -371,7 +378,7 @@ tags:
     description:
       ko: ''
       en: ''
-  raspberrypi:
+  raspberry-pi:
     label:
       ko: Raspberry Pi
       en: Raspberry Pi

@@ -13,6 +13,7 @@ import {mergeKoreanFallbackDocs} from './build-wiki-graph.mjs';
 import {prepareContent} from './prepare-content.mjs';
 import {shouldRebuild, authoredWatchPaths} from './source-watch.mjs';
 import {validateWikiTitles} from './validate-wiki-titles.mjs';
+import {assertContentLint} from './lint-content.mjs';
 import {syncWikiNavigation} from './sync-wiki-navigation.mjs';
 import {syncPublicData} from './public-data.mjs';
 
@@ -59,6 +60,7 @@ function syncTagDefinitions() {
 
 export function syncAll() {
   validateWikiTitles(ROOT);
+  assertContentLint(ROOT);
   syncTagDefinitions();
   prepareContent(ROOT);
   mirror();

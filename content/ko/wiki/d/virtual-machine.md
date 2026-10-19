@@ -1,7 +1,7 @@
 ---
 title: "🖥️ 가상 머신"
 tags:
-  - infra-base
+  - infra
 type: Reference
 status: draft
 sources:

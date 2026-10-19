@@ -111,6 +111,15 @@ Obsidian 콜아웃 문법을 그대로 쓰면 사이트에서 Docusaurus 알림 
   start: 2025
 ```
 
+### Anatomy 그림
+
+`anatomy-figure`는 [Anatomy 스킬](https://github.com/wheresryan22/anatomy)로 만든 인터랙티브 그림을 문서에 넣습니다. 항목은 하나만 쓸 수 있습니다. `name`은 `static/anatomy/` 아래의 폴더 이름이고, 라이트 버전은 `<name>-light/` 폴더에 둡니다. 두 폴더 모두 `index.html`이 있어야 합니다. `title`은 그림의 접근성 이름입니다. 사이트의 라이트/다크 모드에 맞춰 알맞은 버전이 열립니다.
+
+```anatomy-figure
+- name: raspberry-pi
+  title: Raspberry Pi 4 Model B 인터랙티브 그림
+```
+
 일반 문장, 표, 평범한 목록에는 템플릿을 쓰지 않고 Markdown을 유지합니다. 템플릿 하나는 전용 컴포넌트 하나로 구현하고, 다른 템플릿과 렌더링 책임을 섞지 않습니다.
 
 ## 글 쓰기 규칙

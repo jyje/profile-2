@@ -1,10 +1,41 @@
 {
   "version": 1,
-  "formatter": {"version": 1, "engine": "prettier", "engineVersion": "3.9.10", "config": "design-system/format-v1.json"},
-  "blocks": {"version": 1, "schema": "plugins/content-templates/schemas/v1.cjs"},
+  "formatter": {
+    "version": 1,
+    "engine": "prettier",
+    "engineVersion": "3.9.10",
+    "config": "design-system/format-v1.json"
+  },
+  "blocks": {
+    "version": 1,
+    "schema": "plugins/content-templates/schemas/v1.cjs"
+  },
   "templates": {
-    "blog": {"version": 1, "file": "content/_templates/v1/{locale}/blog.md"},
-    "wiki": {"version": 1, "file": "content/_templates/v1/{locale}/wiki.md"},
-    "page": {"version": 1, "file": "content/_templates/v1/{locale}/page.mdx"}
+    "blog": {
+      "version": 1,
+      "file": "content/_templates/v1/{locale}/blog.md"
+    },
+    "wiki": {
+      "version": 1,
+      "file": "content/_templates/v1/{locale}/wiki.md"
+    },
+    "page": {
+      "version": 1,
+      "file": "content/_templates/v1/{locale}/page.mdx"
+    }
+  },
+  "layouts": {
+    "reference": {
+      "latest": 1,
+      "versions": {
+        "1": {
+          "rules": "design-system/layouts/reference-v1.json",
+          "templates": {
+            "ko": "content/_templates/v1/ko/wiki-reference.md",
+            "en": "content/_templates/v1/en/wiki-reference.md"
+          }
+        }
+      }
+    }
   }
 }

@@ -1,0 +1,14 @@
+node_modules/
+.DS_Store
+*.log
+npm-debug.log*
+.env
+.env.*
+shots/
+audit.txt
+/capture.png
+.scratch/
+tmp/
+
+# profile-2: bundled examples (~10MB) are kept local and not committed
+/examples/

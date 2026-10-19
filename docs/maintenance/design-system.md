@@ -89,6 +89,16 @@ and idempotence, migrate and review the diff. Do not silently overwrite old pros
 or float engine versions. Engine updates that change output need a format
 version/migration. Nonbreaking new block names can preserve existing v1 aliases.
 
+A wiki page may also stamp a versioned **layout** with
+`profile_layout: {kind: reference, version: 1}`. Layouts sit beside the template
+stamp: `design-system/content-contract.json` registers each version, its rules live
+in `design-system/layouts/<kind>-v<N>.json`, and its scaffolds in
+`content/_templates/v<N>/{locale}/wiki-<kind>.md`. Scaffold one with
+`npm run content:new -- --kind wiki --layout reference ...`. `npm run lint:content`
+enforces the rules (H2 set and order, empty sections, intro visual, locale parity,
+Anatomy assets) and also runs inside `syncAll()`. A published layout version is
+immutable: a rule change is a new version that pages opt into explicitly.
+
 `media-figure` replaces legacy inline float HTML with one component/CSS module.
 YAML owns image/alt/caption/credit labels and links. Credits form a validated group;
 the component owns responsive placement and project-base-path asset handling.

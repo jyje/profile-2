@@ -45,6 +45,7 @@ jobs:
         run: |
           npm run lint:design
           npm run content:check
+          npm run lint:content
           npm run test:design
 
       - name: Verify UI compatibility boundaries

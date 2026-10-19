@@ -1,0 +1,10 @@
+.frame {
+  display: block;
+  width: 100%;
+  min-height: 24rem;
+  margin: var(--site-space-6) 0;
+  border: 0;
+  border-radius: 12px;
+  background: transparent;
+  color-scheme: normal;
+}
