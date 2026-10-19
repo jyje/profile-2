@@ -29,6 +29,8 @@ use CSS ellipsis with their full text retained in accessible names, tooltips and
 structured data. The original Home item is sticky at UX-001's unchanged origin.
 The list scrolls natively, initially toward the current document; directional
 ellipsis buttons appear only when there is more content in that direction.
+The controls also forward horizontal swipe/drag/trackpad input to the list;
+their overlay must not become a dead zone or activate a click after a drag.
 
 `BreadcrumbFrame/ScrollTrail` decorates the existing list without cloning links,
 replacing the wiki renderer, or moving DOM nodes after hydration. Touch swipes,

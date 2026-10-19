@@ -50,6 +50,7 @@
 .trail :global(.breadcrumbs[data-dragging]) { cursor: grabbing; user-select: none; }
 
 .edge {
+  touch-action: pan-y;
   position: absolute;
   top: 0;
   z-index: 2;
@@ -65,7 +66,7 @@
 }
 
 .edge[hidden] { display: none; }
-.edge:hover { color: var(--ifm-color-primary); background: var(--ifm-breadcrumb-item-background-active); }
+.edge:hover { color: var(--ifm-color-primary); }
 .after { right: 0; }
 
 /* Match the native BlogLayout sidebar column, not the article's reading width.

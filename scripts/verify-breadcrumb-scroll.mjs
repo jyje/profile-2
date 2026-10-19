@@ -61,9 +61,21 @@ export async function verifyBreadcrumbScroll(page, root, screenshots, locale) {
         await page.mouse.down();
         await page.mouse.move(box.x + box.width - 5, box.y + box.height / 2, {steps: 12});
         await page.mouse.up();
-        assert.ok((await metrics()).left < initial.left - 20, 'Mouse drag scrolls toward earlier paths');
+        assert.ok((await metrics()).left < initial.left - 20, `Mouse drag scrolls toward earlier paths: ${locale}/${width}/${theme}/${route}, initial=${JSON.stringify(initial)}, after=${JSON.stringify(await metrics())}`);
         assert.equal(page.url(), url, 'Dragging must not navigate');
         assert.deepEqual(await home(), anchor, 'Sticky Home geometry survives scrolling');
+        if (width === 390) {
+          await tail();
+          const control = await back.boundingBox();
+          const start = control.x + control.width / 2;
+          await page.mouse.move(start, control.y + control.height / 2);
+          await page.mouse.down();
+          await page.mouse.move(start + 60, control.y + control.height / 2, {steps: 12});
+          await page.mouse.up();
+          const after = (await metrics()).left;
+          assert.ok(after < initial.left - 40 && after > initial.left - 100, 'Ellipsis drag must not also click');
+          assert.equal(page.url(), url);
+        }
         await tail();
         await page.mouse.move(box.x + box.width - 70, box.y + box.height / 2);
         await page.mouse.wheel(-100, 0);
@@ -108,12 +120,30 @@ export async function verifyBreadcrumbScroll(page, root, screenshots, locale) {
     await touch.goto(root + routes[0]);
     await touch.locator('[data-breadcrumb-back]').waitFor();
     const trail = touch.locator('ul.breadcrumbs');
-    const before = await trail.evaluate(node => node.scrollLeft);
     const bounds = await trail.boundingBox();
     const cdp = await touchContext.newCDPSession(touch);
-    await cdp.send('Input.synthesizeScrollGesture', {x: bounds.x + bounds.width - 70,
-      y: bounds.y + bounds.height / 2, xDistance: 140, yDistance: 0, gestureSourceType: 'touch', speed: 500});
+    const swipe = async (x, distance) => {
+      const y = bounds.y + bounds.height / 2;
+      await cdp.send('Input.dispatchTouchEvent', {type: 'touchStart', touchPoints: [{x, y}]});
+      for (let step = 1; step <= 12; step++) {
+        await cdp.send('Input.dispatchTouchEvent', {type: 'touchMove', touchPoints: [{x: x + distance * step / 12, y}]});
+        await touch.evaluate(() => new Promise(resolve => requestAnimationFrame(resolve)));
+      }
+      await cdp.send('Input.dispatchTouchEvent', {type: 'touchEnd', touchPoints: []});
+    };
+    const before = await trail.evaluate(node => node.scrollLeft);
+    // Keep the entire native gesture inside the viewport and outside controls.
+    await swipe(bounds.x + bounds.width - 165, 110);
     await touch.waitForFunction(before => document.querySelector('ul.breadcrumbs').scrollLeft < before - 20, before);
+    await trail.evaluate(node => {node.scrollLeft = node.scrollWidth;});
+    const edge = touch.locator('[data-breadcrumb-back]');
+    await edge.waitFor();
+    const control = await edge.boundingBox();
+    const edgeBefore = await trail.evaluate(node => node.scrollLeft);
+    // The ellipsis itself must forward a swipe, not jump or activate its button.
+    await swipe(control.x + control.width / 2, 80);
+    const edgeAfter = await trail.evaluate(node => node.scrollLeft);
+    assert.ok(edgeAfter < edgeBefore - 40 && edgeAfter > edgeBefore - 130, `Ellipsis swipe scrolls without also clicking: before=${edgeBefore}, after=${edgeAfter}`);
     assert.equal(touch.url(), root + routes[0], 'Touch swipe must not navigate');
     await touch.screenshot({path: `${screenshots}/${locale}-390-touch.png`, animations: 'disabled'});
   } finally {await touchContext.close();}

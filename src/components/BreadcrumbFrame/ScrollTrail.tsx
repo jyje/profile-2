@@ -68,7 +68,11 @@ export default function ScrollTrail({children}: {children: ReactNode}) {
     mutations.observe(list, {childList: true, characterData: true, subtree: true});
     const down = (event: PointerEvent) => {
       suppressClick = false;
-      if (event.pointerType !== 'mouse' || event.button !== 0 || (event.target as Element).closest('.breadcrumbs__item') === home) return;
+      const target = event.target as Element;
+      const edge = target.closest('[data-breadcrumb-back],[data-breadcrumb-forward]');
+      // Native touch scroll handles the list. Overlay controls are siblings of
+      // that scroll area, so forward their horizontal gestures explicitly.
+      if ((event.pointerType !== 'mouse' && !edge) || event.button !== 0 || target.closest('.breadcrumbs__item') === home) return;
       drag = {id: event.pointerId, x: event.clientX, left: list.scrollLeft, moved: false};
     };
     const move = (event: PointerEvent) => {
@@ -76,12 +80,17 @@ export default function ScrollTrail({children}: {children: ReactNode}) {
       if (!drag.moved && Math.abs(event.clientX - drag.x) < 6) return;
       drag.moved = true;
       suppressClick = true;
-      list.setPointerCapture(event.pointerId);
+      host.setPointerCapture(event.pointerId);
       list.dataset.dragging = 'true';
       list.scrollLeft = drag.left + drag.x - event.clientX;
       event.preventDefault();
     };
     const up = () => {drag = undefined; delete list.dataset.dragging;};
+    const lost = (event: PointerEvent) => {
+      // Touch starts with implicit capture on the pressed button. Transferring
+      // it to the host must not terminate the gesture on the bubbling old event.
+      if (event.target === host) up();
+    };
     const click = (event: MouseEvent) => {
       if (!suppressClick) return;
       suppressClick = false;
@@ -93,20 +102,22 @@ export default function ScrollTrail({children}: {children: ReactNode}) {
     const wheel = (event: WheelEvent) => {
       // Shift-wheel axis mapping differs by browser/OS. Leave ordinary vertical
       // page scrolling and native horizontal trackpad gestures untouched.
-      if (!event.shiftKey || event.deltaX || !event.deltaY) return;
-      list.scrollLeft += event.deltaY * (event.deltaMode === 1 ? 16 : event.deltaMode === 2 ? list.clientWidth : 1);
+      const edge = (event.target as Element).closest('[data-breadcrumb-back],[data-breadcrumb-forward]');
+      const delta = edge && event.deltaX ? event.deltaX : event.shiftKey && !event.deltaX ? event.deltaY : 0;
+      if (!delta) return;
+      list.scrollLeft += delta * (event.deltaMode === 1 ? 16 : event.deltaMode === 2 ? list.clientWidth : 1);
       event.preventDefault();
     };
     list.addEventListener('scroll', measure, {passive: true});
     list.addEventListener('focusin', focusItem);
-    list.addEventListener('pointerdown', down);
-    list.addEventListener('pointermove', move);
-    list.addEventListener('pointerup', up);
-    list.addEventListener('pointercancel', up);
-    list.addEventListener('lostpointercapture', up);
-    list.addEventListener('click', click, true);
-    list.addEventListener('dragstart', dragStart);
-    list.addEventListener('wheel', wheel, {passive: false});
+    host.addEventListener('pointerdown', down);
+    host.addEventListener('pointermove', move);
+    host.addEventListener('pointerup', up);
+    host.addEventListener('pointercancel', up);
+    host.addEventListener('lostpointercapture', lost);
+    host.addEventListener('click', click, true);
+    host.addEventListener('dragstart', dragStart);
+    host.addEventListener('wheel', wheel, {passive: false});
     observeItems();
     void document.fonts.ready.then(() => {if (alive) revealTail();});
     return () => {
@@ -114,14 +125,14 @@ export default function ScrollTrail({children}: {children: ReactNode}) {
       resize.disconnect(); mutations.disconnect();
       list.removeEventListener('scroll', measure);
       list.removeEventListener('focusin', focusItem);
-      list.removeEventListener('pointerdown', down);
-      list.removeEventListener('pointermove', move);
-      list.removeEventListener('pointerup', up);
-      list.removeEventListener('pointercancel', up);
-      list.removeEventListener('lostpointercapture', up);
-      list.removeEventListener('click', click, true);
-      list.removeEventListener('dragstart', dragStart);
-      list.removeEventListener('wheel', wheel);
+      host.removeEventListener('pointerdown', down);
+      host.removeEventListener('pointermove', move);
+      host.removeEventListener('pointerup', up);
+      host.removeEventListener('pointercancel', up);
+      host.removeEventListener('lostpointercapture', lost);
+      host.removeEventListener('click', click, true);
+      host.removeEventListener('dragstart', dragStart);
+      host.removeEventListener('wheel', wheel);
     };
   }, [pathname, currentLocale]);
 
