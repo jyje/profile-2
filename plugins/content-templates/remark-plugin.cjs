@@ -9,6 +9,12 @@ const templates = {
     required: ['name'],
     allowed: ['name', 'image', 'description', 'start', 'end'],
   },
+  // One figure per fence: name is a directory under static/anatomy/, title is the iframe's accessible name.
+  'anatomy-figure': {
+    required: ['name', 'title'],
+    allowed: ['name', 'title'],
+    single: true,
+  },
 };
 
 function validateItems(items, template, language) {
@@ -43,6 +49,14 @@ function validateItems(items, template, language) {
       if (item[key] !== undefined && item[key] !== null && !['string', 'number'].includes(typeof item[key])) {
         throw new Error(`Field "${key}" must be a year or text in ${language} item ${index + 1}`);
       }
+    }
+
+    if (template.single && items.length !== 1) {
+      throw new Error(`Expected exactly one item for ${language}`);
+    }
+
+    if (template.single && !/^[a-z0-9-]+$/.test(item.name)) {
+      throw new Error(`Field "name" must be a lowercase directory name in ${language} item ${index + 1}`);
     }
 
     return item;
