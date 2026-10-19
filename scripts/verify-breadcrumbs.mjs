@@ -4,6 +4,7 @@ import path from 'node:path';
 import http from 'node:http';
 import handler from 'serve-handler';
 import {chromium} from 'playwright';
+import {verifyBreadcrumbScroll} from './verify-breadcrumb-scroll.mjs';
 
 const prefix = process.env.VERIFY_BASE_PATH ?? '/profile-2/';
 let origin = process.env.VERIFY_ORIGIN;
@@ -108,10 +109,11 @@ try {
       assert.equal(await page.locator(selector).isVisible(), false, 'Breadcrumb must not print');
       await page.emulateMedia({media: 'screen'});
     }
+    await verifyBreadcrumbScroll(page, root, screenshots, locale);
     await ctx.close();
   }
   assert.deepEqual(errors, []);
-  console.log('Breadcrumbs passed: all page families, both locales, schema, links, base path, 3 widths, themes, keyboard, long titles, home/404 and print.');
+  console.log('Breadcrumbs passed: all page families, both locales, schema, links, base path, 3 widths, themes, keyboard, one-row long titles, ellipsis controls, mouse/trackpad/Shift-wheel/touch, no-JS, home/404 and print.');
 } finally {
   await browser.close();
   if (server) await new Promise(resolve => server.close(resolve));

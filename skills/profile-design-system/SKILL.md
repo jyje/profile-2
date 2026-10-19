@@ -37,8 +37,20 @@ Read [UX lint](../../docs/maintenance/ux-lint.md) before changing layout. Inspec
 - Keep navigation outside hero spacing, reveal animations, and reading widths.
 - About labels and links belong in localized MDX `breadcrumbs` front matter.
   Never derive titles from slugs or insert inline breadcrumbs into a hero.
-- Preserve native hierarchy/JSON-LD, links, wrapping, print hiding, and Labs
+- Preserve native hierarchy/JSON-LD, links, print hiding, and Labs
   callbacks. Do not copy upstream dropdown/sidebar event handlers.
+
+## Case 2: UX-002 single-line scroll trail
+
+- Keep one row at every width. Abbreviate long labels visually without changing
+  authored text or schema; preserve full accessible names and native tooltips.
+- `BreadcrumbFrame/ScrollTrail` decorates the original list in place. Pin Home
+  at UX-001's origin; scroll the remainder, initially revealing the current item.
+- Show directional ellipsis buttons only for offscreen content. Native touch,
+  trackpad/Shift-wheel, mouse drag and keyboard focus must expose hidden links.
+  A drag must not follow a link, and resizing/locale/Labs updates must remeasure.
+- Test nested wiki and custom trails, SSR/no-JS, print and reduced motion. The
+  captured wrap canary must fail UX-002 while UX-001 tolerances remain unchanged.
 
 ## Audit and repair
 

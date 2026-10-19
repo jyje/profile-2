@@ -6,6 +6,7 @@ export const breadcrumbRule = {
   widths: [390, 864, 920, 1222, 1728], themes: ['light', 'dark'], locales: ['ko', 'en'],
   routes: [
     'wiki/', 'wiki/d/argo-cd/', 'wiki/_tag-archives/', 'wiki/_tag-archives/kubernetes/',
+    'wiki/d/portfolio/widearth-digital-twins-platforms-at-maxst/',
     'blog/', 'blog/kcsa-kubernetes-and-cloud-native-security-associate/',
     'blog/capa-certified-argo-project-associate/', 'blog/widearth-digital-twins-platforms-at-maxst/',
     'blog/archive/', 'blog/authors/', 'blog/_tag-archives/kubernetes/',
@@ -13,6 +14,16 @@ export const breadcrumbRule = {
     'tags/', 'tags/kubernetes/', 'search/?q=kubernetes', 'labs/',
   ],
 };
+
+// UX-002 changes the reviewed wrap policy, not UX-001's fixed origin/tolerance.
+export function breadcrumbTrailViolations(trail) {
+  const errors = [];
+  if (!trail) return ['UX-002: missing scroll trail'];
+  if (!trail.singleRow) errors.push('UX-002: breadcrumbs must stay on one row');
+  if (trail.scrollMode !== 'auto') errors.push('UX-002: trail must allow native horizontal scrolling');
+  if (!trail.labelsFit) errors.push('UX-002: long labels must abbreviate inside their items');
+  return errors;
+}
 
 export function breadcrumbViolations(g) {
   const rule = breadcrumbRule;

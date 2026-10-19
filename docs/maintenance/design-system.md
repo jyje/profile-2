@@ -10,6 +10,7 @@ Shadow DOM design system. Nothing here restores private public-source documents.
 | Rule | Contract and enforcement |
 | --- | --- |
 | UX-001 | Shared Home-glyph origin after excluding the actual sidebar; coordinates, captured pixels and drift canaries |
+| UX-002 | Single-line, visually abbreviated breadcrumbs; sticky Home, native internal scrolling, ellipsis controls, swipe/drag/focus and a wrapping canary |
 | DS-001 | Rendered colors use named site/Infima/component tokens; PostCSS rejects raw colors. Named graph palettes remain component-owned |
 | DS-002 | Shared static spacing uses equivalent scale tokens. Exact standard rem values are safely replaced; fluid expressions and specialized values remain intentional |
 | DS-003 | MDX/Markdown supplies content/data, not inline styles or breadcrumb placement. Each visual template owns one entrypoint and CSS module |
