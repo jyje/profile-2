@@ -19,11 +19,11 @@ sources:
 - [쿠버네티스](./k8s.md)의 [컨테이너](./container.md) 기반 [워크플로우](./workflow.md) 엔진
 
 
-## Objectives 
+## Objectives
 - 쿠버네티스 파드를 원하는 순서대로 실행하여 문제를 해결한다.
 
 
-## Example 
+## Example
 - [아르고 이벤트](./argo-events.md)와 연동해 이벤트 감지 후 파이프라인을 수행한다.
 	- 구체적인 예시:
 		- 깃허브에서 푸시 이벤트를 감지해 CI/CD 파이프라인을 수행한다.

@@ -24,7 +24,7 @@ sources:
 - Python에서 [Argo Workflows](./argo-workflows.md)와 [Argo Events](./argo-events.md)를 사용하기 위한 SDK
 
 
-## About 
+## About
 - labs
 
 

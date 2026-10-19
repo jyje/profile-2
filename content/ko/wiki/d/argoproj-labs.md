@@ -12,7 +12,7 @@ sources:
 - [아르고 프로젝트](./argo-proj.md)의 실험적인 프로젝트들
 
 
-## Example 
+## Example
 실험적 프로젝트, 보조 프로젝트 모음
 - [Argo Hera](./argoproj-labs-hera.md): Python에서 [Argo Workflows](./argo-workflows.md)와 [Argo Events](./argo-events.md)를 사용하기 위한 SDK
 - [Argo CD Image Updater](./argoproj-labs-argocd-image-updater.md): [Argo CD](./argo-cd.md)에서 이미지 태그를 자동 갱신하기 위한 에드온
