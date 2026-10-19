@@ -2,7 +2,7 @@
 title: "🐳 Docker"
 tags:
   - devops
-  - infra-base
+  - infra
 type: Reference
 status: draft
 sources:

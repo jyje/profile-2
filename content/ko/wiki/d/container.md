@@ -2,7 +2,7 @@
 title: "📦 컨테이너"
 tags:
   - devops
-  - infra-base
+  - infra
 type: Reference
 status: draft
 sources:

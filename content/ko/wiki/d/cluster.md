@@ -2,7 +2,7 @@
 title: "🖥️ 클러스터"
 tags:
   - devops
-  - infra-base
+  - infra
 type: Reference
 status: draft
 sources:
