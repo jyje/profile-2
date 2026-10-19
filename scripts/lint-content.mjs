@@ -3,31 +3,28 @@ import path from 'node:path';
 import {pathToFileURL} from 'node:url';
 import * as yaml from 'js-yaml';
 
-// Structural lint for every authored document that can render: content/{ko,en}/{wiki,blog}.
-// Baseline checks apply to all of them. A document that declares `template: <id>@<N>`
-// also gets that template version's rules from templates/<id>/v<N>/rules.json.
-// Templates live outside content/, so they are never staged or rendered (see test-lint-content.mjs).
+// Structure lint for every authored document that can render: content/{ko,en}/{wiki,blog}.
+// Prettier-level formatting, stamps and titles belong to `npm run content:check`; this adds what it does not cover.
+// Baseline checks apply to all documents. A document that stamps `profile_layout: {kind, version}` also gets that
+// layout version's rules. Layouts are registered in design-system/content-contract.json; their scaffolds live in
+// content/_templates/, which is outside the locale roots and ignored by publication (see test-lint-content.mjs).
 
 const LOCALES = ['ko', 'en'];
 const KINDS = ['wiki', 'blog'];
-const TEMPLATE_PATTERN = /^([a-z0-9]+(?:-[a-z0-9]+)*)@(\d+)$/;
-
-export function loadTemplates(root) {
+export function loadLayouts(root) {
   const registry = new Map();
-  const base = path.join(root, 'templates');
-  if (!fs.existsSync(base)) return registry;
-  for (const id of fs.readdirSync(base, {withFileTypes: true}).filter(entry => entry.isDirectory())) {
-    for (const version of fs.readdirSync(path.join(base, id.name), {withFileTypes: true})) {
-      const match = version.isDirectory() && version.name.match(/^v(\d+)$/);
-      const file = match && path.join(base, id.name, version.name, 'rules.json');
-      if (!file || !fs.existsSync(file)) continue;
-      registry.set(`${id.name}@${match[1]}`, {...JSON.parse(fs.readFileSync(file, 'utf8')), key: `${id.name}@${match[1]}`, templateId: id.name, templateVersion: Number(match[1])});
+  const file = path.join(root, 'design-system/content-contract.json');
+  if (!fs.existsSync(file)) return registry;
+  const layouts = JSON.parse(fs.readFileSync(file, 'utf8')).layouts ?? {};
+  for (const [kind, entry] of Object.entries(layouts)) {
+    for (const [version, spec] of Object.entries(entry.versions ?? {})) {
+      const rulesFile = path.join(root, spec.rules);
+      if (!fs.existsSync(rulesFile)) throw new Error(`Layout ${kind}@${version} rules are missing: ${spec.rules}`);
+      registry.set(`${kind}@${version}`, {...JSON.parse(fs.readFileSync(rulesFile, 'utf8')), key: `${kind}@${version}`, layoutKind: kind, layoutVersion: Number(version), latest: Number(entry.latest)});
     }
   }
   return registry;
 }
-
-const latestVersion = (registry, id) => Math.max(0, ...[...registry.values()].filter(rule => rule.templateId === id).map(rule => rule.templateVersion));
 
 export function parseDocument(source) {
   const match = source.match(/^---\r?\n([\s\S]*?)\r?\n---[ \t]*(?:\r?\n|$)/);
@@ -89,12 +86,8 @@ export function lintDocument(root, file, source, registry, {assets = true} = {})
   if (document.frontMatterError) add('error', 'front-matter-invalid', 1, document.frontMatterError);
 
   // Baseline: every rendered document.
-  for (const heading of document.headings) {
-    if (/\s$/.test(heading.raw.replace(/\r$/, ''))) add('error', 'heading-trailing-space', heading.line, `Heading has trailing whitespace: ${heading.text}`);
-  }
   document.headings.forEach((heading, index) => {
     const previous = document.headings[index - 1];
-    if (heading.level === 1) add('warn', 'heading-body-h1', heading.line, `The title comes from front matter; avoid a body H1: ${heading.text}`);
     if (previous && heading.level > previous.level + 1) add('warn', 'heading-level-skip', heading.line, `H${previous.level} is followed by H${heading.level}: ${heading.text}`);
   });
   const seen = new Set();
@@ -107,7 +100,7 @@ export function lintDocument(root, file, source, registry, {assets = true} = {})
     add('error', 'image-missing', 1, `front matter image not found: static${image}`);
   }
   const figures = document.fences.filter(item => item.lang === 'anatomy-figure');
-  if (figures.length && image === undefined && (document.frontMatter?.type === 'Reference' || document.frontMatter?.template !== undefined)) {
+  if (figures.length && image === undefined && (document.frontMatter?.type === 'Reference' || document.frontMatter?.profile_layout !== undefined)) {
     add('warn', 'anatomy-thumbnail', 1, 'Add an `image:` front matter (npm run build:anatomy writes static/anatomy/<name>/thumbnail.png)');
   }
   if (assets) {
@@ -122,13 +115,15 @@ export function lintDocument(root, file, source, registry, {assets = true} = {})
   }
 
   // Template: opt-in, versioned.
-  const declared = document.frontMatter?.template;
-  if (declared === undefined) return {diagnostics: out, document, template: undefined};
-  const parts = typeof declared === 'string' && declared.match(TEMPLATE_PATTERN);
-  const rules = parts && registry.get(declared);
-  if (!parts) { add('error', 'template-invalid', 1, `template must look like "wiki-reference@1", got ${JSON.stringify(declared)}`); return {diagnostics: out, document, template: undefined}; }
-  if (!rules) { add('error', 'template-unknown', 1, `Unknown template ${declared}`); return {diagnostics: out, document, template: undefined}; }
-  if (latestVersion(registry, rules.templateId) > rules.templateVersion) add('warn', 'template-outdated', 1, `${declared} is older than v${latestVersion(registry, rules.templateId)}`);
+  const stamp = document.frontMatter?.profile_layout;
+  if (stamp === undefined) return {diagnostics: out, document, template: undefined};
+  const valid = stamp && typeof stamp === 'object' && typeof stamp.kind === 'string' && Number.isInteger(stamp.version);
+  const declared = valid ? `${stamp.kind}@${stamp.version}` : JSON.stringify(stamp);
+  const parts = valid;
+  const rules = valid && registry.get(declared);
+  if (!parts) { add('error', 'template-invalid', 1, `profile_layout must look like {kind: reference, version: 1}, got ${declared}`); return {diagnostics: out, document, template: undefined}; }
+  if (!rules) { add('error', 'template-unknown', 1, `Unknown layout ${declared}`); return {diagnostics: out, document, template: undefined}; }
+  if (rules.latest > rules.layoutVersion) add('warn', 'template-outdated', 1, `${declared} is older than v${rules.latest}`);
 
   for (const key of rules.frontMatter?.required ?? []) {
     if (document.frontMatter[key] === undefined || document.frontMatter[key] === null) add('error', 'template-front-matter', 1, `Front matter "${key}" is required by ${declared}`);
@@ -167,7 +162,7 @@ export function lintDocument(root, file, source, registry, {assets = true} = {})
 }
 
 export function lintContent(root, options = {}) {
-  const registry = loadTemplates(root);
+  const registry = loadLayouts(root);
   const diagnostics = [];
   const parsed = new Map();
   for (const locale of LOCALES) {
@@ -194,8 +189,8 @@ export function lintContent(root, options = {}) {
   }
   // Legacy: wiki references that have not adopted a template yet.
   for (const [key, result] of parsed) {
-    if (key.startsWith('ko/wiki/d/') && result.document.frontMatter?.type === 'Reference' && result.document.frontMatter?.template === undefined) {
-      diagnostics.push({severity: 'info', rule: 'template-legacy', file: path.relative(root, result.file).replaceAll('\\', '/'), line: 1, message: 'No template declared'});
+    if (key.startsWith('ko/wiki/d/') && result.document.frontMatter?.type === 'Reference' && result.document.frontMatter?.profile_layout === undefined) {
+      diagnostics.push({severity: 'info', rule: 'template-legacy', file: path.relative(root, result.file).replaceAll('\\', '/'), line: 1, message: 'No profile_layout stamp'});
     }
   }
   return diagnostics;
@@ -207,13 +202,6 @@ export function fixDocument(source, locale = 'ko') {
   const fixes = [];
   const document = parseDocument(source);
   const lines = source.split('\n');
-  for (const heading of document.headings) {
-    const index = heading.line - 1;
-    if (/[ \t]+\r?$/.test(lines[index]) && !/^\s*$/.test(lines[index])) {
-      lines[index] = lines[index].replace(/[ \t]+(\r?)$/, '$1');
-      fixes.push({rule: 'heading-trailing-space', line: heading.line});
-    }
-  }
   let text = lines.join('\n');
   // "## Name" holding only bullets becomes a notation line at the end of "## Definition".
   const reparsed = parseDocument(text);

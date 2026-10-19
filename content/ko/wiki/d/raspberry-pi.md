@@ -5,9 +5,11 @@ tags:
   - mini-pc
   - raspberry-pi
 type: Reference
-template: wiki-reference@1
 status: draft
 image: /anatomy/raspberry-pi/thumbnail.png
+profile_template: {kind: wiki, version: 1}
+profile_layout: {kind: reference, version: 1}
+profile_format: 1
 ---
 
 ```anatomy-figure
@@ -44,16 +46,16 @@ image: /anatomy/raspberry-pi/thumbnail.png
 
 위 그림의 모델입니다. 공식 제품 소개는 "Your tiny, dual-display, desktop computer"입니다.
 
-| 항목 | 내용 |
-|---|---|
-| SoC | Broadcom BCM2711, 쿼드코어 Cortex-A72 (ARM 64비트) |
-| 메모리 | LPDDR4, 모델에 따라 1~8GB |
-| 영상 | 마이크로 HDMI 2개, MIPI DSI, MIPI CSI |
-| 연결 | USB 3.0 2개, USB 2.0 2개, 기가비트 이더넷, 무선 랜, 블루투스 |
-| 전원 | USB-C 5V |
-| 저장장치 | microSD |
-| 크기 | 85 × 56 mm |
-| 확장 | 40핀 GPIO 헤더 |
+| 항목     | 내용                                                         |
+| -------- | ------------------------------------------------------------ |
+| SoC      | Broadcom BCM2711, 쿼드코어 Cortex-A72 (ARM 64비트)           |
+| 메모리   | LPDDR4, 모델에 따라 1~8GB                                    |
+| 영상     | 마이크로 HDMI 2개, MIPI DSI, MIPI CSI                        |
+| 연결     | USB 3.0 2개, USB 2.0 2개, 기가비트 이더넷, 무선 랜, 블루투스 |
+| 전원     | USB-C 5V                                                     |
+| 저장장치 | microSD                                                      |
+| 크기     | 85 × 56 mm                                                   |
+| 확장     | 40핀 GPIO 헤더                                               |
 
 ### GPIO 헤더
 

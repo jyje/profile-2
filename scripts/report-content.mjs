@@ -15,7 +15,7 @@ export function reportContent(root) {
     const h2 = new Set(document.headings.filter(heading => heading.level === 2).map(heading => heading.text));
     rows.push({
       slug: relative.replace(/\.mdx?$/, ''),
-      template: document.frontMatter.template ?? null,
+      template: document.frontMatter.profile_layout ? `${document.frontMatter.profile_layout.kind}@${document.frontMatter.profile_layout.version}` : null,
       status: document.frontMatter.status ?? null,
       visual: [...introKinds(document)][0] ?? null,
       thumbnail: document.frontMatter.image !== undefined,

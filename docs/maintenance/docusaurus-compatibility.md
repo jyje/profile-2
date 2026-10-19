@@ -32,9 +32,15 @@ See [Docusaurus's swizzling guidance](https://docusaurus.io/docs/swizzling).
 
 ### Compatibility inventory
 
+The [versioned design-system gate](design-system.md) also covers pinned
+Prettier/config, template/block schemas, staged-index hook execution and public
+build preflight. Upgrades must preserve MDX, Obsidian callouts/links, authored
+dates, assets and canonical routes, not just produce a successful compilation.
+
 | Surface | Review on upgrade |
 | --- | --- |
 | `src/theme/` wrappers | Original component names, aliases, props, metadata providers, breadcrumb structured data, dropdown/sidebar behavior, and layout hooks |
+| Breadcrumb placement and scrolling (UX-001/UX-002) | `BreadcrumbFrame` + `ScrollTrail` decorate the original list, sticky Home geometry, one-row ellipsis/scroll/focus/drag, MDX placement context, BlogPostPage metadata, DocItem/Layout duplicate guard, native reading widths, Infima tokens and screenshot/coordinate/pixel/wrap regression gate. See [UX lint](ux-lint.md). |
 | Content synchronization and visibility | Front matter, locale mirrors, Git-derived dates, exclusions, generated indexes, and canonical metadata without source/body leakage |
 | Content templates | Remark/MDX transforms, YAML validation, localized labels, and static rendering |
 | Content network, document graph, global tags, redirects, and llms-txt plugins | Public plugin lifecycle/data shape, canonical permalinks, local/global graphs, and excluded content |
@@ -42,6 +48,7 @@ See [Docusaurus's swizzling guidance](https://docusaurus.io/docs/swizzling).
 | `@easyops-cn/docusaurus-search-local` | Declared peer compatibility, both-locale indexing, public-content filtering, and search UI in static output |
 | Selective shadcn/Tailwind integration | Public PostCSS hook, `tw:` prefix, no Preflight/global reset, Infima tokens, dark-mode inheritance, and SSR |
 | Vue Labs federation | Browser-only loading, optional v1 navigation, update/unmount cleanup, locale/theme synchronization, timeout/retry, and full-width layout |
+| About access boundary | Authored MDX, shared ordinary-link section navigation, safe legacy routes, no private data imports, and public-output/CI artifact checks |
 
 Use the [UI integration guide](../../src/components/ui/README.md),
 [document graph guide](../../plugins/document-graph/README.md),
@@ -65,6 +72,22 @@ Any unavoidable exception needs a documented reason, owner surface, removal path
 and regression test before approval.
 
 ## Dependency policy
+
+The version-update configuration is [`.github/dependabot.yaml`](../../.github/dependabot.yaml),
+not a second `.yml` file. It checks root npm dependencies and GitHub Actions every
+Monday at 09:00 Asia/Seoul and uses `🤖 ci(deps)` / `🤖 ci(deps-dev)` bot prefixes.
+Official Docusaurus packages, React and Tailwind each have a coordinated group;
+other minor/patch changes are split by production/development dependency type.
+Other majors remain separate PRs. Framework major groups are proposals, not
+approved migrations: the same-version and full compatibility gates below still
+apply. Grouping does not guarantee every unchanged official package is included.
+
+Security updates remain separate from the weekly version-update schedule and
+grouping. There are no blanket ignores, auto-merge rules, or alternate target
+branches. GitHub's repository security-update setting must also be enabled;
+this YAML alone does not enable it. Review the existing overrides and the local
+braces guard whenever Dependabot proposes related updates. `npm run test:security`
+checks the YAML naming, ecosystems, schedules, bot format and grouping policy.
 
 - Upgrade direct official `@docusaurus/*` packages together to one target release.
   Keep core, preset, faster, redirects, types, tsconfig, and module aliases aligned,
@@ -95,6 +118,8 @@ version policies. Keep this inventory synchronized whenever an override changes.
 
 | Override | Current reason and removal gate |
 | --- | --- |
+| `@docusaurus/core` -> `tinypool` 2.1.2 | Fix GHSA-5gmw-xhrv-c9v3 and GHSA-85c8-ppgw-ccpr. This crosses core's declared 1.x range, so the worker contract test and a real two-worker bilingual SSG build are required. Remove when aligned official Docusaurus packages resolve a patched worker pool without this override. |
+| `postcss-selector-parser` -> 7.1.6 | Fix GHSA-rj75-hqrm-r3gf, including cssnano's remaining 6.x paths. Verify CSS modules, minification and static output. Remove when all upstream paths resolve patched versions. |
 | `@module-federation/dts-plugin` -> `adm-zip` 0.6.1 | Existing advisory mitigation described in the Labs integration guide. Remove only when the parent resolves a patched version without the override and federation tests/builds pass. |
 | `copy-webpack-plugin` and `css-minimizer-webpack-plugin` -> `serialize-javascript` 7.0.7 | Existing transitive security pin. Confirm the current advisory and the parent's supported fixed range; remove only after clean resolution and static build verification. |
 | `sockjs` -> `uuid` 11.1.1 | Existing transitive security pin in development transport. Confirm the advisory and API compatibility; remove only after upstream resolution and dev/HMR verification. |
@@ -103,6 +128,26 @@ For an override addition or revision, record the advisory URL/ID, affected depen
 path, runtime/build-only exposure, compatibility evidence, and removal condition
 in the upgrade PR. The legacy pins above do not substitute for a fresh advisory
 review and are not proof that the complete dependency tree is vulnerability-free.
+
+### Temporary braces depth mitigation
+
+GHSA-vfj7-8cjw-p6xm has no upstream fixed release as of 2026-10-18.
+`scripts/patch-braces.cjs` adds a 100-level parser stack bound and iterative AST
+validation to installed braces 3.0.3. It verifies the original SHA-256 of each
+modified file, checks every installed lockfile path, and rejects unknown sources
+or versions rather than guessing a new patch. The `postinstall` lifecycle applies
+it; build and development entrypoints refuse missing or changed patches.
+Always run `npm ci` with lifecycle scripts enabled. Raw Docusaurus CLI invocation
+is not a substitute for the guarded repository entrypoints.
+
+`npm run test:security` verifies the patch, ordinary glob semantics, hostile
+nesting/direct ASTs, worker compatibility, and all locked fixed-version pins.
+CI and Pages both run this gate. Do not dismiss the braces alert as fixed or
+renumber the dependency to hide it: npm audit and Dependabot still correctly
+report the unpatched upstream version and its dependent packages. Remove this
+mitigation only after an upstream fix is installed, its depth tests pass, and
+clean installs, file watching, content selection and bilingual builds pass.
+See [dependency security review](dependency-security.md) for evidence and scope.
 
 ## Upgrade workflow
 
@@ -151,12 +196,11 @@ additional results in the PR:
   old/new v1 remotes, nested fixture navigation, translated labels, stale callbacks,
   errors/retries, and unmount cleanup. Inspect the actual Vue remote too; fixtures
   do not certify production remote deployment or API services.
-- Regenerate Korean/English career exports and render every PDF page. Each resume
-  stays one A4 page for every role; Full CVs stay multi-page without content loss.
-  Selected CV has no page limit. Career files under `data/career/` use shared
-  bilingual `.yaml` records; the source compiler preserves immutable CV anchors
-  consumed by the global tag plugin. Confirm hidden
-  breadcrumbs/tools, font loading, page breaks, and normal skill-chip height.
+- Check localized About navigation and LinkedIn access instructions. Legacy
+  document routes must not render private payloads; public tags must not recreate
+  CV anchors. Private PDF rendering is maintained separately and is not a public
+  build or CI dependency. Preserve its existing page-quality requirements when
+  changing private exports, without uploading them to public CI.
 
 Use [Docusaurus release notes](https://github.com/facebook/docusaurus/releases)
 and [official migration guidance](https://docusaurus.io/docs/migration) as upstream

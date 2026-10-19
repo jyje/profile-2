@@ -1,0 +1,6 @@
+.figure {
+  width: min(100%, 20.625rem);
+  margin: var(--site-space-4) auto;
+}
+.figure img { display: block; width: 100%; height: auto; border-radius: var(--ifm-global-radius); }
+.figure figcaption { margin-top: var(--site-space-2); font-size: 0.85rem; color: var(--site-muted); }

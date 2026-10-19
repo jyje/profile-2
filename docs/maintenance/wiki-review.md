@@ -1,5 +1,9 @@
 # Full-plan independent review
 
+> Historical record: public Resume/CV rendering and export behavior described below
+> was retired by the About access-boundary refactor. See
+> [current About behavior](about-access.md). This record is not a current public export guide.
+
 ## Scope and method
 
 Claude Code, using `claude-opus-5-5`, reviewed `origin/main...dfaae03` in English

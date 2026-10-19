@@ -1,0 +1,14 @@
+/* Additive tokens only. No reset, new color provider or typography override. */
+:root {
+  --site-space-1: 0.25rem;
+  --site-space-2: 0.5rem;
+  --site-space-3: 0.75rem;
+  --site-space-4: 1rem;
+  --site-space-5: 1.25rem;
+  --site-space-6: 1.5rem;
+  --site-space-8: 2rem;
+  --site-space-10: 2.5rem;
+  --site-space-12: 3rem;
+  --site-space-16: 4rem;
+  --site-shadow-soft: 0 3px 12px rgb(10 30 38 / 7%);
+}

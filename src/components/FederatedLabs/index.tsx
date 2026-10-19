@@ -3,7 +3,8 @@ import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import {useColorMode} from '@docusaurus/theme-common';
 import {Button} from '@site/src/components/ui/button';
 import styles from './styles.module.css';
-import SiteBreadcrumbs, {useBreadcrumbLabels} from '@site/src/components/SiteBreadcrumbs';
+import {useBreadcrumbLabels} from '@site/src/components/SiteBreadcrumbs';
+import BreadcrumbFrame from '@site/src/components/BreadcrumbFrame';
 import {validScreens, type LabsOptions as Options, type LabsHandle as Handle, type LabsRemote as Remote, type LabsScreen} from './contract';
 
 type Copy = {loading: string; unavailable: string; explanation: string; retry: string; missing: string; connected: string};
@@ -96,7 +97,7 @@ export default function FederatedLabs({copy}: {copy: Copy}) {
 
   return <div ref={frame} className={styles.frame}>
     <div ref={breadcrumbBar} className={styles.breadcrumbBar}>
-      <SiteBreadcrumbs items={[
+      <BreadcrumbFrame items={[
         {label: labels.labs, href: '/labs/'},
         ...(state === 'ready' ? screens.map(screen => ({label: screen.label, virtual: true,
           onNavigate: handle.current?.navigate ? () => handle.current?.navigate?.(screen.id) : undefined})) : []),

@@ -1,0 +1,39 @@
+---
+title: 이력서
+breadcrumbs:
+  - {label: 소개, href: /about/}
+  - {label: 이력서}
+description: 자세한 이력이 필요하시면 LinkedIn으로 연락해주세요.
+wrapperClassName: site-about-page
+hide_table_of_contents: true
+profile_template: {kind: page, version: 1}
+profile_format: 1
+---
+
+import Link from '@docusaurus/Link';
+import AboutSectionNav from '@site/src/components/AboutSectionNav';
+
+<header className="about-hero">
+  <div className="container">
+    <AboutSectionNav label="소개 하위 탐색" current="/about/resume/" items={[
+  {href: '/about/', label: '개요'},
+  {href: '/about/portfolio/', label: '포트폴리오'},
+  {href: '/about/resume/', label: '이력서'},
+]} />
+    <p className="about-eyebrow">ABOUT / RESUME</p>
+    <h1 className="about-name">이력서</h1>
+  </div>
+</header>
+
+<main className="container about-main" data-about-access>
+  <section className="about-section">
+
+자세한 경력과 프로젝트 경험을 담은 이력서를 따로 준비해두었습니다. 필요하시면 LinkedIn으로 연락해주세요.
+
+    <div className="about-request-actions">
+      <a className="button button--primary" href="https://www.linkedin.com/in/jyje" target="_blank" rel="noreferrer">LinkedIn에서 연락하기</a>
+      <Link to="/about/portfolio/">포트폴리오 보기</Link>
+    </div>
+
+  </section>
+</main>

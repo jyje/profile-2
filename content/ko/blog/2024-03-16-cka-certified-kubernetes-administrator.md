@@ -8,7 +8,9 @@ tags:
   - certifications
   - kubernetes
   - linux-foundation
-image: ./assets/d151aaa0-4523-4caa-bbb9-d6dd9ca02938.png
+image: ./assets/cncf-certification-cka.png
+profile_template: {kind: blog, version: 1}
+profile_format: 1
 ---
 
 ## 1. 자격증 소개
@@ -23,9 +25,10 @@ CKA 시험은 Kubernetes가 실행 중인 커맨드라인에서 여러 문제를
 
 ![CKA 자격증](./assets/925c52cf-4e04-4992-82b4-faa372fcb139.svg)
 
-*CKA 자격증 2024. 2024년 3월 16일 발급. 2027년 3월 15일 만료. 자격증 확인은 [여기](https://www.credly.com/badges/d944bde7-222a-4ce5-b4e6-4e6c84df0ef8)에서 할 수 있습니다.*
+_CKA 자격증 2024. 2024년 3월 16일 발급. 2027년 3월 15일 만료. 자격증 확인은 [여기](https://www.credly.com/badges/d944bde7-222a-4ce5-b4e6-4e6c84df0ef8)에서 할 수 있습니다._
 
 <!-- Overview -->
+
 2024년 3월 15일에 CKA 시험을 보고 첫 시도에 합격했습니다. 쉽지 않은 시험이었지만 준비한 덕분에 통과할 수 있었습니다. Kubernetes 공식 문서를 꼼꼼히 읽고, 온라인 강좌를 수강하면서 Kubernetes 클러스터를 직접 다루며 준비했습니다.
 
 시험 준비를 위해 Udemy의 [Certified Kubernetes Administrator (CKA) with Practice Tests](https://www.udemy.com/course/certified-kubernetes-administrator-with-practice-tests) 강좌를 수강하며 Kubernetes 핵심 개념을 이해했습니다. 또한 [KodeKloud](https://learn.kodekloud.com/user/courses/udemy-labs-certified-kubernetes-administrator-with-practice-tests) 플랫폼을 통해 Kubernetes 클러스터 실습과 핸즈온 랩을 진행했습니다. 아래는 KodeKloud 강좌 수료증입니다:

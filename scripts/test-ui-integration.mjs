@@ -34,15 +34,44 @@ test('theme behavior stays upstream, with only site-specific label and link wrap
     assert.doesNotMatch(source, /@docusaurus\/theme-classic\/lib|@docusaurus\/theme-common\/internal/);
   }
   const translations = JSON.parse(await fs.readFile(path.join(root, 'i18n/ko/docusaurus-theme-classic/navbar.json'), 'utf8'));
-  for (const [key, value] of Object.entries({Blog: '블로그', Wiki: '위키', Labs: '실험실', About: '소개', Resume: '이력서', 'Selected CV': '경력기술서', 'Full CV': '전체 CV'})) {
+  for (const [key, value] of Object.entries({Blog: '블로그', Wiki: '위키', Labs: '실험실', About: '소개', 'Resume': '이력서'})) {
     assert.equal(translations[`item.label.${key}`].message, value);
   }
+});
+
+test('About Overview is active only on its exact route', async () => {
+  const config = await fs.readFile(path.join(root, 'docusaurus.config.ts'), 'utf8');
+  const match = config.match(/\{to: '\/about', label: 'Overview', activeBaseRegex: '([^']+)'\}/);
+  assert.ok(match, 'Overview needs an explicit exact-route matcher');
+  const parent = config.match(/to: '\/about',[\s\S]*?label: 'About',[\s\S]*?className: 'site-about-dropdown',[\s\S]*?activeBaseRegex: '([^']+)'/);
+  assert.ok(parent, 'About dropdown trigger needs an exact-route matcher');
+  const isOverviewRoute = new RegExp(match[1]);
+  const isAboutParentRoute = new RegExp(parent[1]);
+  assert.equal(isOverviewRoute.test('/profile-2/en/about/'), true);
+  assert.equal(isOverviewRoute.test('/profile-2/en/about/resume/'), false);
+  assert.equal(isOverviewRoute.test('/profile-2/en/about/portfolio/'), false);
+  assert.equal(isAboutParentRoute.test('/profile-2/en/about/'), true);
+  assert.equal(isAboutParentRoute.test('/profile-2/en/about/resume/'), false);
+  assert.equal(isAboutParentRoute.test('/profile-2/en/about/portfolio/'), false);
+
+  const css = await fs.readFile(path.join(root, 'src/css/custom.css'), 'utf8');
+  assert.match(css, /\.site-about-dropdown ~ \.dropdown__menu \.dropdown__link:hover:not\(\.dropdown__link--active\):not\(:focus-visible\)\s*\{[^}]*background-color:\s*transparent/);
 });
 
 test('prefixed utilities merge without consuming existing CSS-module classes', () => {
   assert.equal(cn('tw:px-4', 'tw:px-8', false, 'documentLayout'), 'tw:px-8 documentLayout');
   assert.equal(cn('tw:hover:bg-primary', 'tw:hover:bg-accent'), 'tw:hover:bg-accent');
   assert.equal(cn('button', 'button--secondary'), 'button button--secondary');
+});
+
+test('blog listings omit Posts without disabling native article sidebars', async () => {
+  const list = await fs.readFile(path.join(root, 'src/components/BlogListPage/index.tsx'), 'utf8');
+  assert.match(list, /<BlogLayout>/);
+  assert.doesNotMatch(list, /<BlogLayout\s[^>]*sidebar=/);
+  const layout = await fs.readFile(path.join(root, 'src/theme/BlogLayout/index.tsx'), 'utf8');
+  assert.match(layout, /<OriginalLayout \{\.\.\.props\}\s*\/>/);
+  const config = await fs.readFile(path.join(root, 'docusaurus.config.ts'), 'utf8');
+  assert.match(config, /blogSidebarCount: 'ALL'/);
 });
 
 test('mobile dropdown layout and caret styling remain owned by the theme', async () => {

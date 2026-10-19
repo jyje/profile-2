@@ -1,5 +1,13 @@
 # Unified site breadcrumbs
 
+Current placement is governed by [UX-001](ux-lint.md), including `BreadcrumbFrame`,
+MDX front matter, and mandatory capture/pixel checks. The original rollout record
+below is retained as history, not the current per-page placement contract.
+
+> Historical record: public Resume/CV rendering and export behavior described below
+> was retired by the About access-boundary refactor. See
+> [current About behavior](about-access.md). This record is not a current public export guide.
+
 ## Completed behavior
 
 All site sections now use the existing wiki/Infima breadcrumb presentation.

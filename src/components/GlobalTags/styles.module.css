@@ -1,12 +1,12 @@
 .page {
   max-width: 58rem;
   min-height: 65vh;
-  padding-top: 3rem;
+  padding-top: var(--site-space-12);
   padding-bottom: 5rem;
 }
 
 .heading {
-  margin-bottom: 2rem;
+  margin-bottom: var(--site-space-8);
 }
 
 .heading h1 {
@@ -27,8 +27,8 @@
 .tagCard {
   display: grid;
   grid-template-columns: 1fr auto;
-  gap: 0.25rem 0.75rem;
-  padding: 0.9rem 1rem;
+  gap: var(--site-space-1) var(--site-space-3);
+  padding: 0.9rem var(--site-space-4);
   border: 1px solid var(--ifm-color-emphasis-300);
   border-radius: 0.6rem;
   background: var(--ifm-background-surface-color);

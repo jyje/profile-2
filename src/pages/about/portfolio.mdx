@@ -1,41 +1,60 @@
 ---
 title: 포트폴리오
-description: 프로젝트 사례와 구현 기록을 모았습니다.
+breadcrumbs:
+  - {label: 소개, href: /about/}
+  - {label: 포트폴리오}
+description: 직접 맡아온 프로젝트와 그 과정의 설계·구현 이야기를 소개합니다.
 wrapperClassName: site-about-page
 hide_table_of_contents: true
+profile_template: {kind: page, version: 1}
+profile_format: 1
 ---
 
 import Link from '@docusaurus/Link';
-import SiteBreadcrumbs from '@site/src/components/SiteBreadcrumbs';
+import AboutSectionNav from '@site/src/components/AboutSectionNav';
 
 <header className="about-hero">
   <div className="container">
-    <SiteBreadcrumbs items={[{label: '소개', href: '/about/'}, {label: '포트폴리오'}]} />
+    <AboutSectionNav label="소개 하위 탐색" current="/about/portfolio/" items={[
+  {href: '/about/', label: '개요'},
+  {href: '/about/portfolio/', label: '포트폴리오'},
+  {href: '/about/resume/', label: '이력서'},
+]} />
     <p className="about-eyebrow">PORTFOLIO / SELECTED WORK</p>
     <h1 className="about-name">포트폴리오</h1>
-    <p className="about-lead">프로젝트의 배경과 설계, 구현 경험을 사례별로 기록했습니다.</p>
+    <p className="about-lead">AI 플랫폼과 인프라 프로젝트를 소개합니다.</p>
     <div className="about-intro">
-      <p>디지털 트윈 플랫폼, 온프레미스 MLOps, 하이브리드 Kubernetes 프로젝트를 중심으로 상세 내용을 확인할 수 있습니다.</p>
+      <p>프로젝트에서 맡았던 일과 설계·구현 과정에서 고민했던 점을 글로 남겼습니다.</p>
     </div>
   </div>
 </header>
 
 <main className="container about-main">
-  <section className="about-section">
-    <h2>프로젝트 사례</h2>
-    <div className="about-links">
-      <Link to="/blog/widearth-digital-twins-platforms-at-maxst">
-        <span>Widearth: AR &amp; 디지털 트윈 플랫폼 <span aria-hidden="true">↗</span></span>
-        <small>실공간 기반 AR 서비스와 디지털 트윈 플랫폼의 사례를 살펴봅니다.</small>
-      </Link>
-      <Link to="/blog/mlops-onpremise-mlops-with-open-source-projects">
-        <span>온프레미스 MLOps 플랫폼 <span aria-hidden="true">↗</span></span>
-        <small>Kubeflow와 Argo Workflows 등을 활용한 GPU 클러스터 구축 사례입니다.</small>
-      </Link>
-      <Link to="/blog/devops-hybrid-clusters-with-onpremise-baremetal-k8s-and-aws-eks">
-        <span>하이브리드 Kubernetes 클러스터 <span aria-hidden="true">↗</span></span>
-        <small>온프레미스와 AWS EKS를 결합한 클러스터의 설계와 운영 경험입니다.</small>
-      </Link>
-    </div>
+  <section className="about-section about-case">
+
+## Widearth: AR 및 디지털 트윈 플랫폼
+
+실공간 기반 AR 서비스와 디지털 트윈 플랫폼에서 하이브리드 인프라와 ML 파이프라인의 배포·운영을 맡았습니다. 사용자 서비스와 공간 데이터를 처리하는 파이프라인을 함께 운영하기 위해, 각각의 역할을 구분하고 클라우드와 온프레미스 자원을 조합했습니다.
+
+<Link to="/blog/widearth-digital-twins-platforms-at-maxst">글 읽기</Link>
+
+  </section>
+  <section className="about-section about-case">
+
+## 온프레미스 MLOps 플랫폼
+
+GPU를 사용하는 실험과 ML 작업을 반복 가능한 파이프라인으로 관리할 수 있도록 MLOps 플랫폼과 GPU 클러스터를 구축했습니다. Kubernetes 위에 Kubeflow, Argo Workflows 등의 오픈소스를 조합해 실험 도구와 작업 실행 환경을 연결했습니다.
+
+<Link to="/blog/mlops-onpremise-mlops-with-open-source-projects">글 읽기</Link>
+
+  </section>
+  <section className="about-section about-case">
+
+## 하이브리드 Kubernetes 클러스터
+
+온프레미스 자원을 활용하면서 클라우드의 확장성과 서비스 연속성도 확보하기 위해 베어메탈 Kubernetes와 AWS EKS를 연결했습니다. 클러스터와 작업 실행·상태 관찰 환경을 구성하고, Metric Collector와 워크플로를 이용해 자원 상태에 따라 클라우드 작업을 확장하도록 했습니다.
+
+<Link to="/blog/devops-hybrid-clusters-with-onpremise-baremetal-k8s-and-aws-eks">글 읽기</Link>
+
   </section>
 </main>

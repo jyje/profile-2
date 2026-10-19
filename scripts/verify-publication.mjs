@@ -4,12 +4,14 @@ import path from 'node:path';
 import http from 'node:http';
 import {contentMode, ignorePatterns, isDocIgnored} from '../plugins/content-visibility.cjs';
 import {blogPublicationRoute} from './publication-blog-routes.mjs';
+import {verifyPublicCareerBoundary} from './public-career-boundary.mjs';
 
 const root = path.resolve(import.meta.dirname, '..');
 const output = path.resolve(process.env.VERIFY_BUILD_DIR ?? 'build');
 const mode = contentMode();
 const patterns = ignorePatterns();
 const prefix = process.env.VERIFY_BASE_PATH ?? '/profile-2/';
+console.log(`Public career boundary: ${verifyPublicCareerBoundary(output)} output files checked.`);
 const files = fs.readdirSync(output, {recursive: true}).filter(file => fs.statSync(path.join(output, file)).isFile());
 const documents = files.filter(file => file.endsWith('.html') && file !== '404.html' && file !== 'en/404.html');
 assert.ok(documents.length > 0, 'No HTML documents were built');

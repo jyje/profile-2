@@ -3,25 +3,29 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import {test} from 'node:test';
-import {fixDocument, lintContent, lintDocument, loadTemplates, parseDocument} from './lint-content.mjs';
-import {scaffoldWiki} from './new-wiki.mjs';
+import {spawnSync} from 'node:child_process';
+import {fixDocument, lintContent, lintDocument, loadLayouts, parseDocument} from './lint-content.mjs';
 import {formatReport, reportContent} from './report-content.mjs';
 import {prepareContent} from './prepare-content.mjs';
 
 const repo = path.resolve(import.meta.dirname, '..');
-const registry = loadTemplates(repo);
+const registry = loadLayouts(repo);
+const STAMP = 'profile_layout: {kind: reference, version: 1}';
 
-const doc = (body, front = 'template: wiki-reference@1') => `---\ntitle: "🍓 Pi"\ntags: [raspberry-pi]\ntype: Reference\n${front}\n---\n\n${body}`;
+const doc = (body, front = STAMP) => `---\ntitle: "🍓 Pi"\ntags: [raspberry-pi]\ntype: Reference\n${front}\n---\n\n${body}`;
 const VISUAL = '![thumbnail](./assets/pi.png)\n\n';
 const GOOD = doc(`${VISUAL}## Definition\n\n- a computer\n\n## Usage\n\n- homelab\n\n## References\n\n- https://example.com\n`);
 const run = (source, options = {assets: false}) => lintDocument(repo, path.join(repo, 'content/ko/wiki/d/x.md'), source, registry, options).diagnostics;
 const rules = diagnostics => diagnostics.map(item => item.rule);
 
-test('wiki-reference@1 is registered and its template satisfies its own rules', () => {
-  assert.ok(registry.has('wiki-reference@1'));
-  const template = fs.readFileSync(path.join(repo, 'templates/wiki-reference/v1/template.md'), 'utf8');
-  assert.deepEqual(run(template).filter(item => item.severity === 'error'), []);
-  assert.match(template, /^template: wiki-reference@1$/m);
+test('the reference layout is registered and both scaffolds satisfy its rules', () => {
+  assert.ok(registry.has('reference@1'));
+  for (const locale of ['ko', 'en']) {
+    const file = path.join(repo, `content/_templates/v1/${locale}/wiki-reference.md`);
+    const template = fs.readFileSync(file, 'utf8').replaceAll('TITLE_VALUE', '"🍓 Pi"');
+    assert.deepEqual(run(template).filter(item => item.severity === 'error'), [], locale);
+    assert.match(template, /^profile_layout: \{kind: reference, version: 1\}$/m);
+  }
 });
 
 test('a conforming document passes', () => {
@@ -38,8 +42,8 @@ test('H2 names, order, duplicates and required sections are enforced', () => {
 
 test('missing Understanding and Usage is a warning only while the page is a draft', () => {
   const body = `${VISUAL}## Definition\n\nx\n\n## References\n\nx\n`;
-  assert.deepEqual(run(doc(body, 'template: wiki-reference@1\nstatus: draft')).map(item => [item.rule, item.severity]), [['template-heading-recommended', 'warn']]);
-  assert.deepEqual(run(doc(body, 'template: wiki-reference@1\nstatus: reviewed')).map(item => [item.rule, item.severity]), [['template-heading-recommended', 'error']]);
+  assert.deepEqual(run(doc(body, `${STAMP}\nstatus: draft`)).map(item => [item.rule, item.severity]), [['template-heading-recommended', 'warn']]);
+  assert.deepEqual(run(doc(body, `${STAMP}\nstatus: reviewed`)).map(item => [item.rule, item.severity]), [['template-heading-recommended', 'error']]);
   assert.deepEqual(run(doc(body)).map(item => [item.rule, item.severity]), [['template-heading-recommended', 'error']]);
 });
 
@@ -63,15 +67,15 @@ test('an image after the first H2 is not an intro visual', () => {
 });
 
 test('template declarations are validated and versions are immutable inputs', () => {
-  assert.ok(rules(run(doc(GOOD, 'template: nope'))).includes('template-invalid'));
-  assert.ok(rules(run(doc(`${VISUAL}## Definition\n\nx\n`, 'template: wiki-reference@9'))).includes('template-unknown'));
-  const outdated = new Map(registry); outdated.set('wiki-reference@2', {...registry.get('wiki-reference@1'), key: 'wiki-reference@2', templateVersion: 2});
+  assert.ok(rules(run(doc(GOOD, 'profile_layout: nope'))).includes('template-invalid'));
+  assert.ok(rules(run(doc(`${VISUAL}## Definition\n\nx\n`, 'profile_layout: {kind: reference, version: 9}'))).includes('template-unknown'));
+  const outdated = new Map(registry); outdated.set('reference@1', {...registry.get('reference@1'), latest: 2});
   const result = lintDocument(repo, path.join(repo, 'content/ko/wiki/d/x.md'), GOOD, outdated, {assets: false}).diagnostics;
   assert.deepEqual(result.map(item => item.rule), ['template-outdated']);
 });
 
 test('front matter required by the template must exist', () => {
-  const source = '---\ntitle: "🍓 Pi"\ntemplate: wiki-reference@1\n---\n\n' + VISUAL + '## Definition\n\nx\n\n## References\n\nx\n';
+  const source = `---\ntitle: "🍓 Pi"\n${STAMP}\n---\n\n` + VISUAL + '## Definition\n\nx\n\n## References\n\nx\n';
   assert.deepEqual(run(source).filter(item => item.rule === 'template-front-matter').map(item => item.message.match(/"(\w+)"/)[1]).sort(), ['tags', 'type']);
 });
 
@@ -80,8 +84,8 @@ test('a title-only translation is not checked for body structure', () => {
 });
 
 test('baseline rules apply to documents without a template', () => {
-  const found = rules(run('---\ntitle: "📄 A"\n---\n\n## One \n\n#### Deep\n\n## One\n\n# Top\n'));
-  for (const rule of ['heading-trailing-space', 'heading-level-skip', 'heading-duplicate-h2', 'heading-body-h1']) assert.ok(found.includes(rule), rule);
+  const found = rules(run('---\ntitle: "📄 A"\n---\n\n## One\n\n#### Deep\n\n## One\n'));
+  for (const rule of ['heading-level-skip', 'heading-duplicate-h2']) assert.ok(found.includes(rule), rule);
   assert.ok(!found.some(rule => rule.startsWith('template-')));
 });
 
@@ -99,7 +103,7 @@ test('anatomy-figure assets must exist in both themes', t => {
 test('locales must agree on template and H2 sequence once both have a body', t => {
   const root = fs.mkdtempSync(path.join(os.tmpdir(), 'profile2-lint-'));
   t.after(() => fs.rmSync(root, {recursive: true, force: true}));
-  fs.cpSync(path.join(repo, 'templates'), path.join(root, 'templates'), {recursive: true});
+  fs.cpSync(path.join(repo, 'design-system'), path.join(root, 'design-system'), {recursive: true});
   const write = (locale, text) => { const file = path.join(root, `content/${locale}/wiki/d/pi.md`); fs.mkdirSync(path.dirname(file), {recursive: true}); fs.writeFileSync(file, text); };
   write('ko', GOOD);
   write('en', doc(`${VISUAL}## Definition\n\nx\n\n## Details\n\nx\n\n## References\n\nx\n`));
@@ -109,18 +113,18 @@ test('locales must agree on template and H2 sequence once both have a body', t =
   assert.deepEqual(lintContent(root, {assets: false}).filter(item => item.rule === 'template-locale-parity'), []);
 });
 
-test('templates are never staged or published, in any content mode', t => {
+test('scaffolds are never staged or published, in any content mode', t => {
   const root = fs.mkdtempSync(path.join(os.tmpdir(), 'profile2-lint-'));
   t.after(() => fs.rmSync(root, {recursive: true, force: true}));
-  fs.cpSync(path.join(repo, 'templates'), path.join(root, 'templates'), {recursive: true});
+  fs.cpSync(path.join(repo, 'content/_templates'), path.join(root, 'content/_templates'), {recursive: true});
   const write = (file, text) => { fs.mkdirSync(path.dirname(path.join(root, file)), {recursive: true}); fs.writeFileSync(path.join(root, file), text); };
-  write('.docignore', 'content/*/wiki/_guide/\n');
+  write('.docignore', 'content/*/wiki/_guide/\ncontent/_templates/\n');
   for (const locale of ['ko', 'en']) write(`content/${locale}/wiki/index.md`, '---\ntitle: "🏠 Home"\n---\n\nHome');
   for (const mode of ['public', 'development']) {
     prepareContent(root, mode);
     const staged = fs.readdirSync(path.join(root, '.content-build'), {recursive: true}).map(String);
     assert.ok(staged.some(file => file.endsWith('index.md')), 'content is staged');
-    assert.deepEqual(staged.filter(file => /template|rules\.json|wiki-reference/.test(file)), [], mode);
+    assert.deepEqual(staged.filter(file => /_templates|wiki-reference|wiki\.md\b.*TITLE/.test(file)), [], mode);
   }
 });
 
@@ -144,11 +148,11 @@ test('front matter image must exist, and Anatomy reference pages should have a t
   assert.deepEqual(lint('image: /anatomy/pi/thumbnail.png\n'), []);
 });
 
-test('--fix repairs only unambiguous problems and is idempotent', () => {
+test('--fix repairs only the unambiguous legacy Name section and is idempotent', () => {
   const front = '---\ntitle: "📄 A"\n---\n\n';
-  const clean = fixDocument(`${front}## Name\n- Istio; 이스티오\n\n\n## Definition\n- 서비스 메시 구현체\n\n## Usage \n- x\n`);
+  const clean = fixDocument(`${front}## Name\n- Istio; 이스티오\n\n\n## Definition\n- 서비스 메시 구현체\n\n## Usage\n- x\n`);
   assert.equal(clean.text, `${front}## Definition\n- 서비스 메시 구현체\n- 표기: Istio; 이스티오\n\n## Usage\n- x\n`);
-  assert.deepEqual(clean.fixes.map(fix => fix.rule).sort(), ['heading-trailing-space', 'legacy-name-section']);
+  assert.deepEqual(clean.fixes.map(fix => fix.rule), ['legacy-name-section']);
   assert.equal(fixDocument(clean.text).fixes.length, 0);
   assert.match(fixDocument(`${front}## Name\n- Istio\n\n## Definition\n- x\n`, 'en').text, /- Also written: Istio/);
   for (const name of ['## Name\n- a\n- b\n', '## Name\n- a\n\t- nested\n', '## Name\n- a\n\n### Origin\n- b\n']) {
@@ -157,62 +161,39 @@ test('--fix repairs only unambiguous problems and is idempotent', () => {
   }
 });
 
-test('--fix leaves headings inside code fences alone', () => {
-  const source = '---\ntitle: "📄 A"\n---\n\n```md\n## Not a heading \n```\n';
-  assert.equal(fixDocument(source).text, source);
-});
-
-test('scaffold creates a Korean skeleton and a title-only English page from the latest template', t => {
+test('content:new --layout reference scaffolds a stamped page that passes the lint', t => {
   const root = fs.mkdtempSync(path.join(os.tmpdir(), 'profile2-scaffold-'));
   t.after(() => fs.rmSync(root, {recursive: true, force: true}));
-  fs.cpSync(path.join(repo, 'templates'), path.join(root, 'templates'), {recursive: true});
-  fs.mkdirSync(path.join(root, 'data'), {recursive: true});
-  fs.writeFileSync(path.join(root, 'data/tags.yml'), 'tags:\n  infra:\n    label: {ko: 인프라, en: Infrastructure}\n');
-  const result = scaffoldWiki(root, {slug: 'mini-pc', title: '🖥️ 미니 PC', enTitle: '🖥️ Mini PC', tags: ['infra', 'mini-pc']});
-  assert.deepEqual(result.files, ['content/ko/wiki/d/mini-pc.md', 'content/en/wiki/d/mini-pc.md']);
-  assert.equal(result.template, 'wiki-reference@1');
-  assert.deepEqual(result.warnings, ['Tag "mini-pc" is not defined in data/tags.yml']);
-  const ko = fs.readFileSync(path.join(root, result.files[0]), 'utf8');
-  const parsed = parseDocument(ko);
+  fs.cpSync(path.join(repo, 'design-system'), path.join(root, 'design-system'), {recursive: true});
+  fs.cpSync(path.join(repo, 'content/_templates'), path.join(root, 'content/_templates'), {recursive: true});
+  const make = (...args) => spawnSync(process.execPath, [path.join(repo, 'scripts/content-new.mjs'), ...args], {cwd: root, encoding: 'utf8'});
+  const made = make('--kind', 'wiki', '--locale', 'ko', '--layout', 'reference', '--path', 'd/mini-pc.md', '--title', '🖥️ 미니 PC');
+  assert.equal(made.status, 0, made.stderr);
+  const parsed = parseDocument(fs.readFileSync(path.join(root, 'content/ko/wiki/d/mini-pc.md'), 'utf8'));
+  assert.deepEqual(parsed.frontMatter.profile_layout, {kind: 'reference', version: 1});
+  assert.deepEqual(parsed.frontMatter.profile_template, {kind: 'wiki', version: 1});
   assert.equal(parsed.frontMatter.title, '🖥️ 미니 PC');
-  assert.deepEqual(parsed.frontMatter.tags, ['infra', 'mini-pc']);
-  assert.equal(parsed.frontMatter.template, 'wiki-reference@1');
-  assert.deepEqual(parseDocument(fs.readFileSync(path.join(root, result.files[1]), 'utf8')).frontMatter, {title: '🖥️ Mini PC'});
-  // the skeleton is a draft to be edited, but it is recognised and structurally sound apart from placeholders
-  const found = lintContent(root, {assets: false}).filter(item => item.severity === 'error');
-  assert.deepEqual(found, []);
-  assert.throws(() => scaffoldWiki(root, {slug: 'mini-pc', title: '🖥️ 미니 PC', enTitle: '🖥️ Mini PC'}), /Already exists/);
-});
-
-test('scaffold validates names and titles', t => {
-  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'profile2-scaffold-'));
-  t.after(() => fs.rmSync(root, {recursive: true, force: true}));
-  fs.cpSync(path.join(repo, 'templates'), path.join(root, 'templates'), {recursive: true});
-  assert.throws(() => scaffoldWiki(root, {slug: 'Mini_PC', title: '🖥️ PC'}), /kebab-case/);
-  assert.throws(() => scaffoldWiki(root, {slug: 'pc', title: 'PC'}), /emoji/);
-  assert.throws(() => scaffoldWiki(root, {slug: 'pc', title: '🖥️ 미니 PC'}), /--en-title/);
-  assert.throws(() => scaffoldWiki(root, {slug: 'pc', title: '🖥️ 미니 PC', enTitle: '🖥️ 미니'}), /must not contain Korean/);
-  assert.throws(() => scaffoldWiki(root, {slug: 'pc', title: '🖥️ PC', tags: ['Mini PC']}), /Tags must be kebab-case/);
-  assert.throws(() => scaffoldWiki(root, {slug: 'pc', title: '🖥️ PC', template: 'nope'}), /Unknown template/);
-  assert.throws(() => scaffoldWiki(root, {slug: 'pc', title: '🖥️ PC', template: 'wiki-reference@9'}), /Unknown template version/);
-  assert.equal(fs.existsSync(path.join(root, 'content')), false);
+  assert.deepEqual(lintContent(root, {assets: false}).filter(item => item.severity === 'error'), []);
+  assert.notEqual(make('--kind', 'wiki', '--locale', 'ko', '--layout', 'reference', '--path', 'd/mini-pc.md', '--title', '🖥️ 미니 PC').status, 0, 'refuses overwrite');
+  assert.match(make('--kind', 'wiki', '--locale', 'en', '--layout', 'nope', '--path', 'd/x.md', '--title', '🖥️ X').stderr, /Unknown layout/);
+  assert.match(make('--kind', 'blog', '--locale', 'en', '--layout', 'reference', '--path', '2026-01-01-x.md', '--title', 'X').stderr, /wiki pages only/);
 });
 
 test('the coverage report lists reference pages and what each is missing', t => {
   const root = fs.mkdtempSync(path.join(os.tmpdir(), 'profile2-report-'));
   t.after(() => fs.rmSync(root, {recursive: true, force: true}));
   const write = (name, text) => { const file = path.join(root, 'content/ko/wiki/d', name); fs.mkdirSync(path.dirname(file), {recursive: true}); fs.writeFileSync(file, text); };
-  write('full.md', `---\ntitle: "🍓 Full"\ntype: Reference\ntemplate: wiki-reference@1\nstatus: draft\nimage: /a.png\n---\n\n${VISUAL}## Definition\n\nx\n\n## Understanding\n\nx\n\n## References\n\nx\n`);
+  write('full.md', `---\ntitle: "🍓 Full"\ntype: Reference\n${STAMP}\nstatus: draft\nimage: /a.png\n---\n\n${VISUAL}## Definition\n\nx\n\n## Understanding\n\nx\n\n## References\n\nx\n`);
   write('old.md', '---\ntitle: "📄 Old"\ntype: Reference\nstatus: draft\n---\n\n## Definition\n- x\n');
   write('index.md', '---\ntitle: "📚 Docs"\n---\n\nindex');
   write('note.md', '---\ntitle: "📄 Note"\n---\n\nnot a reference');
   const rows = reportContent(root);
   assert.deepEqual(rows.map(row => row.slug), ['full', 'old']);
   assert.deepEqual({template: rows[0].template, status: rows[0].status, visual: rows[0].visual, thumbnail: rows[0].thumbnail, understanding: rows[0].understanding, usage: rows[0].usage, references: rows[0].references},
-    {template: 'wiki-reference@1', status: 'draft', visual: 'image', thumbnail: true, understanding: true, usage: false, references: true});
+    {template: 'reference@1', status: 'draft', visual: 'image', thumbnail: true, understanding: true, usage: false, references: true});
   assert.equal(rows[1].template, null);
   const text = formatReport(rows);
-  assert.match(text, /\| full \| wiki-reference@1 \| draft \| image \| ✓ \| ✓ \| – \| – \| ✓ \|/);
+  assert.match(text, /\| full \| reference@1 \| draft \| image \| ✓ \| ✓ \| – \| – \| ✓ \|/);
   assert.match(text, /\| old \| legacy \|/);
   assert.match(text, /Missing both Understanding and Usage: old$/);
 });

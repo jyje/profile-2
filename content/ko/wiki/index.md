@@ -2,6 +2,8 @@
 title: "🏠 위키 홈"
 slug: /
 sidebar_position: 1
+profile_template: {kind: wiki, version: 1}
+profile_format: 1
 ---
 
 이 위키는 제가 학습하고 참고하는 내용을 모은 **개인 지식기반**입니다. 블로그가 시간 순서의 글이라면, 위키는 계속 고쳐 쓰는 노트를 모아둡니다.

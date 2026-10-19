@@ -5,9 +5,11 @@ tags:
   - mini-pc
   - raspberry-pi
 type: Reference
-template: wiki-reference@1
 status: draft
 image: /anatomy/raspberry-pi/thumbnail.png
+profile_template: {kind: wiki, version: 1}
+profile_layout: {kind: reference, version: 1}
+profile_format: 1
 ---
 
 ```anatomy-figure
@@ -44,16 +46,16 @@ image: /anatomy/raspberry-pi/thumbnail.png
 
 The model in the figure above. Its official tagline is "Your tiny, dual-display, desktop computer".
 
-| Item | Detail |
-|---|---|
-| SoC | Broadcom BCM2711, quad-core Cortex-A72 (64-bit ARM) |
-| Memory | LPDDR4, 1 to 8 GB depending on the model |
-| Video | 2 micro-HDMI ports, MIPI DSI, MIPI CSI |
+| Item         | Detail                                                   |
+| ------------ | -------------------------------------------------------- |
+| SoC          | Broadcom BCM2711, quad-core Cortex-A72 (64-bit ARM)      |
+| Memory       | LPDDR4, 1 to 8 GB depending on the model                 |
+| Video        | 2 micro-HDMI ports, MIPI DSI, MIPI CSI                   |
 | Connectivity | 2 USB 3.0, 2 USB 2.0, Gigabit Ethernet, Wi-Fi, Bluetooth |
-| Power | USB-C, 5 V |
-| Storage | microSD |
-| Size | 85 × 56 mm |
-| Expansion | 40-pin GPIO header |
+| Power        | USB-C, 5 V                                               |
+| Storage      | microSD                                                  |
+| Size         | 85 × 56 mm                                               |
+| Expansion    | 40-pin GPIO header                                       |
 
 ### GPIO header
 

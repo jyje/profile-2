@@ -6,6 +6,8 @@ type: Profile
 status: draft
 sources:
   - uri: https://github.com/jyje/blog/blob/34752ed2db6859c9d98f7d197276f4e46549e3a2/content/docs/author-jyje.md
+profile_template: {kind: wiki, version: 1}
+profile_format: 1
 ---
 
 - 🇰🇷 전제영; 🇬🇧 Jeayoung Jeon; 🧑‍💻 AI/MLOps/DevOps Engineer
@@ -14,6 +16,7 @@ sources:
 - 📄 PDFs: [🇬🇧 Resume](https://jyje.online/profile/resume) | [🇰🇷 이력서](https://jyje.online/profile/ko/resume)
 
 ### 🧑‍💻 간단한 소개
+
 MLOps/DevOps 엔지니어 [전제영](./author-jyje.md)입니다. 고성능/고효율의 AI 서비스와 인프라를 연구하며, 빠른 혁신과 효과적인 상품 개발을 위해 힘쓰고 있습니다.
 
 저는 차량기술 및 AI를 포함한 다양한 분야의 도전을 꿈꾸고 있습니다. 제가 기여할 수 있는 팀이 있다면 편하게 연락 부탁드립니다.

@@ -1,0 +1,45 @@
+{
+  "id": "reference",
+  "version": 1,
+  "description": "A personal wiki reference page: what a term is, how I understand it, how I use it, and where to read more.",
+  "frontMatter": {
+    "required": [
+      "title",
+      "tags",
+      "type"
+    ]
+  },
+  "headings": {
+    "level": 2,
+    "order": [
+      "Definition",
+      "Understanding",
+      "Usage",
+      "Details",
+      "References"
+    ],
+    "required": [
+      "Definition",
+      "References"
+    ],
+    "recommendedOneOf": [
+      [
+        "Understanding",
+        "Usage"
+      ]
+    ]
+  },
+  "introVisual": {
+    "required": true,
+    "kinds": [
+      "anatomy-figure",
+      "image",
+      "diagram"
+    ]
+  },
+  "emptySections": "error",
+  "statusGate": {
+    "field": "status",
+    "draft": "draft"
+  }
+}

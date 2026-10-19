@@ -42,8 +42,17 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Verify dependency security mitigations
+        run: npm run test:security
+
       - name: Typecheck
         run: npm run typecheck
+
+      - name: Verify versioned design and content contracts
+        run: |
+          npm run lint:design
+          npm run content:check
+          npm run test:design
 
       - name: Build all locales
         run: npm run build
@@ -53,6 +62,25 @@ jobs:
 
       - name: Verify static routes and publication boundaries
         run: npm run test:publication
+
+      - name: Install browser for UX lint
+        run: npx playwright install --with-deps chromium
+
+      - name: UX-001 screenshot and coordinate lint
+        id: ux_lint
+        run: npm run lint:ux
+        env:
+          VERIFY_BASE_PATH: ${{ steps.pages.outputs.base_path }}/
+
+      - name: Upload UX lint captures and report
+        if: ${{ always() && (steps.ux_lint.outcome == 'success' || steps.ux_lint.outcome == 'failure') }}
+        uses: actions/upload-artifact@v7
+        with:
+          name: pages-ux-lint-captures
+          path: .playwright-mcp/ux-lint/after/
+          include-hidden-files: true
+          if-no-files-found: error
+          retention-days: 7
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v5

@@ -1,0 +1,74 @@
+# Version updates for the Docusaurus host and its GitHub Actions workflows.
+# https://docs.github.com/en/code-security/reference/supply-chain-security/dependabot-options-reference
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+      time: "09:00"
+      timezone: Asia/Seoul
+    open-pull-requests-limit: 5
+    versioning-strategy: increase
+    labels:
+      - dependencies
+    commit-message:
+      prefix: "🤖 ci"
+      prefix-development: "🤖 ci"
+      include: scope
+    groups:
+      # Keep official packages together, including development-only types/config.
+      # Major framework changes still require the documented migration review.
+      docusaurus:
+        patterns:
+          - "@docusaurus/*"
+      react:
+        patterns:
+          - react
+          - react-dom
+          - "@types/react*"
+      tailwind:
+        patterns:
+          - tailwindcss
+          - "@tailwindcss/*"
+          - tailwind-merge
+      # Earlier matching groups take precedence. Other majors stay separate.
+      production-minor-patch:
+        dependency-type: production
+        patterns:
+          - "*"
+        update-types:
+          - minor
+          - patch
+      development-minor-patch:
+        dependency-type: development
+        patterns:
+          - "*"
+        update-types:
+          - minor
+          - patch
+    # No ignores or security-update grouping: do not hide alerts or combine
+    # unrelated urgent fixes. Overrides and the braces patch need manual review.
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+      time: "09:00"
+      timezone: Asia/Seoul
+    open-pull-requests-limit: 3
+    labels:
+      - dependencies
+    commit-message:
+      prefix: "🤖 ci"
+      prefix-development: "🤖 ci"
+      include: scope
+    groups:
+      actions-minor-patch:
+        patterns:
+          - "*"
+        update-types:
+          - minor
+          - patch

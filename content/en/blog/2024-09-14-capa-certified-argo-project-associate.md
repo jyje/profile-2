@@ -8,7 +8,9 @@ tags:
   - certifications
   - kubernetes
   - linux-foundation
-image: ./assets/e396e8d4-7dfb-45b8-be12-84d9164a70ab.png
+image: ./assets/cncf-certification-capa.png
+profile_template: {kind: blog, version: 1}
+profile_format: 1
 ---
 
 I'm sharing my experience passing the [CAPA (Certified Argo Project Associate)](https://training.linuxfoundation.org/certification/certified-argo-project-associate-capa/) exam last weekend. CAPA is a brand-new certification launched in the first half of 2024, an Associate-level exam that validates your ability to work with the [Argo Project](https://argoproj.github.io/). This post is a short introduction to the Argo Project and the CAPA certification, followed by a record of how I prepared and what I learned along the way. I hope it's useful to anyone considering or curious about CAPA 🚀
@@ -19,14 +21,20 @@ I'm sharing my experience passing the [CAPA (Certified Argo Project Associate)](
 
 ### What is the Argo Project?
 
-<figure class="figure" style="float: right; width: 330px; max-width: 68%; margin: 0.25rem 1.0rem">
-  <img src="/img/legacy/capa-octopus-mascot.jpg" alt="Not the official mascot — just a stuffed octopus toy that looks like one" loading="lazy" style="width: 100%; height: auto; border-radius: 8px; margin: 0;" />
-  <figcaption class="figcaption" style="margin-top: 0.5rem; font-size: 0.75em; color: var(--gray);">Not the official mascot — just a stuffed octopus (or "jjukkumi") toy that happens to look like one.<br/>Photo by <a href="https://unsplash.com/@cosiela?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash">Cosiela Borta</a> on <a href="https://unsplash.com/photos/a-pink-octopus-stuffed-animal-sitting-on-top-of-a-table-S3VKHlvBfMA?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash">Unsplash</a></figcaption>
-</figure>
+```media-figure
+- image: /img/legacy/capa-octopus-mascot.jpg
+  alt: Not the official mascot - just a stuffed octopus toy that looks like one
+  caption: Not the official mascot - just a stuffed octopus (or "jjukkumi") toy that happens to look like one.
+  credit_label: Photo by
+  credit_name: Cosiela Borta
+  credit_url: https://unsplash.com/@cosiela?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash
+  source_label: on
+  source_name: Unsplash
+  source_url: https://unsplash.com/photos/a-pink-octopus-stuffed-animal-sitting-on-top-of-a-table-S3VKHlvBfMA?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash
+```
 
 The [Argo Project](https://argoproj.github.io/) is a suite of tools that combine with Kubernetes clusters to make them behave like a single DevOps platform — and it's getting more attention as Kubernetes adoption grows. It consists of four components:
 
-<div style="clear: both;"></div>
 - **Argo Workflows**: An orchestration engine for general-purpose workflows, including ML and CI/CD pipelines
 - **Argo CD**: A declarative continuous-deployment tool (the most well-known of the four)
 - **Argo Rollouts**: A deployment-strategy manager that supports advanced update strategies
@@ -50,7 +58,7 @@ If you've taken Kubernetes certifications like CKA, CKAD, or CKS, this exam envi
 
 ![CAPA Certification](./assets/capa-certificate.png)
 
-*My CAPA certification 2024. Issued on September 14, 2024, expires on September 15, 2026. You can verify it [here](https://www.credly.com/badges/ee42c2c7-2ac3-411f-8713-cc26cbec8022).*
+_My CAPA certification 2024. Issued on September 14, 2024, expires on September 15, 2026. You can verify it [here](https://www.credly.com/badges/ee42c2c7-2ac3-411f-8713-cc26cbec8022)._
 
 ### Why did I pursue it?
 
@@ -96,7 +104,7 @@ Buy the exam from the [exam page](https://training.linuxfoundation.org/certifica
 
 ![Exam preparation checklist](./assets/capa-exam-portal-checklist.jpg)
 
-*The CAPA exam readiness checklist on the Linux Foundation Training & Certification dashboard.*
+_The CAPA exam readiness checklist on the Linux Foundation Training & Certification dashboard._
 
 A few things worth knowing about how it's run:
 

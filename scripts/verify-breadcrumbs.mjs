@@ -4,6 +4,7 @@ import path from 'node:path';
 import http from 'node:http';
 import handler from 'serve-handler';
 import {chromium} from 'playwright';
+import {verifyBreadcrumbScroll} from './verify-breadcrumb-scroll.mjs';
 
 const prefix = process.env.VERIFY_BASE_PATH ?? '/profile-2/';
 let origin = process.env.VERIFY_ORIGIN;
@@ -48,8 +49,8 @@ try {
       ['blog/_tag-archives/kubernetes/', [tags, 'Kubernetes']],
       ['about/', [about]],
       ['about/resume/', [about, ko ? '이력서' : 'Resume']],
-      ['about/selected-cv/', [about, ko ? '경력기술서' : 'Selected CV']],
-      ['about/cv/', [about, ko ? '전체 CV' : 'Full CV']],
+      ['about/selected-cv/', [about, ko ? '이력서' : 'Resume', 'Selected CV']],
+      ['about/cv/', [about, ko ? '이력서' : 'Resume', 'Full CV']],
       ['about/portfolio/', [about, ko ? '포트폴리오' : 'Portfolio']],
       ['tags/', [tags]], ['tags/kubernetes/', [tags, 'Kubernetes']],
       ['search/?q=kubernetes', [ko ? '검색' : 'Search']],
@@ -108,10 +109,11 @@ try {
       assert.equal(await page.locator(selector).isVisible(), false, 'Breadcrumb must not print');
       await page.emulateMedia({media: 'screen'});
     }
+    await verifyBreadcrumbScroll(page, root, screenshots, locale);
     await ctx.close();
   }
   assert.deepEqual(errors, []);
-  console.log('Breadcrumbs passed: all page families, both locales, schema, links, base path, 3 widths, themes, keyboard, long titles, home/404 and print.');
+  console.log('Breadcrumbs passed: all page families, both locales, schema, links, base path, 3 widths, themes, keyboard, one-row long titles, ellipsis controls, mouse/trackpad/Shift-wheel/touch, no-JS, home/404 and print.');
 } finally {
   await browser.close();
   if (server) await new Promise(resolve => server.close(resolve));

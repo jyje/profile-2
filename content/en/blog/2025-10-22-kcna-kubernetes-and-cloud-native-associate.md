@@ -8,7 +8,9 @@ tags:
   - certifications
   - kubernetes
   - linux-foundation
-image: ./assets/CNCF-Certification_-KCNA.png
+image: ./assets/cncf-certification-kcna.png
+profile_template: {kind: blog, version: 1}
+profile_format: 1
 ---
 
 ## 1. About the Certification
@@ -31,11 +33,12 @@ Unlike hands-on certifications like CKA or CKAD, KCNA focuses on theoretical kno
 
 ![KCNA Certification](./assets/8984032a-6f68-4aa6-bd7d-2c786141fc80.png)
 
-*My KCNA certification 2025. Issued on October 22, 2025. Expires on October 22, 2028. You can verify my certification [here](https://www.credly.com/badges/759e92f0-7b3b-4788-8eff-c20ad1e2c645).*
+_My KCNA certification 2025. Issued on October 22, 2025. Expires on October 22, 2028. You can verify my certification [here](https://www.credly.com/badges/759e92f0-7b3b-4788-8eff-c20ad1e2c645)._
 
 I took the KCNA exam on October 22, 2025, and passed it successfully. Coming from hands-on experience with Kubernetes through my CKA and CKAD certifications, I found the KCNA exam to be a good way to validate and systematize my theoretical understanding of the cloud native ecosystem.
 
 The exam format consists entirely of four-choice multiple-choice questions with no hands-on components:
+
 - All 60 questions are theoretical multiple-choice questions (no command-line tasks)
 - Focus on concepts and principles rather than practical implementation
 - Covers broader cloud native topics beyond just Kubernetes
@@ -49,11 +52,13 @@ To aid my preparation, I enrolled in the [Kubernetes and Cloud-Native Associate 
 Based on my experience, here are some important tips for those preparing for the KCNA exam:
 
 **Essential Resources Before the Exam:**
+
 - **Official CNCF Curriculum**: Review the official KCNA curriculum to understand the exact exam domains and their weightings
 - **CNCF Landscape**: Familiarize yourself with the [CNCF Landscape](https://landscape.cncf.io/) - understand the categorization of projects (Graduated, Incubating, Sandbox) and their purposes. The exam may include questions about recently added projects
 - **Recent CNCF Additions**: Pay special attention to projects that joined the CNCF ecosystem in the 2-3 months before your exam date. These newer projects can appear on the exam, so staying current is crucial
 
 **Study Strategy:**
+
 - If you're already familiar with Kubernetes (e.g., from CKA/CKAD), the KodeKloud course can be completed in about 1 week
 - Focus on understanding the "why" and "what" rather than just the "how" - KCNA tests conceptual knowledge through four-choice multiple-choice questions only
 - Practice with mock exams to get comfortable with the multiple-choice format (remember: no hands-on tasks on the actual exam)
@@ -67,6 +72,7 @@ The KCNA exam covers the entire cloud native landscape, not just Kubernetes. Mak
 The KCNA certification serves as an excellent foundation for understanding the cloud native ecosystem. For those with hands-on Kubernetes experience (like CKA/CKAD holders), it provides an opportunity to validate and expand theoretical knowledge. For beginners, it offers a structured learning path into cloud native technologies.
 
 Key characteristics of KCNA:
+
 - **Entry-level certification**: Accessible to those new to cloud native technologies
 - **Broad coverage**: Covers the entire cloud native ecosystem, not just Kubernetes
 - **Theoretical focus**: Tests understanding of concepts and principles

@@ -1,41 +1,60 @@
 ---
 title: Portfolio
-description: Selected project case studies and implementation notes.
+breadcrumbs:
+  - {label: About, href: /about/}
+  - {label: Portfolio}
+description: Projects I have worked on and the engineering decisions behind them.
 wrapperClassName: site-about-page
 hide_table_of_contents: true
+profile_template: {kind: page, version: 1}
+profile_format: 1
 ---
 
 import Link from '@docusaurus/Link';
-import SiteBreadcrumbs from '@site/src/components/SiteBreadcrumbs';
+import AboutSectionNav from '@site/src/components/AboutSectionNav';
 
 <header className="about-hero">
   <div className="container">
-    <SiteBreadcrumbs items={[{label: 'About', href: '/about/'}, {label: 'Portfolio'}]} />
+    <AboutSectionNav label="About sections" current="/about/portfolio/" items={[
+  {href: '/about/', label: 'Overview'},
+  {href: '/about/portfolio/', label: 'Portfolio'},
+  {href: '/about/resume/', label: 'Resume'},
+]} />
     <p className="about-eyebrow">PORTFOLIO / SELECTED WORK</p>
     <h1 className="about-name">Portfolio</h1>
-    <p className="about-lead">Project background, architecture, and implementation experience.</p>
+    <p className="about-lead">My work on AI platforms and infrastructure.</p>
     <div className="about-intro">
-      <p>Explore case studies covering digital twin platforms, on-premise MLOps, and hybrid Kubernetes.</p>
+      <p>These articles describe my part in each project and the decisions I made along the way.</p>
     </div>
   </div>
 </header>
 
 <main className="container about-main">
-  <section className="about-section">
-    <h2>Case studies</h2>
-    <div className="about-links">
-      <Link to="/blog/widearth-digital-twins-platforms-at-maxst">
-        <span>Widearth: AR &amp; Digital Twins Platforms <span aria-hidden="true">↗</span></span>
-        <small>A case study of real-world AR services and a digital twin platform.</small>
-      </Link>
-      <Link to="/blog/mlops-onpremise-mlops-with-open-source-projects">
-        <span>On-Premise MLOps Platform <span aria-hidden="true">↗</span></span>
-        <small>A GPU cluster built with Kubeflow, Argo Workflows, and open source projects.</small>
-      </Link>
-      <Link to="/blog/devops-hybrid-clusters-with-onpremise-baremetal-k8s-and-aws-eks">
-        <span>Hybrid Kubernetes Cluster <span aria-hidden="true">↗</span></span>
-        <small>Architecture and operations across on-premise infrastructure and AWS EKS.</small>
-      </Link>
-    </div>
+  <section className="about-section about-case">
+
+## Widearth: AR and digital twin platform
+
+I handled deployment and operation of hybrid infrastructure and ML pipelines for a real-world AR service and digital twin platform. To support user-facing services alongside spatial-data processing, I separated their responsibilities and combined cloud and on-premise resources.
+
+<Link to="/blog/widearth-digital-twins-platforms-at-maxst">Read the article</Link>
+
+  </section>
+  <section className="about-section about-case">
+
+## On-premise MLOps platform
+
+I built an MLOps platform and GPU cluster to manage GPU-backed experiments and ML workloads as repeatable pipelines. On Kubernetes, I combined open source tools including Kubeflow and Argo Workflows to connect experimentation tools with the execution environment.
+
+<Link to="/blog/mlops-onpremise-mlops-with-open-source-projects">Read the article</Link>
+
+  </section>
+  <section className="about-section about-case">
+
+## Hybrid Kubernetes cluster
+
+I connected on-premise bare-metal Kubernetes with AWS EKS to use local resources while retaining cloud scalability and service continuity. I configured the cluster, workload execution, and status monitoring, using a Metric Collector and workflows to expand cloud workloads according to resource status.
+
+<Link to="/blog/devops-hybrid-clusters-with-onpremise-baremetal-k8s-and-aws-eks">Read the article</Link>
+
   </section>
 </main>

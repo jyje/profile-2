@@ -11,6 +11,8 @@ tags:
   - aws
   - onpremise
 image: ./assets/286a79d6-5433-4315-9309-61f6a6235f4c.jpg
+profile_template: {kind: blog, version: 1}
+profile_format: 1
 ---
 
 ## 1. 개요
@@ -86,9 +88,9 @@ ML 워크로드를 온프레미스 GPU 서버에서 처리함으로써 퍼블릭
 - [FastAPI]
 - [Prometheus SDK]
 
-[AWS EKS]: https://aws.amazon.com/eks "Amazon Elastic Kubernetes Service"
-[Kubernetes]: https://kubernetes.io "Kubernetes: Production-Grade Container Orchestration"
-[Kubespray]: https://kubespray.io "Kubespray: Kubernetes Cluster Deployment Tool"
-[Argo Workflows]: https://argoproj.github.io/workflows "Workflow Engine in Argo Projects"
-[FastAPI]: https://fastapi.tiangolo.com "FastAPI: Python API Framework"
-[Prometheus SDK]: https://github.com/prometheus/client_python "Python Package for Prometheus Client"
+[AWS EKS]: https://aws.amazon.com/eks 'Amazon Elastic Kubernetes Service'
+[Kubernetes]: https://kubernetes.io 'Kubernetes: Production-Grade Container Orchestration'
+[Kubespray]: https://kubespray.io 'Kubespray: Kubernetes Cluster Deployment Tool'
+[Argo Workflows]: https://argoproj.github.io/workflows 'Workflow Engine in Argo Projects'
+[FastAPI]: https://fastapi.tiangolo.com 'FastAPI: Python API Framework'
+[Prometheus SDK]: https://github.com/prometheus/client_python 'Python Package for Prometheus Client'

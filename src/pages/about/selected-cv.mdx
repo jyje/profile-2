@@ -1,0 +1,42 @@
+---
+title: 경력기술서
+breadcrumbs:
+  - {label: 소개, href: /about/}
+  - {label: 이력서, href: /about/resume/}
+  - {label: Selected CV}
+description: 자세한 이력이 필요하시면 LinkedIn으로 연락해주세요.
+wrapperClassName: site-about-page
+hide_table_of_contents: true
+noindex: true
+profile_template: {kind: page, version: 1}
+profile_format: 1
+---
+
+import Link from '@docusaurus/Link';
+import AboutSectionNav from '@site/src/components/AboutSectionNav';
+
+<header className="about-hero">
+  <div className="container">
+    <AboutSectionNav label="소개 하위 탐색" current="/about/resume/" items={[
+  {href: '/about/', label: '개요'},
+  {href: '/about/portfolio/', label: '포트폴리오'},
+  {href: '/about/resume/', label: '이력서'},
+]} />
+    <p className="about-eyebrow">ABOUT / DOCUMENT ACCESS</p>
+    <h1 className="about-name">경력기술서</h1>
+    <p className="about-lead">자세한 이력이 필요하시면 연락해주세요.</p>
+  </div>
+</header>
+
+<main className="container about-main" data-about-access>
+  <section className="about-section">
+
+이 페이지의 내용은 더 이상 공개하지 않습니다. 자세한 이력이 필요하시면 이력서 페이지에서 연락 방법을 확인해주세요.
+
+    <div className="about-request-actions">
+      <Link className="button button--primary" to="/about/resume/">이력서</Link>
+      <Link to="/about/portfolio/">포트폴리오 보기</Link>
+    </div>
+
+  </section>
+</main>

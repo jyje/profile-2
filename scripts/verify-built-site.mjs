@@ -1,11 +1,12 @@
 import assert from 'node:assert/strict';
 import http from 'node:http';
 import path from 'node:path';
-import {spawn} from 'node:child_process';
 import handler from 'serve-handler';
 import {chromium} from 'playwright';
-import {verifyCareerProfiles} from './verify-career-profiles.mjs';
-import {verifyCareerChips} from './verify-career-chips.mjs';
+import {verifyAboutAccess} from './verify-about-access.mjs';
+import {verifyPublicCareerBoundary} from './public-career-boundary.mjs';
+import {verifyBlogSidebar} from './verify-blog-sidebar.mjs';
+import {verifyNavbarOrder} from './verify-navbar-order.mjs';
 
 const prefix = process.env.VERIFY_BASE_PATH ?? '/profile-2/';
 const directory = path.resolve(process.env.VERIFY_BUILD_DIR ?? 'build');
@@ -36,30 +37,15 @@ try {
     await page.goto(root + 'tags/kubernetes');
     assert.ok(await page.locator('main a[href*="/blog/"]').count() > 0);
     assert.ok(await page.locator('main a[href*="/wiki/"]').count() > 0);
-    const cvLink = page.locator('main a[href*="/about/cv/#"], main a[href*="/about/cv#"]').first();
-    const href = await cvLink.getAttribute('href');
-    await cvLink.click();
-    await page.locator('[data-career-document="cv"]').waitFor();
-    assert.ok(await page.locator(`[id="${href.split('#')[1]}"]`).count());
-    for (const width of [390, 864, 1222]) {
-      await page.setViewportSize({width, height: 900});
-      for (const variant of ['resume', 'cv']) {
-        await page.goto(root + `about/${variant}`);
-        await page.locator(`[data-career-document="${variant}"]`).waitFor();
-        assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth + 1), `horizontal overflow at ${locale}/${variant}/${width}`);
-        await page.evaluate(() => document.fonts.ready);
-        if (variant === 'cv') await verifyCareerChips(page);
-      }
-    }
+    assert.equal(await page.locator('main a[href*="/about/cv#"],main a[href*="/about/cv/#"]').count(), 0);
     await context.close();
     // Static/API access is served as addressed, without language redirection.
     const raw = await fetch(root + 'about/cv'); assert.equal(raw.status, 200);
     assert.equal(raw.url, root + 'about/cv');
   }
-  await verifyCareerProfiles(browser, base);
-  await new Promise((resolve, reject) => {
-    const child = spawn(process.execPath, ['scripts/export-career-pdfs.mjs'], {stdio: 'inherit', env: {...process.env, PDF_BASE_URL: base}});
-    child.on('error', reject); child.on('exit', code => code === 0 ? resolve() : reject(new Error(`PDF validation failed (${code})`)));
-  });
-  console.log('Both locales: cross-content links, graph entry, CV anchors, mobile widths, static routes and PDFs passed.');
+  await verifyAboutAccess(browser, base);
+  await verifyBlogSidebar(browser, base);
+  await verifyNavbarOrder(browser, base);
+  console.log(`Public career boundary: ${verifyPublicCareerBoundary(directory)} output files checked.`);
+  console.log('Both locales: cross-content links, graphs, public About navigation, access gateways and static routes passed.');
 } finally { await browser.close(); await new Promise(resolve => server.close(resolve)); }

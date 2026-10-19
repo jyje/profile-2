@@ -1,50 +1,7 @@
 const fs = require('node:fs');
 const path = require('node:path');
 const yaml = require('js-yaml');
-const {loadCareer} = require('../career-data.cjs');
 const {buildNetwork} = require('../content-network.cjs');
-
-function normalizedTags(value) {
-  return [...new Set((Array.isArray(value) ? value : []).filter(tag => typeof tag === 'string'))];
-}
-
-function resumeEntries(siteDir, locale) {
-  const resume = loadCareer(siteDir).sources[locale];
-  const sections = [
-    ['work', 'work'],
-    ['projects', 'projects'],
-    ['education', 'education'],
-    ['skills', 'skills'],
-  ];
-  const entries = [];
-  for (const [section, key] of sections) {
-    for (const item of (resume[key] ?? [])) {
-      const tags = normalizedTags(item.tags);
-      if (!tags.length) continue;
-      const title = section === 'work'
-        ? `${item.company}: ${item.position}`
-        : section === 'education'
-          ? item.institution
-          : section === 'skills'
-            ? item.name
-            : item.position;
-      const description = section === 'skills'
-        ? (item.keywords ?? []).join(', ')
-        : String(item.area ?? item.roles?.description ?? '').trim();
-      entries.push({
-        kind: 'resume',
-        title: String(title ?? key),
-        description,
-        date: String(item.startDate ?? '').slice(0, 10),
-        route: `/about/cv#${item.anchor}`,
-        tags,
-        locale,
-        source: `data/career/${section}#${item.id}`,
-      });
-    }
-  }
-  return entries;
-}
 
 function localized(value, locale) {
   if (value && typeof value === 'object') return String(value[locale] ?? value.en ?? value.ko ?? '');
@@ -60,7 +17,6 @@ async function buildTagData(context, allContent) {
       ...entry, route: entry.path,
       kind: entry.kind === 'wiki' && /(?:^|\/)portfolio\//.test(entry.source) ? 'portfolio' : entry.kind,
     })),
-    ...resumeEntries(siteDir, locale),
   ];
 
   for (const entry of entries) {
@@ -110,7 +66,6 @@ module.exports = function globalTagsPlugin(context) {
     getPathsToWatch() {
       return [
         path.join(siteDir, 'data/tags.yml'),
-        path.join(siteDir, 'data/career/**/*.yaml'),
         path.join(siteDir, `content/${locale}/blog/**/*.{md,mdx}`),
         path.join(siteDir, locale === 'en' ? 'i18n/en/docusaurus-plugin-content-docs/current/**/*.{md,mdx}' : 'content/ko/wiki/**/*.{md,mdx}'),
       ];
