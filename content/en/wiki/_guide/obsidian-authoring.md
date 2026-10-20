@@ -116,12 +116,15 @@ Repeated structured data in blog posts, wiki documents, and pages can use YAML c
 
 ### Anatomy figure
 
-`anatomy-figure` embeds an interactive figure made with the [Anatomy skill](https://github.com/wheresryan22/anatomy). It takes exactly one item. `name` is a folder under `static/anatomy/`, and the light version lives in the `<name>-light/` folder. Both folders need an `index.html`. `title` is the figure's accessible name. The version that matches the site's light or dark mode is shown.
+`anatomy` is the standard macro for embedding an interactive figure made with the [Anatomy skill](https://github.com/wheresryan22/anatomy). Unlike the other templates its body is **one line, a path**, not YAML. The path is a figure folder under `static/`, written from the site root. The dark version is `<path>/index.html` and the light version is `<path>/light/index.html`; both must exist. The version that matches the site's light or dark mode is shown.
 
-```anatomy-figure
-- name: raspberry-pi
-  title: Interactive figure of the Raspberry Pi 4 Model B
+```anatomy
+/img/figures/raspberry-pi
 ```
+
+Backticks are the standard form. A block written with three apostrophes (opening with `'''anatomy` and closing with `'''`) is treated as the same block, and `npm run content:format` rewrites the source into the backtick form above. Examples written inside code blocks are left alone.
+
+The path starts with `/` and may not contain `..`, empty segments, a query or spaces. `content:check` reports a malformed path as `CONTENT-004`, and `lint:content` reports a missing file as `anatomy-asset-missing`. `anatomy-figure` has been replaced by this macro.
 
 Keep ordinary prose, tables, and lists as Markdown. Each visual template has one dedicated component; do not combine multiple template renderers into one component.
 

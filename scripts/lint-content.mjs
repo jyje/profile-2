@@ -2,6 +2,9 @@ import fs from 'node:fs';
 import path from 'node:path';
 import {pathToFileURL} from 'node:url';
 import * as yaml from 'js-yaml';
+import macroModule from '../plugins/content-templates/macros.cjs';
+
+const {macros, normalizeMacroFences} = macroModule;
 
 // Structure lint for every authored document that can render: content/{ko,en}/{wiki,blog}.
 // Prettier-level formatting, stamps and titles belong to `npm run content:check`; this adds what it does not cover.
@@ -26,7 +29,8 @@ export function loadLayouts(root) {
   return registry;
 }
 
-export function parseDocument(source) {
+export function parseDocument(input) {
+  const source = normalizeMacroFences(input);
   const match = source.match(/^---\r?\n([\s\S]*?)\r?\n---[ \t]*(?:\r?\n|$)/);
   let frontMatter = {};
   let frontMatterError;
@@ -71,7 +75,8 @@ export function introKinds(document) {
   const kinds = new Set();
   for (const fence of document.fences) {
     if (fence.line >= first) continue;
-    if (fence.lang === 'anatomy-figure') kinds.add('anatomy-figure');
+    // The macro is `anatomy`; the layout rules keep the v1 kind name `anatomy-figure`.
+    if (fence.lang === 'anatomy') kinds.add('anatomy-figure');
     if (fence.lang === 'mermaid') kinds.add('diagram');
   }
   if (document.images.some(image => image.line < first)) kinds.add('image');
@@ -99,17 +104,16 @@ export function lintDocument(root, file, source, registry, {assets = true} = {})
   if (assets && typeof image === 'string' && image.startsWith('/') && !fs.existsSync(path.join(root, 'static', image))) {
     add('error', 'image-missing', 1, `front matter image not found: static${image}`);
   }
-  const figures = document.fences.filter(item => item.lang === 'anatomy-figure');
+  const figures = document.fences.filter(item => item.lang === 'anatomy');
   if (figures.length && image === undefined && (document.frontMatter?.type === 'Reference' || document.frontMatter?.profile_layout !== undefined)) {
-    add('warn', 'anatomy-thumbnail', 1, 'Add an `image:` front matter (npm run build:anatomy writes static/anatomy/<name>/thumbnail.png)');
+    add('warn', 'anatomy-thumbnail', 1, 'Add an `image:` front matter (npm run build:anatomy writes static/img/figures/<name>/thumbnail.png)');
   }
   if (assets) {
     for (const fence of figures) {
-      let name;
-      try { name = yaml.load(fence.value)?.[0]?.name; } catch { name = undefined; }
-      if (typeof name !== 'string') { add('error', 'anatomy-name', fence.line, 'anatomy-figure needs a name'); continue; }
-      for (const directory of [name, `${name}-light`]) {
-        if (!fs.existsSync(path.join(root, 'static/anatomy', directory, 'index.html'))) add('error', 'anatomy-asset-missing', fence.line, `Missing static/anatomy/${directory}/index.html`);
+      let figure;
+      try { figure = macros.anatomy.parse(fence.value); } catch (error) { add('error', 'anatomy-path', fence.line, error.message); continue; }
+      for (const file of [`static${figure.path}/index.html`, `static${figure.path}/light/index.html`]) {
+        if (!fs.existsSync(path.join(root, file))) add('error', 'anatomy-asset-missing', fence.line, `Missing ${file}`);
       }
     }
   }

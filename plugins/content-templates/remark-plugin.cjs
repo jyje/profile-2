@@ -1,6 +1,7 @@
 const yaml = require('js-yaml');
 
 const templates = require('./schemas/v1.cjs');
+const {macros} = require('./macros.cjs');
 
 function validateItems(items, template, language) {
   if (!Array.isArray(items) || items.length === 0) {
@@ -45,13 +46,6 @@ function validateItems(items, template, language) {
       }
     }
 
-    if (template.single && items.length !== 1) {
-      throw new Error(`Expected exactly one item for ${language}`);
-    }
-
-    if (template.single && !/^[a-z0-9-]+$/.test(item.name)) {
-      throw new Error(`Field "name" must be a lowercase directory name in ${language} item ${index + 1}`);
-    }
 
     return item;
   });
@@ -63,6 +57,22 @@ module.exports = function remarkContentTemplates() {
       if (!parent || !Array.isArray(parent.children)) return;
 
       parent.children = parent.children.flatMap((node) => {
+        if (node.type === 'code' && Object.hasOwn(macros, node.lang)) {
+          try {
+            return [{
+              type: 'mdxJsxFlowElement',
+              name: 'ContentTemplate',
+              attributes: [
+                {type: 'mdxJsxAttribute', name: 'type', value: node.lang},
+                {type: 'mdxJsxAttribute', name: 'itemsJson', value: JSON.stringify([macros[node.lang].parse(node.value)])},
+              ],
+              children: [],
+              position: node.position,
+            }];
+          } catch (error) {
+            file.fail(`Invalid ${node.lang} macro: ${error.message}`, node);
+          }
+        }
         if (node.type === 'code' && Object.hasOwn(templates, node.lang)) {
           const template = templates[node.lang];
           try {
@@ -92,3 +102,4 @@ module.exports = function remarkContentTemplates() {
 };
 module.exports.validateItems = validateItems;
 module.exports.schemas = templates;
+module.exports.macros = macros;

@@ -18,7 +18,7 @@ async function fixture(t) {
   const root = await fs.mkdtemp(path.join(os.tmpdir(), 'profile-design-test-'));
   t.after(() => fs.rm(root, {recursive:true,force:true}));
   const write = async (name, text) => {await fs.mkdir(path.dirname(path.join(root,name)),{recursive:true});await fs.writeFile(path.join(root,name),text);};
-  for (const name of ['design-system/format-v1.json','design-system/content-contract.json','scripts/content-format/v1.mjs','scripts/content-format.mjs','scripts/design-system/rules.mjs','scripts/design-system/lint.mjs','scripts/validate-wiki-titles.mjs','plugins/content-templates/remark-plugin.cjs','plugins/content-templates/schemas/v1.cjs']) {
+  for (const name of ['design-system/format-v1.json','design-system/content-contract.json','scripts/content-format/v1.mjs','scripts/content-format.mjs','scripts/design-system/rules.mjs','scripts/design-system/lint.mjs','scripts/validate-wiki-titles.mjs','plugins/content-templates/remark-plugin.cjs','plugins/content-templates/schemas/v1.cjs','plugins/content-templates/macros.cjs']) {
     await write(name, await fs.readFile(path.join(project,name)));
   }
   for (const dir of ['src/pages','src/components/ContentTemplates','content/en','i18n/en/docusaurus-plugin-content-pages']) await write(`${dir}/.keep`, '');

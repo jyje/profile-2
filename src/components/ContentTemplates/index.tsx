@@ -5,7 +5,7 @@ import ListTypeImageHeader, {type CareerItem} from './ListTypeImageHeader';
 import MediaFigure, {type FigureItem} from './MediaFigure';
 
 type Props = {
-  type: 'list-type-2x2' | 'list-type-image-header' | 'media-figure' | 'anatomy-figure';
+  type: 'list-type-2x2' | 'list-type-image-header' | 'media-figure' | 'anatomy';
   itemsJson: string;
 };
 
@@ -21,7 +21,7 @@ export default function ContentTemplate({type, itemsJson}: Props): ReactNode {
     return <ListTypeImageHeader items={items as CareerItem[]} />;
   }
 
-  if (type === 'anatomy-figure') {
+  if (type === 'anatomy') {
     return <AnatomyFigure items={items as AnatomyItem[]} />;
   }
 

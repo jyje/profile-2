@@ -4,6 +4,8 @@ import os from 'node:os';
 import path from 'node:path';
 import {test} from 'node:test';
 import {spawnSync} from 'node:child_process';
+import {createRequire} from 'node:module';
+import {contentViolations, formatContent} from './content-format/v1.mjs';
 import {fixDocument, lintContent, lintDocument, loadLayouts, parseDocument} from './lint-content.mjs';
 import {formatReport, reportContent} from './report-content.mjs';
 import {prepareContent} from './prepare-content.mjs';
@@ -56,7 +58,7 @@ test('an intro visual is required before the first H2, and fenced headings are i
   assert.ok(rules(run(doc('## Definition\n\nx\n\n## References\n\nx\n'))).includes('template-intro-visual'));
   assert.ok(rules(run(doc('```md\n## Not a heading\n```\n\n## Definition\n\nx\n\n## References\n\nx\n'))).includes('template-intro-visual'));
   assert.deepEqual(parseDocument(doc('```md\n## Not a heading\n```\n\n## Real\n\nx\n')).headings.map(item => item.text), ['Real']);
-  const fence = '```anatomy-figure\n- name: pi\n  title: Pi\n```\n\n';
+  const fence = '```anatomy\n/img/figures/pi\n```\n\n';
   assert.deepEqual(rules(run(doc(`${fence}## Definition\n\nx\n\n## References\n\nx\n`))).filter(rule => rule === 'template-intro-visual'), []);
   const diagram = '```mermaid\ngraph TD; A-->B\n```\n\n';
   assert.deepEqual(rules(run(doc(`${diagram}## Definition\n\nx\n\n## References\n\nx\n`))).filter(rule => rule === 'template-intro-visual'), []);
@@ -89,15 +91,90 @@ test('baseline rules apply to documents without a template', () => {
   assert.ok(!found.some(rule => rule.startsWith('template-')));
 });
 
-test('anatomy-figure assets must exist in both themes', t => {
+test('anatomy figure folders need both a dark and a light page', t => {
   const root = fs.mkdtempSync(path.join(os.tmpdir(), 'profile2-lint-'));
   t.after(() => fs.rmSync(root, {recursive: true, force: true}));
-  const source = '---\ntitle: "📄 A"\n---\n\n```anatomy-figure\n- name: pi\n  title: Pi\n```\n';
-  const lint = () => lintDocument(root, path.join(root, 'content/ko/wiki/a.md'), source, registry).diagnostics.map(item => item.message);
-  assert.deepEqual(lint(), ['Missing static/anatomy/pi/index.html', 'Missing static/anatomy/pi-light/index.html']);
-  fs.mkdirSync(path.join(root, 'static/anatomy/pi'), {recursive: true});
-  fs.writeFileSync(path.join(root, 'static/anatomy/pi/index.html'), '');
-  assert.deepEqual(lint(), ['Missing static/anatomy/pi-light/index.html']);
+  const source = '---\ntitle: "📄 A"\n---\n\n```anatomy\n/img/figures/pi\n```\n';
+  const lint = text => lintDocument(root, path.join(root, 'content/ko/wiki/a.md'), text ?? source, registry).diagnostics.map(item => item.message);
+  assert.deepEqual(lint(), ['Missing static/img/figures/pi/index.html', 'Missing static/img/figures/pi/light/index.html']);
+  fs.mkdirSync(path.join(root, 'static/img/figures/pi'), {recursive: true});
+  fs.writeFileSync(path.join(root, 'static/img/figures/pi/index.html'), '');
+  assert.deepEqual(lint(), ['Missing static/img/figures/pi/light/index.html']);
+  assert.match(lint('---\ntitle: "📄 A"\n---\n\n```anatomy\npi\n```\n')[0], /root-relative static directory/);
+  assert.match(lint('---\ntitle: "📄 A"\n---\n\n```anatomy\n/a\n/b\n```\n')[0], /exactly one line/);
+});
+
+test("'''anatomy is the same block as a backtick fence", t => {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'profile2-lint-'));
+  t.after(() => fs.rmSync(root, {recursive: true, force: true}));
+  const apostrophes = `---\ntitle: "📄 A"\n---\n\n'''anatomy\n/img/figures/pi\n'''\n\n## One\n\nx\n`;
+  const parsed = parseDocument(apostrophes);
+  assert.deepEqual(parsed.fences.map(fence => [fence.lang, fence.value]), [['anatomy', '/img/figures/pi']]);
+  assert.deepEqual(parsed.headings.map(heading => [heading.text, heading.line]), [['One', 9]], 'line numbers are preserved');
+  const missing = lintDocument(root, path.join(root, 'content/ko/wiki/a.md'), apostrophes, registry).diagnostics.map(item => item.rule);
+  assert.deepEqual(missing, ['anatomy-asset-missing', 'anatomy-asset-missing']);
+  const inCode = parseDocument('---\ntitle: "📄 A"\n---\n\n```text\n\'\'\'anatomy\n/img/figures/pi\n\'\'\'\n```\n');
+  assert.deepEqual(inCode.fences.map(fence => fence.lang), ['text'], 'an example inside a code block is not a macro');
+  // as the intro visual of a layout page
+  const page = `---\ntitle: "🍓 Pi"\ntags: [a]\ntype: Reference\n${STAMP}\n---\n\n'''anatomy\n/img/figures/pi\n'''\n\n## Definition\n\nx\n\n## References\n\nx\n`;
+  assert.ok(!rules(run(page)).includes('template-intro-visual'));
+});
+
+test('the anatomy macro takes exactly one root-relative static directory', () => {
+  const {macros, normalizeMacroFences} = createRequire(import.meta.url)('../plugins/content-templates/macros.cjs');
+  assert.deepEqual(macros.anatomy.parse('/img/figures/raspberry-pi/\n'), {path: '/img/figures/raspberry-pi'});
+  assert.deepEqual(macros.anatomy.parse('  /img/figures/a.b_c-d  '), {path: '/img/figures/a.b_c-d'});
+  for (const bad of ['', 'raspberry-pi', 'img/figures/x', '/a/../b', '/a/./b', '//x', '/a//b', '/a b', '/a\n/b', '/img/figures/x?y=1', '/img/figures/x#top', '/']) {
+    assert.throws(() => macros.anatomy.parse(bad), /anatomy/, JSON.stringify(bad));
+  }
+  const text = "a\n'''anatomy\n/x/y\n'''\nb\n```md\n'''anatomy\n/x/z\n'''\n```\n'''other\nq\n'''\n'''anatomy\n/unclosed\n";
+  const out = normalizeMacroFences(text);
+  assert.equal(out.split('\n').length, text.split('\n').length);
+  assert.match(out, /^```anatomy\n\/x\/y\n```$/m);
+  assert.match(out, /```md\n'''anatomy\n\/x\/z\n'''\n```/, 'an example inside a code fence stays as written');
+  assert.match(out, /'''other\nq\n'''/, 'only known macros are rewritten');
+  assert.match(out, /'''anatomy\n\/unclosed\n$/, 'an unclosed block is left alone');
+});
+
+test('the remark plugin turns the macro into a ContentTemplate and fails on a bad path', () => {
+  const plugin = createRequire(import.meta.url)('../plugins/content-templates/remark-plugin.cjs');
+  const failures = [];
+  const run = value => {
+    const tree = {type: 'root', children: [{type: 'code', lang: 'anatomy', value, position: {}}]};
+    plugin()(tree, {fail: (message) => { failures.push(message); throw new Error(message); }});
+    return tree.children[0];
+  };
+  const node = run('/img/figures/pi');
+  assert.equal(node.type, 'mdxJsxFlowElement');
+  assert.deepEqual(node.attributes.map(attribute => [attribute.name, attribute.value]), [['type', 'anatomy'], ['itemsJson', '[{"path":"/img/figures/pi"}]']]);
+  assert.throws(() => run('pi'), /Invalid anatomy macro/);
+  assert.equal(failures.length, 1);
+});
+
+test('content:check validates the anatomy macro in either spelling', () => {
+  const doc = body => `---\ntitle: "📄 A"\nprofile_template: {kind: wiki, version: 1}\nprofile_format: 1\n---\n\n${body}\n`;
+  const file = 'content/ko/wiki/d/a.md';
+  assert.deepEqual(contentViolations(doc('```anatomy\n/img/figures/pi\n```'), file), []);
+  assert.deepEqual(contentViolations(doc("'''anatomy\n/img/figures/pi\n'''"), file), []);
+  assert.match(contentViolations(doc('```anatomy\npi\n```'), file)[0], /^CONTENT-004: anatomy path/);
+  assert.match(contentViolations(doc("'''anatomy\npi\n'''"), file)[0], /^CONTENT-004: anatomy path/);
+});
+
+test("staging rewrites '''anatomy to a backtick fence, including a borrowed body", t => {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'profile2-stage-'));
+  t.after(() => fs.rmSync(root, {recursive: true, force: true}));
+  const write = (file, text) => { fs.mkdirSync(path.dirname(path.join(root, file)), {recursive: true}); fs.writeFileSync(path.join(root, file), text); };
+  write('.docignore', 'content/_templates/\n');
+  write('content/ko/wiki/index.md', '---\ntitle: "🏠 홈"\n---\n\nHome');
+  write('content/en/wiki/index.md', '---\ntitle: "🏠 Home"\n---\n');
+  write('content/ko/wiki/d/pi.md', `---\ntitle: "🍓 Pi"\n---\n\n'''anatomy\n/img/figures/pi\n'''\n\nText\n`);
+  write('content/en/wiki/d/pi.md', '---\ntitle: "🍓 Pi"\n---\n');
+  prepareContent(root, 'public');
+  for (const locale of ['ko', 'en']) {
+    const staged = fs.readFileSync(path.join(root, '.content-build', locale, 'wiki/d/pi.md'), 'utf8');
+    assert.match(staged, /```anatomy\n\/img\/figures\/pi\n```/, locale);
+    assert.doesNotMatch(staged, /'''anatomy/, locale);
+  }
 });
 
 test('locales must agree on template and H2 sequence once both have a body', t => {
@@ -136,16 +213,15 @@ test('every rendered document in this repository passes the lint', () => {
 test('front matter image must exist, and Anatomy reference pages should have a thumbnail', t => {
   const root = fs.mkdtempSync(path.join(os.tmpdir(), 'profile2-lint-'));
   t.after(() => fs.rmSync(root, {recursive: true, force: true}));
-  fs.mkdirSync(path.join(root, 'static/anatomy/pi'), {recursive: true});
-  fs.writeFileSync(path.join(root, 'static/anatomy/pi/index.html'), '');
-  fs.mkdirSync(path.join(root, 'static/anatomy/pi-light'), {recursive: true});
-  fs.writeFileSync(path.join(root, 'static/anatomy/pi-light/index.html'), '');
-  const fence = '```anatomy-figure\n- name: pi\n  title: Pi\n```\n';
+  fs.mkdirSync(path.join(root, 'static/img/figures/pi/light'), {recursive: true});
+  fs.writeFileSync(path.join(root, 'static/img/figures/pi/index.html'), '');
+  fs.writeFileSync(path.join(root, 'static/img/figures/pi/light/index.html'), '');
+  const fence = '```anatomy\n/img/figures/pi\n```\n';
   const lint = front => lintDocument(root, path.join(root, 'content/ko/wiki/d/a.md'), `---\ntitle: "📄 A"\ntype: Reference\n${front}---\n\n${fence}`, registry).diagnostics.map(item => `${item.severity}:${item.rule}`);
   assert.deepEqual(lint(''), ['warn:anatomy-thumbnail']);
-  assert.deepEqual(lint('image: /anatomy/pi/thumbnail.png\n'), ['error:image-missing']);
-  fs.writeFileSync(path.join(root, 'static/anatomy/pi/thumbnail.png'), '');
-  assert.deepEqual(lint('image: /anatomy/pi/thumbnail.png\n'), []);
+  assert.deepEqual(lint('image: /img/figures/pi/thumbnail.png\n'), ['error:image-missing']);
+  fs.writeFileSync(path.join(root, 'static/img/figures/pi/thumbnail.png'), '');
+  assert.deepEqual(lint('image: /img/figures/pi/thumbnail.png\n'), []);
 });
 
 test('--fix repairs only the unambiguous legacy Name section and is idempotent', () => {
@@ -196,4 +272,14 @@ test('the coverage report lists reference pages and what each is missing', t => 
   assert.match(text, /\| full \| reference@1 \| draft \| image \| ✓ \| ✓ \| – \| – \| ✓ \|/);
   assert.match(text, /\| old \| legacy \|/);
   assert.match(text, /Missing both Understanding and Usage: old$/);
+});
+
+test("content:format writes the apostrophe anatomy block as a backtick fence and leaves code examples alone", async () => {
+  const file = 'content/ko/wiki/d/a.md';
+  const source = "---\ntitle: \"📄 A\"\nprofile_template: {kind: wiki, version: 1}\nprofile_format: 1\n---\n\n'''anatomy\n/img/figures/pi\n'''\n\n```text\n'''anatomy\n/img/figures/pi\n'''\n```\n";
+  const formatted = await formatContent(source, file);
+  assert.match(formatted, /^```anatomy\n\/img\/figures\/pi\n```$/m);
+  assert.match(formatted, /```text\n'''anatomy\n\/img\/figures\/pi\n'''\n```/, 'the documented example is untouched');
+  assert.equal(await formatContent(formatted, file), formatted, 'idempotent');
+  assert.notEqual(formatted, source, 'content:check sees the apostrophe spelling as needing a format pass');
 });

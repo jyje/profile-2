@@ -1,19 +1,22 @@
 import {useCallback, useEffect, useRef, useState, type ReactNode} from 'react';
 import {useColorMode} from '@docusaurus/theme-common';
 import useBaseUrl from '@docusaurus/useBaseUrl';
+import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import styles from './styles.module.css';
 
 export type AnatomyItem = {
-  /** Directory under static/anatomy/. The light page is the `<name>-light/` directory. */
-  name: string;
-  title: string;
+  /** Root-relative static directory, for example /img/figures/raspberry-pi. Dark is index.html, light is light/index.html. */
+  path: string;
 };
 
+const TITLES: Record<string, string> = {ko: '인터랙티브 그림', en: 'Interactive figure'};
+
 export default function AnatomyFigure({items}: {items: AnatomyItem[]}): ReactNode {
-  const {name, title} = items[0];
+  const {path} = items[0];
   const {colorMode} = useColorMode();
-  const dark = useBaseUrl(`/anatomy/${name}/`);
-  const light = useBaseUrl(`/anatomy/${name}-light/`);
+  const {i18n: {currentLocale}} = useDocusaurusContext();
+  const dark = useBaseUrl(`${path}/`);
+  const light = useBaseUrl(`${path}/light/`);
   const frame = useRef<HTMLIFrameElement>(null);
   const [height, setHeight] = useState<number | undefined>();
 
@@ -40,7 +43,7 @@ export default function AnatomyFigure({items}: {items: AnatomyItem[]}): ReactNod
       className={styles.frame}
       style={height ? {height} : undefined}
       src={colorMode === 'dark' ? dark : light}
-      title={title}
+      title={TITLES[currentLocale] ?? TITLES.en}
       onLoad={fit}
     />
   );

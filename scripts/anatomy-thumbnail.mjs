@@ -3,16 +3,16 @@ import path from 'node:path';
 import {pathToFileURL} from 'node:url';
 import {chromium} from 'playwright';
 
-// Render a 1200x630 social card for an Anatomy figure: static/anatomy/<name>/thumbnail.png.
-// Reference it from a document with `image: /anatomy/<name>/thumbnail.png`.
+// Render a 1200x630 social card for an Anatomy figure: static/img/figures/<name>/thumbnail.png.
+// Reference it from a document with `image: /img/figures/<name>/thumbnail.png`.
 async function launch() {
   try { return await chromium.launch(); } catch { return chromium.launch({channel: 'chrome'}); }
 }
 
 export async function writeThumbnail(root, name) {
-  const source = path.join(root, 'static/anatomy', `${name}-light`, 'index.html');
+  const source = path.join(root, 'static/img/figures', name, 'light', 'index.html');
   if (!fs.existsSync(source)) throw new Error(`Missing ${path.relative(root, source)}; run npm run build:anatomy -- ${name}`);
-  const output = path.join(root, 'static/anatomy', name, 'thumbnail.png');
+  const output = path.join(root, 'static/img/figures', name, 'thumbnail.png');
   const browser = await launch();
   try {
     const page = await browser.newPage({viewport: {width: 1200, height: 630}, deviceScaleFactor: 1});

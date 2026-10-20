@@ -3,6 +3,7 @@ import path from 'node:path';
 import {contentMode, ignorePatterns, isDocIgnored, publicationContext} from '../plugins/content-visibility.cjs';
 import {createLastUpdateReader, withLastUpdate} from './content-last-update.mjs';
 import {withDevelopmentNotice} from './development-notice.mjs';
+import {normalizeMacroFences} from '../plugins/content-templates/macros.cjs';
 import {planLocaleFallbacks, withLocaleFallback, writeFallbackManifest} from './locale-fallback.mjs';
 
 // Stage authored content without mutating it. Underscored development sections get
@@ -37,9 +38,10 @@ export function prepareContent(root, mode = contentMode()) {
           else if (/\.mdx?$/.test(entry.name)) {
             const text = fs.readFileSync(authored, 'utf8');
             // Borrowed bodies show the date of the file whose text is displayed.
-            const markdown = fallback
+            // `'''anatomy` blocks are authoring shorthand for backtick fences; Docusaurus only ever sees fences.
+            const markdown = normalizeMacroFences(fallback
               ? withLastUpdate(withLocaleFallback(text, authored, fallback, locale), fallback.file, readDate)
-              : withLastUpdate(text, authored, readDate);
+              : withLastUpdate(text, authored, readDate));
             if (fallback) borrowed.set(`content/${path.relative(output, destination).replaceAll('\\', '/')}`, fallback.locale);
             fs.writeFileSync(destination, mode === 'development' && ignored ? withDevelopmentNotice(markdown, locale) : markdown);
           } else fs.copyFileSync(path.join(from, entry.name), destination);
