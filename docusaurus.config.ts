@@ -1,3 +1,5 @@
+import fs from 'node:fs';
+import * as yaml from 'js-yaml';
 import {themes as prismThemes} from 'prism-react-renderer';
 import type {Config} from '@docusaurus/types';
 import type * as Preset from '@docusaurus/preset-classic';
@@ -7,6 +9,9 @@ import {assertPreparedContent} from './plugins/content-visibility.cjs';
 
 // This runs in Node.js - Don't use client-side code here (browser APIs, JSX...)
 assertPreparedContent();
+
+// Old tag slugs that must keep working, declared per tag as `aliases` in data/tags.yml.
+const tagRegistry = (yaml.load(fs.readFileSync('data/tags.yml', 'utf8')) as {tags?: Record<string, {aliases?: string[]}>})?.tags ?? {};
 
 const config: Config = {
   title: 'jyje.online',
@@ -122,11 +127,7 @@ const config: Config = {
           const globalTag = existingPath.match(/^\/tags(?:\/([^/]+))?$/);
           if (globalTag) {
             const suffix = globalTag[1] ? `/${globalTag[1]}` : '';
-            const aliases = globalTag[1] === 'kubernetes'
-              ? ['k8s']
-              : globalTag[1] === 'digital-twins'
-                ? ['digital-twin']
-                : [];
+            const aliases = globalTag[1] ? (tagRegistry[globalTag[1]]?.aliases ?? []) : [];
             return [
               `/blog/tags${suffix}`,
               `/wiki/tags${suffix}`,

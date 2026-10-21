@@ -44,7 +44,7 @@ function fixture(t, locale = 'ko', base = '/') {
   const siteDir = fs.mkdtempSync(path.join(os.tmpdir(), 'profile2-network-'));
   t.after(() => fs.rmSync(siteDir, {recursive: true, force: true}));
   const write = (file, body) => { const p = path.join(siteDir, file); fs.mkdirSync(path.dirname(p), {recursive: true}); fs.writeFileSync(p, body); };
-  write('data/tags.yml', 'tags:\n  ai:\n    label: {ko: AI, en: AI}\n');
+  write('data/tags.yml', 'tags:\n  ai:\n    label: AI\n');
   write('.docignore', 'content/*/wiki/_guide/\ncontent/*/wiki/_design/\n');
   const metadata = (source, permalink, extra = {}) => ({source: `@site/${source}`, permalink, title: 'Same title', tags: [{permalink: `${base}tags/ai`}], ...extra});
   const context = {siteDir, siteConfig: {baseUrl: base, url: 'https://example.com'}, i18n: {currentLocale: locale}};

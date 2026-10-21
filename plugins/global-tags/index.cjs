@@ -24,18 +24,18 @@ async function buildTagData(context, allContent) {
       if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(slug)) {
         throw new Error(`Global tag must use kebab-case: ${slug} in ${entry.source}`);
       }
-      if (!registry[slug]?.label?.[locale]) {
-        throw new Error(`Missing ${locale} label for global tag '${slug}' in ${entry.source}; add it to data/tags.yml`);
+      if (!registry[slug]?.label) {
+        throw new Error(`Missing label for global tag '${slug}' in ${entry.source}; add it to data/tags.yml`);
       }
     }
   }
 
   const usedTags = new Set(entries.flatMap((entry) => entry.tags));
-  const tags = [...usedTags].sort((a, b) => localized(registry[a]?.label, locale).localeCompare(localized(registry[b]?.label, locale), locale)).map((slug) => {
+  const tags = [...usedTags].sort((a, b) => String(registry[a].label).localeCompare(String(registry[b].label), locale)).map((slug) => {
     const tagItems = entries.filter((entry) => entry.tags.includes(slug));
     return {
       slug,
-      label: localized(registry[slug].label, locale),
+      label: String(registry[slug].label),
       description: localized(registry[slug].description, locale),
       count: tagItems.length,
       items: tagItems.sort((a, b) => (b.date || '').localeCompare(a.date || '') || a.title.localeCompare(b.title, locale))
