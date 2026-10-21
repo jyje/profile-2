@@ -108,7 +108,10 @@ Existing list-type blocks retain their schema and layout contracts.
 
 `hooks:install` sets **local** `core.hooksPath=.githooks`, makes the tracked hooks
 executable and refuses to overwrite another hook setup. Fresh clones need explicit install.
-Use Node 26+, including GUI/editor commits.
+Use Node 26+. GUI and editor clients (VS Code Source Control) start hooks without the user's
+shell profile, so the pre-commit hook selects the `.nvmrc` version through nvm when the launching
+environment runs an older Node. It needs nvm with Node 26 installed; otherwise the hook stops with
+the Node 26+ message.
 
 Chromium must be installed explicitly before rendering-related commits; the hook
 does not download browsers or modify global tooling during a commit.
