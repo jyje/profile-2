@@ -4,7 +4,7 @@ import os from 'node:os';
 import path from 'node:path';
 import {test} from 'node:test';
 import {spawnSync} from 'node:child_process';
-import {fixDocument, lintContent, lintDocument, loadLayouts, parseDocument} from './lint-content.mjs';
+import {fixDocument, lintContent, lintDocument, lintTagRegistry, loadLayouts, loadTagRegistry, parseDocument} from './lint-content.mjs';
 import {formatReport, reportContent} from './report-content.mjs';
 import {prepareContent} from './prepare-content.mjs';
 
@@ -196,4 +196,93 @@ test('the coverage report lists reference pages and what each is missing', t => 
   assert.match(text, /\| full \| reference@1 \| draft \| image \| ✓ \| ✓ \| – \| – \| ✓ \|/);
   assert.match(text, /\| old \| legacy \|/);
   assert.match(text, /Missing both Understanding and Usage: old$/);
+});
+
+function tagFixture(t, registryYaml) {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'profile2-tags-'));
+  t.after(() => fs.rmSync(root, {recursive: true, force: true}));
+  const write = (file, text) => { fs.mkdirSync(path.dirname(path.join(root, file)), {recursive: true}); fs.writeFileSync(path.join(root, file), text); };
+  write('data/tags.yml', registryYaml);
+  return {root, write};
+}
+const registryRules = registry => lintTagRegistry(registry).map(item => `${item.rule}`);
+
+test('the repository tag registry follows the tag rules', () => {
+  assert.deepEqual(lintTagRegistry(loadTagRegistry(repo)), []);
+});
+
+test('tag labels are one English label per tag and must spell the slug', t => {
+  const {root} = tagFixture(t, [
+    'tags:',
+    '  raspberry-pi:', '    label: Raspberry_Pi',
+    '  mini-pc:', '    label: Mini_PC',
+    '  infra:', '    label: {ko: 인프라, en: Infra}',
+    '  on-premise:', '    label: 온프레미스',
+    '  argo-cd:', '    label: Argo CD',
+    '  tech-note:', '    label: Technical_Notes',
+    '  Bad_Slug:', '    label: Bad_Slug',
+    '  mini-pcs:', '    label: mini_pc',
+    '',
+  ].join('\n'));
+  const found = lintTagRegistry(loadTagRegistry(root));
+  const by = slug => found.filter(item => item.message.includes(`"${slug}"`) || item.message.includes(slug)).map(item => item.rule);
+  assert.ok(by('infra').includes('tag-label-type'), 'a per-locale label map is rejected');
+  assert.ok(registryRules(loadTagRegistry(root)).includes('tag-label-format'), 'Korean or spaced labels are rejected');
+  assert.ok(found.some(item => item.rule === 'tag-label-format' && /온프레미스/.test(item.message)));
+  assert.ok(found.some(item => item.rule === 'tag-label-format' && /Argo CD/.test(item.message)));
+  assert.ok(found.some(item => item.rule === 'tag-label-slug' && /Technical_Notes/.test(item.message)), 'label must spell the slug');
+  assert.ok(found.some(item => item.rule === 'tag-slug-format' && /Bad_Slug/.test(item.message)));
+  assert.ok(found.some(item => item.rule === 'tag-label-duplicate' && /mini_pc/.test(item.message)), 'labels are unique ignoring case');
+  assert.ok(!found.some(item => /raspberry-pi/.test(item.message)), 'a correct tag has no findings');
+  assert.ok(found.every(item => item.severity === 'error' && item.file === 'data/tags.yml' && item.line >= 1));
+});
+
+test('tag aliases are kebab-case and never collide with a tag or another alias', t => {
+  const {root} = tagFixture(t, [
+    'tags:',
+    '  kubernetes:', '    label: Kubernetes', '    aliases: [k8s, Kube_Rnetes]',
+    '  k8s-tools:', '    label: K8s_Tools', '    aliases: [k8s]',
+    '  helm:', '    label: Helm', '    aliases: [k8s-tools]',
+    '',
+  ].join('\n'));
+  const messages = lintTagRegistry(loadTagRegistry(root)).map(item => `${item.rule}: ${item.message}`).join('\n');
+  assert.match(messages, /tag-alias-format: Alias "Kube_Rnetes"/);
+  assert.match(messages, /tag-alias-collision: Alias "k8s" is claimed by/);
+  assert.match(messages, /tag-alias-collision: Alias "k8s-tools" is also a registered tag/);
+});
+
+test('document tags must be registered kebab-case slugs without duplicates', t => {
+  const {root} = tagFixture(t, 'tags:\n  raspberry-pi:\n    label: Raspberry_Pi\n    aliases: [rpi]\n  on-premise:\n    label: On_Premise\n    aliases: [onpremise]\n');
+  const tags = loadTagRegistry(root);
+  const lint = front => lintDocument(root, path.join(root, 'content/ko/wiki/d/a.md'), `---\ntitle: "📄 A"\n${front}---\n\nBody\n`, registry, {assets: false, tags}).diagnostics.map(item => `${item.rule}@${item.line}`);
+  assert.deepEqual(lint('tags:\n  - raspberry-pi\n  - on-premise\n'), []);
+  assert.deepEqual(lint('tags: [raspberry-pi]\n'), []);
+  assert.deepEqual(lint(''), [], 'no tags is fine');
+  assert.deepEqual(lint('tags:\n  - Raspberry_Pi\n'), ['tag-format@4']);
+  assert.deepEqual(lint('tags:\n  - 라즈베리파이\n'), ['tag-format@4']);
+  assert.deepEqual(lint('tags:\n  - raspberry-pi\n  - raspberry-pi\n'), ['tag-duplicate@4']);
+  assert.deepEqual(lint('tags:\n  - unknown-tag\n'), ['tag-unregistered@4']);
+  const alias = lintDocument(root, path.join(root, 'content/ko/wiki/d/a.md'), '---\ntitle: "📄 A"\ntags:\n  - onpremise\n---\n\nBody\n', registry, {assets: false, tags}).diagnostics;
+  assert.match(alias[0].message, /old alias; use "on-premise"/);
+});
+
+test('the same document carries the same tags in every language', t => {
+  const {root, write} = tagFixture(t, 'tags:\n  raspberry-pi:\n    label: Raspberry_Pi\n  infra:\n    label: Infra\n  mini-pc:\n    label: Mini_PC\n');
+  const page = tags => `---\ntitle: "🍓 Pi"\n${tags}---\n\nBody\n`;
+  write('content/ko/wiki/d/pi.md', page('tags:\n  - raspberry-pi\n  - infra\n'));
+  write('content/en/wiki/d/pi.md', page('tags:\n  - infra\n  - mini-pc\n'));
+  const parity = () => lintContent(root, {assets: false}).filter(item => item.rule === 'tag-locale-parity');
+  assert.equal(parity().length, 1);
+  assert.match(parity()[0].message, /\[infra, mini-pc\] vs \[infra, raspberry-pi\]/);
+  write('content/en/wiki/d/pi.md', page('tags: [infra, raspberry-pi]\n'));
+  assert.deepEqual(parity(), [], 'order does not matter');
+  write('content/en/wiki/d/pi.md', '---\ntitle: "🍓 Pi"\n---\n');
+  assert.deepEqual(parity(), [], 'a title-only English page borrows the Korean tags');
+});
+
+test('tag problems are never auto-fixed', () => {
+  const source = '---\ntitle: "📄 A"\ntags:\n  - Raspberry_Pi\n  - onpremise\n---\n\n## Name\n- Pi\n\n## Definition\n- x\n';
+  const fixed = fixDocument(source);
+  assert.match(fixed.text, /tags:\n  - Raspberry_Pi\n  - onpremise\n/);
+  assert.deepEqual(fixed.fixes.map(fix => fix.rule), ['legacy-name-section']);
 });

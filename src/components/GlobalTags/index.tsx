@@ -46,7 +46,7 @@ function TagIndex({data}: {data: TagData}): ReactNode {
       <div className={styles.tagGrid}>
         {data.tagList.map((tag) => (
           <Link className={styles.tagCard} key={tag.slug} to={`/tags/${tag.slug}`}>
-            <span className={styles.tagLabel}>{tag.label}</span>
+            <span className={styles.tagLabel}>#{tag.label}</span>
             <span className={styles.tagCount}>{tag.count}</span>
             {tag.description && <span className={styles.tagDescription}>{tag.description}</span>}
           </Link>
@@ -63,7 +63,7 @@ function TagDetail({data, tag}: {data: TagData; tag: Tag}): ReactNode {
     <><BreadcrumbFrame items={[{label: isKorean ? '전체 태그' : 'All tags', href: '/tags/'}, {label: tag.label}]} />
     <main className={`container ${styles.page}`}>
       <header className={styles.heading}>
-        <h1>{tag.label}</h1>
+        <h1>#{tag.label}</h1>
         <p>{tag.description || (isKorean ? `${tag.count}개 항목` : `${tag.count} items`)}</p>
       </header>
       <ol className={styles.itemList}>
@@ -88,7 +88,7 @@ function TagDetail({data, tag}: {data: TagData; tag: Tag}): ReactNode {
 
 export default function GlobalTags({data, slug}: {data: TagData; slug: string | null}): ReactNode {
   const tag = slug ? data.tagList.find((item) => item.slug === slug) : undefined;
-  const title = tag?.label ?? (data.locale === 'ko' ? '전체 태그' : 'All tags');
+  const title = tag ? `#${tag.label}` : (data.locale === 'ko' ? '전체 태그' : 'All tags');
   return (
     <Layout title={title}>
       {tag ? <TagDetail data={data} tag={tag} /> : <TagIndex data={data} />}

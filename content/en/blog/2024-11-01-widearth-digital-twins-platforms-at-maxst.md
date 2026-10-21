@@ -11,7 +11,7 @@ tags:
   - devops
   - mlops
   - kubernetes
-  - onpremise
+  - on-premise
   - aws
 image: ./assets/00ef7950-3bb3-4865-82b0-e160b092412c.png
 profile_template: {kind: blog, version: 1}

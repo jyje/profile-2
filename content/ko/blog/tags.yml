@@ -1,12 +1,12 @@
 achievements:
-  label: 성취
+  label: Achievements
   permalink: /achievements
   description: 프로젝트와 실무 성취를 기록한 글
 adas:
   label: ADAS
   permalink: /adas
 agentic-ai:
-  label: 에이전틱 AI
+  label: Agentic_AI
   permalink: /agentic-ai
 ai:
   label: AI
@@ -18,23 +18,23 @@ aiops:
 ar:
   label: AR
   permalink: /ar
+argo-cd:
+  label: Argo_CD
+  permalink: /argo-cd
 argo-events:
-  label: Argo Events
+  label: Argo_Events
   permalink: /argo-events
 argo-proj:
-  label: Argo Project
+  label: Argo_Proj
   permalink: /argo-proj
 argo-workflows:
-  label: Argo Workflows
+  label: Argo_Workflows
   permalink: /argo-workflows
-argocd:
-  label: Argo CD
-  permalink: /argocd
 argoproj-labs:
-  label: Argo Project
+  label: ArgoProj_Labs
   permalink: /argoproj-labs
 author:
-  label: 작성자
+  label: Author
   permalink: /author
 awards:
   label: Awards
@@ -47,7 +47,7 @@ aws:
     For an in-depth understanding, this is my detailed article related to Amazon Web Services (AWS), covering its
     features, practical applications. I focus on AWS services including EKS, EC2, S3, and more.
 careers:
-  label: 경험
+  label: Careers
   permalink: /careers
   description: 경력의 전환점과 경험을 기록한 글
 certifications:
@@ -58,7 +58,7 @@ cncf:
   label: CNCF
   permalink: /cncf
 computer-vision:
-  label: 컴퓨터 비전
+  label: Computer_Vision
   permalink: /computer-vision
 cv:
   label: CV
@@ -70,11 +70,8 @@ devops:
     Posts related to DevOps. DevOps is a set of practices that combines software development (Dev) and IT operations
     (Ops). It aims to shorten the systems development life cycle and provide continuous delivery with high software
     quality.
-digital-twin:
-  label: 디지털 트윈
-  permalink: /digital-twin
 digital-twins:
-  label: Digital Twins
+  label: Digital_Twins
   permalink: /digital-twins
   description: Works on Digital Twins.
 finops:
@@ -84,33 +81,30 @@ fpga:
   label: FPGA
   permalink: /fpga
 github:
-  label: Github
+  label: GitHub
   permalink: /github
   description: Github related posts
 gitops:
   label: GitOps
   permalink: /gitops
 guide:
-  label: 가이드
+  label: Guide
   permalink: /guide
 helm:
   label: Helm
   permalink: /helm
 hybrid-cloud:
-  label: 하이브리드 클라우드
+  label: Hybrid_Cloud
   permalink: /hybrid-cloud
 hyundai-autoever:
-  label: Hyundai AutoEver
+  label: Hyundai_AutoEver
   permalink: /hyundai-autoever
   description: Works at [Hyundai AutoEver](https://www.linkedin.com/company/hyundai-autoever).
 infra:
-  label: 인프라
+  label: Infra
   permalink: /infra
-k8s:
-  label: Kubernetes
-  permalink: /k8s
 kit:
-  label: kit
+  label: Kit
   permalink: /kit
   description: Study in kit
 kubernetes:
@@ -122,7 +116,7 @@ linkedin:
   permalink: /linkedin
   description: Articles and updates shared on LinkedIn 🔗
 linux-foundation:
-  label: Linux Foundation
+  label: Linux_Foundation
   permalink: /linux-foundation
   description: Linux Foundation related posts. The cover image is from the Linux Foundation.
 llm:
@@ -141,7 +135,7 @@ maxst:
   permalink: /maxst
   description: Works at [MAXST](https://www.linkedin.com/company/maxst).
 mini-pc:
-  label: 미니 PC
+  label: Mini_PC
   permalink: /mini-pc
 mlops:
   label: MLOps
@@ -151,47 +145,47 @@ mlops:
     manage production ML (Machine Learning) lifecycles. It focuses on automation and monitoring at all steps of ML
     system construction, including integration, testing, releasing, deployment, and infrastructure management.
 observability:
-  label: 관측성
+  label: Observability
   permalink: /observability
 obsidian:
   label: Obsidian
   permalink: /obsidian
-onpremise:
-  label: On-Premise
-  permalink: /onpremise
+on-premise:
+  label: On_Premise
+  permalink: /on-premise
   description: >-
     As growing public cloud services, on-premise is still a good alternative and backup plan for companies. This tag
     covers the on-premise infrastructure, including Kubernetes, DevOps, and more. I focus on the on-premise
     infrastructure, including bare-metal Kubernetes, Hybrid Architectures, and more.
 org:
-  label: 조직
+  label: Org
   permalink: /org
 paper:
   label: Paper
   permalink: /paper
   description: Paper Works
 portfolio:
-  label: 포트폴리오
+  label: Portfolio
   permalink: /portfolio
 postech:
   label: POSTECH
   permalink: /postech
   description: Study in POSTECH
 posts:
-  label: 게시글
+  label: Posts
   permalink: /posts
 python:
   label: Python
   permalink: /python
 raspberry-pi:
-  label: Raspberry Pi
+  label: Raspberry_Pi
   permalink: /raspberry-pi
   description: >-
     Raspberry Pi is a arm based single board computer that is popular among hobbyists and educators. It is used in a
     wide range of projects from home automation to robotics. I use pies for various projects and will be sharing my
     experiences here.
 rating:
-  label: Rating Systems
+  label: Rating
   permalink: /rating
   description: Research on Rating Systems
 recap:
@@ -209,7 +203,7 @@ slam:
   label: SLAM
   permalink: /slam
 tech-note:
-  label: Technical Notes
+  label: Tech_Note
   permalink: /tech-note
   description: Technical notes
 thesis:
