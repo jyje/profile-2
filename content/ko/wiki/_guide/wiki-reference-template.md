@@ -67,6 +67,18 @@ profile_format: 1
 - `npm run lint:content -- --fix`는 불릿이 한 줄뿐인 레거시 `## Name`을 `## Definition` 끝의 `- 표기:` 줄로 옮깁니다. 판단이 필요한 경우(불릿이 여러 개이거나 하위 헤딩이 있는 경우)는 건드리지 않습니다. `--dry-run`으로 먼저 확인합니다.
 - `npm run report:content`는 Reference 문서마다 레이아웃, 상태, 소개 자료, 썸네일, 섹션 유무를 표로 보여줍니다. `Understanding`과 `Usage`가 비어 있는 문서를 찾을 때 씁니다.
 
+## 태그
+
+태그는 언어와 상관없이 하나의 이름입니다.
+
+- 슬러그: 영어 kebab-case. 예: `raspberry-pi`, `on-premise`. 문서 front matter에는 슬러그를 씁니다.
+- 라벨: `data/tags.yml`의 `label`은 한 줄이고 두 언어에 똑같이 보입니다. 슬러그의 철자를 그대로 따르되 단어를 `_`로 잇습니다. 예: `Raspberry_Pi`, `On_Premise`, `Argo_CD`. 약어는 대문자로 씁니다.
+- 설명: `description`만 한국어와 영어를 따로 씁니다.
+- 한국어 문서와 영어 문서는 같은 태그를 씁니다.
+- 슬러그를 바꾸면 옛 슬러그를 `aliases`에 적어 둡니다. 옛 주소가 새 주소로 리다이렉트됩니다.
+
+`npm run lint:content`가 슬러그·라벨 형식, 라벨과 슬러그의 일치, 라벨 중복, 별칭 충돌, 문서의 미등록 태그, 한국어와 영어의 태그 불일치를 오류로 잡습니다. 태그 이름을 바꾸면 주소가 바뀌기 때문에 자동 수정은 없습니다. 직접 고칩니다. `content/{ko,en}/{wiki,blog}/tags.yml`은 `data/tags.yml`에서 생성되는 파일이므로 손으로 고치지 않습니다.
+
 ## 버전 관리
 
 문서는 `profile_layout: {kind: reference, version: 1}`로 버전을 고정합니다. 발행된 버전은 바꾸지 않고, 규칙을 바꾸려면 새 버전을 만듭니다.

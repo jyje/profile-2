@@ -42,7 +42,7 @@ function syncTagDefinitions() {
   for (const locale of ['ko', 'en']) {
     const output = Object.fromEntries(Object.entries(tags).map(([slug, tag]) => {
       const definition = {
-        label: tag.label?.[locale] ?? slug,
+        label: tag.label ?? slug,
         permalink: `/${slug}`,
       };
       const description = tag.description?.[locale];

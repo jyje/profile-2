@@ -2,7 +2,7 @@
 title: "🔄 Argo CD: Image Updater"
 tags:
   - argoproj-labs
-  - argocd
+  - argo-cd
   - gitops
   - helm
 type: Reference
