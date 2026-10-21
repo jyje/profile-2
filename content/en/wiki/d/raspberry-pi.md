@@ -34,10 +34,9 @@ profile_format: 1
 
 ## Usage
 
-- I run a four-node MicroK8s home cluster: two Pi 4 (one is the control plane) and two Pi 5. The setup is documented in [jyje/cluster](https://github.com/jyje/cluster).
-- The nodes first joined over Wi-Fi, but health checks were too slow to manage, so everything is wired now.
+- I use them as cluster nodes. The setup is on the [Cluster](./cluster.md) page.
 - I served small models with [Ollama](https://ollama.com). I ran a 1B LLM and an embedding model and built a pipeline on them.
-- Frontier models have become very capable, though, so I have since reorganized around workloads that deploy container-based agent harnesses. I connect a Codex subscription and use them for personal purposes.
+- Frontier models are very capable, so I have reorganized the workloads around agent harnesses. That is on the [Cluster](./cluster.md) page.
 
 ## Details
 

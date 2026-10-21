@@ -17,7 +17,7 @@ export async function writeThumbnail(root, name) {
   try {
     const page = await browser.newPage({viewport: {width: 1200, height: 630}, deviceScaleFactor: 1});
     await page.goto(pathToFileURL(source).href);
-    await page.addStyleTag({content: 'html,body{height:100%}body{display:grid;place-items:center}.iso-page{width:min(660px,100%)!important;margin:0!important}'});
+    await page.addStyleTag({content: 'html,body{height:100%}body{display:grid;place-items:center}.iso-page{width:min(660px,100%)!important;margin:0!important}.iso-legend{display:none!important}'});
     await page.waitForSelector('.iso-plate');
     await page.waitForTimeout(700);
     await page.screenshot({path: output});
