@@ -6,15 +6,14 @@ tags:
   - raspberry-pi
 type: Reference
 status: draft
-image: /anatomy/raspberry-pi/thumbnail.png
+image: /img/figures/raspberry-pi/thumbnail.png
 profile_template: {kind: wiki, version: 1}
 profile_layout: {kind: reference, version: 1}
 profile_format: 1
 ---
 
-```anatomy-figure
-- name: raspberry-pi
-  title: Interactive figure of the Raspberry Pi 4 Model B
+```anatomy
+/img/figures/raspberry-pi
 ```
 
 ## Definition

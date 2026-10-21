@@ -10,9 +10,8 @@ profile_format: 1
 
 <!-- Intro visual (required): keep exactly one before the first H2 and delete the rest. An Anatomy figure, a thumbnail, or a diagram image. -->
 
-```anatomy-figure
-- name: example
-  title: Accessible name of the figure
+```anatomy
+/img/figures/example
 ```
 
 ![Thumbnail or diagram description](./assets/example.png)

@@ -10,9 +10,8 @@ profile_format: 1
 
 <!-- 소개 자료(필수): 첫 H2 앞에 하나만 남기고 나머지는 지웁니다. Anatomy 그림, 썸네일, 다이어그램 이미지 중 하나입니다. -->
 
-```anatomy-figure
-- name: example
-  title: 그림의 접근성 이름
+```anatomy
+/img/figures/example
 ```
 
 ![썸네일 또는 다이어그램 설명](./assets/example.png)

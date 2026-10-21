@@ -46,7 +46,7 @@ profile_format: 1
 
 첫 H2 앞에 소개 자료가 하나 있어야 합니다.
 
-- Anatomy 그림: `anatomy-figure` 블록. 사용법은 [Obsidian 작성 가이드](./obsidian-authoring.md)를 봅니다. 그림의 소스는 `figures/<name>/build.mjs`이고, `npm run build:anatomy -- <name>`이 다크/라이트 페이지와 소셜 카드용 `thumbnail.png`를 `static/anatomy/`에 만듭니다. 문서 front matter에 `image: /anatomy/<name>/thumbnail.png`를 적습니다.
+- Anatomy 그림: `anatomy` 매크로(본문은 그림 폴더 경로 한 줄). 사용법은 [Obsidian 작성 가이드](./obsidian-authoring.md)를 봅니다. 그림의 소스는 `figures/<name>/build.mjs`이고, `npm run build:anatomy -- <name>`이 다크/라이트 페이지와 소셜 카드용 `thumbnail.png`를 `static/img/figures/<name>/`에 만듭니다. 문서 front matter에 `image: /img/figures/<name>/thumbnail.png`를 적습니다.
 - 썸네일 또는 다이어그램 이미지: `![설명](./assets/파일.png)`
 - `mermaid` 코드 블록 (사이트에서 Mermaid를 켠 뒤에 사용합니다)
 

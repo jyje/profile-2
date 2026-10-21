@@ -3,6 +3,7 @@ import * as yaml from 'js-yaml';
 import prettier from 'prettier';
 import {marked} from 'marked';
 import contentTemplates from '../../plugins/content-templates/remark-plugin.cjs';
+import {macros, normalizeMacroFences} from '../../plugins/content-templates/macros.cjs';
 
 export const formatterVersion = 1;
 export function contentKind(file) {
@@ -46,7 +47,8 @@ export async function formatContent(text, file, {migrate = false, root = process
         : token.raw;
     }).join('');
   }
-  const input = front ? `---\n${front}\n---\n\n${body.trimStart()}` : body;
+  // The apostrophe spelling of the anatomy block renders as a backtick fence; content:format writes that canonical form.
+  const input = normalizeMacroFences(front ? `---\n${front}\n---\n\n${body.trimStart()}` : body);
   const config = JSON.parse(fs.readFileSync(`${root}/design-system/format-v1.json`, 'utf8'));
   return prettier.format(input, {...config, filepath: file, parser: file.endsWith('.mdx') ? 'mdx' : 'markdown'});
 }
@@ -54,12 +56,17 @@ export async function formatContent(text, file, {migrate = false, root = process
 export function contentViolations(text, file) {
   const kind = contentKind(file);
   if (!kind) return [];
-  const {data, body} = splitDocument(text);
+  const document = splitDocument(text);
+  const {data} = document;
+  const body = normalizeMacroFences(document.body);
   const errors = [];
   if (data.profile_template?.kind !== kind || data.profile_template?.version !== 1 || data.profile_format !== 1) errors.push('CONTENT-001: missing/outdated template or formatter stamp; run content:migrate');
   const headings = headingNodes(body);
   for (const token of marked.lexer(body)) {
-    if (token.type === 'code' && contentTemplates.schemas[token.lang]) {
+    if (token.type === 'code' && Object.hasOwn(macros, token.lang)) {
+      try {macros[token.lang].parse(token.text);}
+      catch(e) {errors.push(`CONTENT-004: ${e.message}`);}
+    } else if (token.type === 'code' && contentTemplates.schemas[token.lang]) {
       try {contentTemplates.validateItems(yaml.load(token.text), contentTemplates.schemas[token.lang], token.lang);}
       catch(e) {errors.push(`CONTENT-004: ${e.message}`);}
     }
