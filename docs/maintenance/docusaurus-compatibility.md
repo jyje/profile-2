@@ -132,7 +132,22 @@ review and are not proof that the complete dependency tree is vulnerability-free
 
 ### Temporary braces depth mitigation
 
-Dependency entrypoints apply/check both mitigations through
+The legacy serve-handler dependency still pins minimatch 3.1.5. Its local
+GHSA-g3hv-75wg-m249 mitigation verifies the original source hash, retains the 3.x
+API and caps patterns at 8192 characters, 128 path components and 16 globstars.
+Patterns may contain at most 32 opening braces. Brace expansion requests one
+result beyond the 256-result budget so overflow is rejected rather than silently
+truncated, and rejects results above 65536 total characters. The upstream parser's
+existing rewrite/depth and 4 MB allocation ceilings remain active. Expanded
+globparts are checked before allocation against an 8192
+part budget. Oversized configuration patterns throw a controlled error; ordinary
+shallow serving patterns keep upstream behavior. These intentionally narrower
+development/preview limits are not a proof that arbitrary user-supplied globs are
+safe. The scanner finding and #69 remain open until a compatible upstream serving
+dependency or reviewed maintained adapter resolves every affected copy. Never
+force minimatch 11 over the legacy function API or lower audit severity locally.
+
+Dependency entrypoints apply/check all local mitigations through
 `scripts/patch-dependencies.cjs`. The separate deepmerge 4.3.1 mitigation for
 GHSA-gcqx-w48m-w2h4 verifies SHA-256 for its source, CommonJS and UMD entrypoints
 before replacing destination assignments with own data properties. This prevents

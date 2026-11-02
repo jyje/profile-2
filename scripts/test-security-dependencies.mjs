@@ -8,10 +8,77 @@ import test from 'node:test';
 import http from 'node:http';
 import {patchBraces} from './patch-braces.cjs';
 import {patchDeepmerge} from './patch-deepmerge.cjs';
+import {patchMinimatch} from './patch-minimatch.cjs';
 
 const require = createRequire(import.meta.url);
 const braces = require('braces');
 const lock = JSON.parse(readFileSync(new URL('../package-lock.json', import.meta.url)));
+
+test('legacy minimatch bounds expansion and globparts while retaining ordinary matching', () => {
+  assert.ok(patchMinimatch(undefined, {check: true}) > 0);
+  patchMinimatch(); patchMinimatch(undefined, {check: true});
+  const match = require('minimatch');
+  for (const pattern of ['x'.repeat(8193), Array(130).fill('x').join('/'), '{1..300}', Array(17).fill('**').join('/')]) {
+    assert.throws(() => match('x', pattern));
+  }
+  const amplified = Array(100).fill('x').join('/') + '/{1..100}';
+  assert.throws(() => new match.Minimatch(amplified), /part budget/);
+  assert.equal(match('/wiki/d/note.html', '/wiki/**/*.html'), true);
+  assert.equal(match('/wiki/.private', '/wiki/*'), false);
+  assert.equal(match('/img/logo.svg', '/img/*.{svg,png}'), true);
+  assert.deepEqual(match.braceExpand('x{1..3}'), ['x1', 'x2', 'x3']);
+  assert.ok(match.makeRe('*.html').test('index.html'));
+});
+
+test('legacy minimatch integrity and installation checks fail closed', () => {
+  const root = mkdtempSync(path.join(tmpdir(), 'matcher-integrity-'));
+  try {
+    const directory = path.join(root, 'node_modules/minimatch');
+    mkdirSync(directory, {recursive: true});
+    const metadata = version => writeFileSync(path.join(root, 'package-lock.json'), JSON.stringify({packages: {'node_modules/minimatch': {version}}}));
+    metadata('3.1.5');
+    const patched = readFileSync(require.resolve('minimatch'), 'utf8');
+    const file = path.join(directory, 'minimatch.js');
+    writeFileSync(file, patched);
+    patchMinimatch(root, {check: true});
+    writeFileSync(file, patched + '\n// synthetic unexpected modification\n');
+    assert.throws(() => patchMinimatch(root), /Unexpected minimatch source/);
+    const start = patched.indexOf('  // profile-2: bound globparts');
+    const end = patched.indexOf('  set = this.globParts', start);
+    writeFileSync(file, patched.slice(0, start) + patched.slice(end));
+    assert.throws(() => patchMinimatch(root, {check: true}), /Missing minimatch mitigation/);
+    patchMinimatch(root);
+    metadata('3.1.6');
+    assert.throws(() => patchMinimatch(root), /Review minimatch mitigation/);
+  } finally { rmSync(root, {recursive: true, force: true}); }
+});
+
+test('bounded matcher retains actual localized static serving and clean URLs', async () => {
+  const root = mkdtempSync(path.join(tmpdir(), 'serving-contract-'));
+  for (const route of ['wiki', 'en/wiki']) {
+    mkdirSync(path.join(root, route), {recursive: true});
+    writeFileSync(path.join(root, route, 'index.html'), `<h1>${route}</h1>`);
+  }
+  const handler = require('serve-handler');
+  const server = http.createServer((req, res) => {
+    if (!req.url.startsWith('/profile-2/')) { res.writeHead(404); res.end(); return; }
+    req.url = '/' + req.url.slice('/profile-2/'.length);
+    handler(req, res, {public: root, cleanUrls: true, directoryListing: false})
+      .catch(() => { if (!res.headersSent) res.writeHead(500); res.end(); });
+  });
+  await new Promise(resolve => server.listen(0, '127.0.0.1', resolve));
+  try {
+    const origin = `http://127.0.0.1:${server.address().port}/profile-2/`;
+    for (const route of ['wiki', 'wiki/', 'en/wiki', 'en/wiki/']) {
+      const response = await fetch(origin + route + '?q=test');
+      assert.equal(response.status, 200);
+      assert.match(await response.text(), /<h1>/);
+    }
+    const missing = await fetch(origin + 'wiki/guide/private-note');
+    assert.equal(missing.status, 404);
+    await missing.arrayBuffer();
+  } finally { await new Promise(resolve => server.close(resolve)); rmSync(root, {recursive: true, force: true}); }
+});
 
 test('deepmerge own-key mitigation is integrity checked, idempotent and preserves ordinary options', () => {
   assert.ok(patchDeepmerge(undefined, {check: true}) > 0);
