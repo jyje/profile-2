@@ -38,6 +38,17 @@ jobs:
       - name: Verify dependency security mitigations
         run: npm run test:security
 
+      - name: Generate allowlisted dependency audit summary
+        run: node scripts/audit-summary.mjs > audit-summary.json
+
+      - name: Upload sanitized dependency summary
+        uses: actions/upload-artifact@v7
+        with:
+          name: dependency-audit-summary
+          path: audit-summary.json
+          if-no-files-found: error
+          retention-days: 7
+
       - name: Typecheck
         run: npm run typecheck
 
