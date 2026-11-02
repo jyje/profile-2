@@ -1,0 +1,16 @@
+.git
+.env
+.env.*
+hidden
+node_modules
+build
+output
+.content-build
+.docusaurus
+.dev-all
+.playwright-mcp
+.claude
+.agents
+.codex
+data/career
+src/generated
