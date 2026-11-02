@@ -7,6 +7,7 @@ import http from 'node:http';
 import path from 'node:path';
 import {spawn} from 'node:child_process';
 import handler from 'serve-handler';
+import {requestPath} from './request-path.mjs';
 import {shouldRebuild} from './source-watch.mjs';
 import bracesMitigation from './patch-braces.cjs';
 
@@ -161,7 +162,12 @@ function watchSources() {
 
 function createServer() {
   return http.createServer((request, response) => {
-    const pathname = new URL(request.url ?? '/', 'http://localhost').pathname;
+    const pathname = requestPath(request.url);
+    if (pathname === null) {
+      response.writeHead(400, {'Content-Type': 'text/plain; charset=utf-8'});
+      response.end('Bad Request');
+      return;
+    }
     if (pathname === eventsPath) {
       response.writeHead(200, {
         'Content-Type': 'text/event-stream',
