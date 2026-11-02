@@ -58,7 +58,7 @@
     "@mdx-js/react": "^3.0.0",
     "@module-federation/enhanced": "2.9.2",
     "@radix-ui/react-slot": "1.5.0",
-    "@tabler/icons-react": "^3.49.0",
+    "@tabler/icons-react": "^3.50.0",
     "class-variance-authority": "0.7.1",
     "clsx": "^2.0.0",
     "prism-react-renderer": "^2.3.0",
