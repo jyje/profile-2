@@ -5,11 +5,59 @@ import path from 'node:path';
 import {execFileSync} from 'node:child_process';
 import {createRequire} from 'node:module';
 import test from 'node:test';
+import http from 'node:http';
 import {patchBraces} from './patch-braces.cjs';
 
 const require = createRequire(import.meta.url);
 const braces = require('braces');
 const lock = JSON.parse(readFileSync(new URL('../package-lock.json', import.meta.url)));
+
+test('reviewed security versions cover every locked and installed toolchain copy', () => {
+  const approved = {'body-parser': '1.20.9', qs: '6.16.2', joi: '17.13.9', undici: '7.30.1', 'serialize-javascript': '7.1.3'};
+  for (const [name, version] of Object.entries(approved)) {
+    const entries = Object.entries(lock.packages).filter(([key]) => key === `node_modules/${name}` || key.endsWith(`/node_modules/${name}`));
+    assert.ok(entries.length, `${name} must be present`);
+    for (const [key, item] of entries) {
+      assert.equal(item.version, version, `${name}: review changes to the security baseline`);
+      const installed = JSON.parse(readFileSync(new URL(`../${key}/package.json`, import.meta.url)));
+      assert.equal(installed.version, item.version, `${name}: run npm ci to match the lockfile`);
+    }
+  }
+});
+
+test('serialization keeps script-sensitive data escaped and callable build functions intact', () => {
+  const serialize = require('serialize-javascript');
+  const data = {text: '</script>\u2028\u2029', values: [1, true, null]};
+  const encoded = serialize(data, {isJSON: true});
+  assert.doesNotMatch(encoded, /<\/script/i);
+  assert.deepEqual(JSON.parse(encoded), data);
+  const source = serialize({transform: function(value) { return value + 1; }});
+  assert.equal(Function(`return (${source})`)().transform(2), 3);
+});
+
+test('Joi retains ordinary config and multiple-email validation behavior', () => {
+  const Joi = require('joi');
+  assert.equal(Joi.object({enabled: Joi.boolean().required()}).validate({enabled: true}).error, undefined);
+  const schema = Joi.string().email({multiple: true, tlds: false});
+  assert.equal(schema.validate('a@example.com,b@example.com').error, undefined);
+  assert.ok(schema.validate(','.repeat(1000)).error);
+});
+
+test('patched Undici retains Agent, redirect and response consumption contracts', async () => {
+  const {Agent, fetch} = require('undici');
+  const agent = new Agent({connect: {family: 4}});
+  const server = http.createServer((req, res) => {
+    if (req.url === '/redirect') { res.writeHead(302, {Location: '/result'}); res.end(); }
+    else { res.writeHead(200, {'Content-Type': 'application/json'}); res.end('{"ok":true}'); }
+  });
+  await new Promise(resolve => server.listen(0, '127.0.0.1', resolve));
+  try {
+    const response = await fetch(`http://127.0.0.1:${server.address().port}/redirect`, {dispatcher: agent});
+    assert.equal(response.status, 200);
+    assert.equal(response.redirected, true);
+    assert.deepEqual(await response.json(), {ok: true});
+  } finally { await agent.close(); await new Promise(resolve => server.close(resolve)); }
+});
 
 test('install, build, development and CI cannot silently omit the mitigation', () => {
   const manifest = JSON.parse(readFileSync(new URL('../package.json', import.meta.url)));
