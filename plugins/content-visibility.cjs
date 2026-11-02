@@ -38,9 +38,9 @@ function publicationContext(root = ROOT, mode = contentMode()) {
   return {mode, patterns: ignorePatterns(root)};
 }
 
-function assertPreparedContent(root = ROOT) {
+function assertPreparedContent(root = ROOT, mode = contentMode()) {
   const marker = path.join(root, '.content-build/publication-context.json');
-  const expected = JSON.stringify(publicationContext(root));
+  const expected = JSON.stringify(publicationContext(root, mode));
   if (!fs.existsSync(marker) || fs.readFileSync(marker, 'utf8') !== expected) {
     throw new Error('Content mode or .docignore changed. Use npm run build for public output, or npm run dev for local documents.');
   }

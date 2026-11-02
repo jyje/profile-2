@@ -96,8 +96,12 @@ test('aliases cannot overwrite public content', t => {
 test('raw Docusaurus commands cannot publish development staging or stale policies', t => {
   const f = fixture(t);
   prepareContent(f.root, 'development');
-  assert.throws(() => assertPreparedContent(f.root), /Content mode/);
+  assert.throws(() => assertPreparedContent(f.root, 'public'), /Content mode/);
+  assert.doesNotThrow(() => assertPreparedContent(f.root, 'development'));
   prepareContent(f.root, 'public');
+  assert.doesNotThrow(() => assertPreparedContent(f.root, 'public'));
+  assert.throws(() => assertPreparedContent(f.root, 'development'), /Content mode/);
+  prepareContent(f.root, contentMode());
   assert.doesNotThrow(() => assertPreparedContent(f.root));
   f.write('.docignore', 'content/*/wiki/_other/');
   assert.throws(() => assertPreparedContent(f.root), /Content mode/);
