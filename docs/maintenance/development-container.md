@@ -28,7 +28,7 @@ explicitly sets `ALLOW_DIRTY_BUILD=true`. Such images must never be published.
 
 ```sh
 context=$(node -p 'JSON.parse(require("fs").readFileSync("/tmp/profile2-context.json")).destination')
-docker build --platform linux/arm64 --tag profile2-validation:dev \
+docker buildx build --load --platform linux/arm64 --tag profile2-validation:dev \
   --build-arg SITE_URL=https://example.invalid \
   --build-arg SITE_CONTENT_MODE=development \
   --build-arg SOURCE_REVISION="$(git rev-parse HEAD)" "$context"

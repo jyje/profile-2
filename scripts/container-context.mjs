@@ -5,10 +5,11 @@ import {execFileSync} from 'node:child_process';
 import {pathToFileURL} from 'node:url';
 import {createLastUpdateReader, withLastUpdate} from './content-last-update.mjs';
 import {formatContent} from './content-format/v1.mjs';
+import {planLocaleFallbacks} from './locale-fallback.mjs';
 
 const allowed = /^(?:(?:src|scripts|plugins|content|data|static|i18n|design-system|docs|container|\.github\/workflows)\/|(?:package(?:-lock)?\.json|docusaurus\.config\.ts|sidebars\.ts|tsconfig\.json|components\.json|\.docignore|\.prettierrc\.cjs|\.prettierignore|Dockerfile|\.dockerignore|\.github\/dependabot\.yaml)$)/;
 const blocked = /^(?:hidden\/|data\/career\/|src\/generated\/|\.git\/)|(?:^|\/)\.env(?:\.|$)/;
-export async function prepareContainerContext({root, destination, files, readDate, revision, dirty = false}) {
+export async function prepareContainerContext({root, destination, files, readDate, revision, dirty = false, fallbacks = new Map()}) {
   if (!/^[0-9a-f]{40}$/.test(revision)) throw new Error('A full source revision is required');
   await fs.mkdir(destination, {recursive: true});
   if ((await fs.readdir(destination)).length) throw new Error('Container destination must be empty');
@@ -23,7 +24,9 @@ export async function prepareContainerContext({root, destination, files, readDat
     const target = path.join(destination, file);
     await fs.mkdir(path.dirname(target), {recursive: true});
     if (/^content\/(ko|en)\/(wiki|blog)\/.*\.mdx?$/.test(file)) {
-      const stamped = withLastUpdate(await fs.readFile(source, 'utf8'), source, readDate);
+      const borrowed = fallbacks.get(source);
+      const dateReader = borrowed ? () => borrowed.data.last_update?.date ?? readDate(borrowed.file) : readDate;
+      const stamped = withLastUpdate(await fs.readFile(source, 'utf8'), source, dateReader);
       await fs.writeFile(target, await formatContent(stamped, file, {root}));
     } else await fs.copyFile(source, target);
     count++;
@@ -40,7 +43,7 @@ if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) 
   if (dirty && !process.argv.includes('--allow-dirty')) throw new Error('Commit tracked changes before preparing a publishable context; --allow-dirty is for local testing only');
   const destination = await fs.mkdtemp(path.join(os.tmpdir(), 'profile-container-context-'));
   try {
-    const count = await prepareContainerContext({root, destination, files, revision: git(['rev-parse', 'HEAD']), readDate: createLastUpdateReader(root), dirty});
+    const count = await prepareContainerContext({root, destination, files, revision: git(['rev-parse', 'HEAD']), readDate: createLastUpdateReader(root), dirty, fallbacks: planLocaleFallbacks(root)});
     console.log(JSON.stringify({destination, files: count}));
   } catch (error) {
     await fs.rm(destination, {recursive: true, force: true});

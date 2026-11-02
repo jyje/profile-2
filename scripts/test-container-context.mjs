@@ -49,3 +49,27 @@ test('container context preserves authored dates without copying Git, credential
     await assert.rejects(prepareContainerContext({root, destination, files, revision: 'a'.repeat(40), readDate: () => undefined}), /must be empty/);
   } finally {await fs.rm(root, {recursive: true, force: true});}
 });
+
+test('title-only documents inherit the body date while explicit target overrides remain authoritative', async () => {
+  const root = await fs.mkdtemp(path.join(os.tmpdir(), 'container-borrowed-date-'));
+  try {
+    await fs.mkdir(path.join(root, 'design-system'));
+    for (const file of ['content-contract.json', 'format-v1.json']) await fs.copyFile(new URL(`../design-system/${file}`, import.meta.url), path.join(root, 'design-system', file));
+    const file = 'content/en/wiki/d/note.md'; const source = path.join(root, file);
+    await fs.mkdir(path.dirname(source), {recursive: true});
+    const bodyFile = path.join(root, 'content/ko/wiki/d/note.md');
+    const fallbacks = new Map([[source, {file: bodyFile, data: {}}]]);
+    await fs.writeFile(source, '---\ntitle: 📄 Note\n---\n');
+    const readDate = value => value === bodyFile ? '2024-02-01T00:00:00Z' : '2026-03-01T00:00:00Z';
+    const run = async name => {
+      const destination = path.join(root, name);
+      await prepareContainerContext({root, destination, files: [file], revision: 'a'.repeat(40), readDate, fallbacks});
+      return fs.readFile(path.join(destination, file), 'utf8');
+    };
+    assert.match(await run('body-git'), /2024-02-01/);
+    fallbacks.get(source).data.last_update = {date: '2023-01-01'};
+    assert.match(await run('body-override'), /2023-01-01/);
+    await fs.writeFile(source, '---\ntitle: 📄 Note\nlast_update:\n  date: "2025-04-01"\n---\n');
+    assert.match(await run('target-override'), /2025-04-01/);
+  } finally {await fs.rm(root, {recursive: true, force: true});}
+});

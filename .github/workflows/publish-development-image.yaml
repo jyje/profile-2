@@ -48,10 +48,11 @@ jobs:
         env:
           SOURCE_CONTEXT: ${{ steps.context.outputs.path }}
         run: |
-          docker build --platform linux/arm64 --tag "$IMAGE" \
+          docker buildx build --load --platform linux/arm64 --tag "$IMAGE" \
             --build-arg SITE_URL="$SITE_URL" --build-arg SITE_CONTENT_MODE=development \
             --build-arg LABS_REMOTE_ENTRY="$LABS_REMOTE_ENTRY" \
             --build-arg SOURCE_REVISION="$GITHUB_SHA" "$SOURCE_CONTEXT"
+          docker image inspect "$IMAGE" --format '{{.Id}}'
       - name: Start restricted container
         run: |
           docker run -d --name profile2-ci --read-only --tmpfs /tmp:rw,noexec,nosuid,size=32m \
