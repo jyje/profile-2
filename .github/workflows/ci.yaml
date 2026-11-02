@@ -4,6 +4,7 @@ on:
   pull_request:
     branches:
       - main
+      - dev
   workflow_dispatch:
 
 permissions:
@@ -64,6 +65,9 @@ jobs:
 
       - name: Verify public content and About isolation
         run: npm run test:content
+
+      - name: Verify container source and publication contracts
+        run: npm run test:container
 
       - name: Build all locales for GitHub Pages
         run: npm run build

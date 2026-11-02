@@ -74,7 +74,8 @@ and regression test before approval.
 ## Dependency policy
 
 The version-update configuration is [`.github/dependabot.yaml`](../../.github/dependabot.yaml),
-not a second `.yml` file. It checks root npm dependencies and GitHub Actions every
+not a second `.yml` file. It checks root npm dependencies, GitHub Actions and
+Dockerfile base images every
 Monday at 09:00 Asia/Seoul and uses `🤖 ci(deps)` / `🤖 ci(deps-dev)` bot prefixes.
 Official Docusaurus packages, React and Tailwind each have a coordinated group;
 other minor/patch changes are split by production/development dependency type.

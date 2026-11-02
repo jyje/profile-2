@@ -13,10 +13,10 @@ const groupFor = (update, name, type, level) => Object.entries(update.groups).fi
   (!group['update-types'] || group['update-types'].includes(level)) &&
   group.patterns.some(pattern => wildcard(pattern).test(name)))?.[0];
 
-test('one yaml config covers exactly the existing host and Actions ecosystems', async () => {
+test('one yaml config covers the host, Actions and container ecosystems', async () => {
   await assert.rejects(access(new URL('.github/dependabot.yml', root)), {code: 'ENOENT'});
   assert.equal(config.version, 2);
-  assert.deepEqual(config.updates.map(update => update['package-ecosystem']), ['npm', 'github-actions']);
+  assert.deepEqual(config.updates.map(update => update['package-ecosystem']), ['npm', 'github-actions', 'docker']);
   for (const update of config.updates) {
     assert.equal(update.directory, '/');
     assert.deepEqual(update.schedule, {interval: 'weekly', day: 'monday', time: '09:00', timezone: 'Asia/Seoul'});
