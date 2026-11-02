@@ -7,10 +7,66 @@ import {createRequire} from 'node:module';
 import test from 'node:test';
 import http from 'node:http';
 import {patchBraces} from './patch-braces.cjs';
+import {patchDeepmerge} from './patch-deepmerge.cjs';
 
 const require = createRequire(import.meta.url);
 const braces = require('braces');
 const lock = JSON.parse(readFileSync(new URL('../package-lock.json', import.meta.url)));
+
+test('deepmerge own-key mitigation is integrity checked, idempotent and preserves ordinary options', () => {
+  assert.ok(patchDeepmerge(undefined, {check: true}) > 0);
+  patchDeepmerge();
+  patchDeepmerge(undefined, {check: true});
+  const merge = require('deepmerge');
+  const target = Object.create(null);
+  Object.defineProperty(target, '__proto__', {value: {syntheticFlag: true}, enumerable: true});
+  for (const result of [merge(target, {}), merge(Object.create(null), target)]) {
+    assert.equal(Object.getPrototypeOf(result), Object.prototype);
+    assert.equal(result.syntheticFlag, undefined);
+    assert.equal(Object.hasOwn(result, '__proto__'), true);
+  }
+  assert.equal({}.syntheticFlag, undefined);
+  const symbol = Symbol('option');
+  assert.deepEqual(merge({a: {x: 1}, list: [1]}, {a: {y: 2}, list: [2]}), {a: {x: 1, y: 2}, list: [1, 2]});
+  assert.equal(merge({[symbol]: 1}, {})[symbol], 1);
+  assert.deepEqual(merge({items: [1]}, {items: [2]}, {arrayMerge: (_target, source) => source}), {items: [2]});
+  assert.deepEqual(merge({x: {a: 1}}, {x: {b: 2}}, {
+    customMerge: key => key === 'x' ? () => ({custom: true}) : undefined,
+  }), {x: {custom: true}});
+});
+
+test('SVG optimization still produces valid SVG with viewBox and shape content', () => {
+  const svgo = require('@svgr/plugin-svgo');
+  const source = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M0 0h24v24H0z"/></svg>';
+  const output = svgo(source, {svgo: true, icon: true, runtimeConfig: false}, {filePath: 'synthetic.svg'});
+  assert.match(output, /<svg/);
+  assert.match(output, /viewBox="0 0 24 24"/);
+  assert.match(output, /<(?:path|rect)/);
+});
+
+test('deepmerge mitigation rejects missing patches, tampered sources and unknown versions', () => {
+  const root = mkdtempSync(path.join(tmpdir(), 'merge-integrity-'));
+  try {
+    const directory = path.join(root, 'node_modules/deepmerge');
+    mkdirSync(path.join(directory, 'dist'), {recursive: true});
+    const metadata = version => writeFileSync(path.join(root, 'package-lock.json'), JSON.stringify({packages: {'node_modules/deepmerge': {version}}}));
+    metadata('4.3.1');
+    const originalRoot = path.dirname(require.resolve('deepmerge/package.json'));
+    for (const file of ['index.js', 'dist/cjs.js', 'dist/umd.js']) {
+      writeFileSync(path.join(directory, file), readFileSync(path.join(originalRoot, file)));
+    }
+    patchDeepmerge(root, {check: true});
+    const file = path.join(directory, 'index.js');
+    const patched = readFileSync(file, 'utf8');
+    writeFileSync(file, patched + '\n// synthetic unexpected modification\n');
+    assert.throws(() => patchDeepmerge(root), /Unexpected deepmerge source/);
+    writeFileSync(file, patched.replace('// profile-2: define own merge keys (GHSA-gcqx-w48m-w2h4)\n', '').replace(/Object\.defineProperty\(destination, key, \{value: (.*), enumerable: true, configurable: true, writable: true\}\)/g, 'destination[key] = $1'));
+    assert.throws(() => patchDeepmerge(root, {check: true}), /Missing deepmerge mitigation/);
+    patchDeepmerge(root);
+    metadata('4.3.2');
+    assert.throws(() => patchDeepmerge(root), /Review deepmerge mitigation/);
+  } finally { rmSync(root, {recursive: true, force: true}); }
+});
 
 test('reviewed security versions cover every locked and installed toolchain copy', () => {
   const approved = {'body-parser': '1.20.9', qs: '6.16.2', joi: '17.13.9', undici: '7.30.1', 'serialize-javascript': '7.1.3'};
@@ -61,9 +117,9 @@ test('patched Undici retains Agent, redirect and response consumption contracts'
 
 test('install, build, development and CI cannot silently omit the mitigation', () => {
   const manifest = JSON.parse(readFileSync(new URL('../package.json', import.meta.url)));
-  assert.equal(manifest.scripts.postinstall, 'node scripts/patch-braces.cjs');
+  assert.equal(manifest.scripts.postinstall, 'node scripts/patch-dependencies.cjs');
   for (const file of ['build-site.mjs', 'development-command.mjs', 'dev-all.mjs', 'sync-locked.mjs']) {
-    assert.match(readFileSync(new URL(file, import.meta.url), 'utf8'), /patchBraces\(undefined, \{check: true\}\)/);
+    assert.match(readFileSync(new URL(file, import.meta.url), 'utf8'), /patchDependencies\(undefined, \{check: true\}\)/);
   }
   for (const file of ['ci.yaml', 'publish-github-pages.yaml']) {
     assert.match(readFileSync(new URL('../.github/workflows/' + file, import.meta.url), 'utf8'), /npm run test:security/);

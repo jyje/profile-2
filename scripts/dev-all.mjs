@@ -9,9 +9,9 @@ import {spawn} from 'node:child_process';
 import handler from 'serve-handler';
 import {requestPath} from './request-path.mjs';
 import {shouldRebuild} from './source-watch.mjs';
-import bracesMitigation from './patch-braces.cjs';
+import bracesMitigation from './patch-dependencies.cjs';
 
-bracesMitigation.patchBraces(undefined, {check: true});
+bracesMitigation.patchDependencies(undefined, {check: true});
 
 const root = path.resolve(import.meta.dirname, '..');
 const ownedRoot = path.join(root, '.dev-all');

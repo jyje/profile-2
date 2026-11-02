@@ -6,9 +6,9 @@ import {syncAll} from './sync-content.mjs';
 import {contentMode} from '../plugins/content-visibility.cjs';
 import {runContentFormat} from './content-format.mjs';
 import {runDesignLint} from './design-system/lint.mjs';
-import bracesMitigation from './patch-braces.cjs';
+import bracesMitigation from './patch-dependencies.cjs';
 
-bracesMitigation.patchBraces(undefined, {check: true});
+bracesMitigation.patchDependencies(undefined, {check: true});
 
 await withBuildLock(async () => {
   if (contentMode() === 'public') {
