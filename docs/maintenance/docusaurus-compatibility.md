@@ -132,6 +132,17 @@ review and are not proof that the complete dependency tree is vulnerability-free
 
 ### Temporary braces depth mitigation
 
+Dependency entrypoints apply/check both mitigations through
+`scripts/patch-dependencies.cjs`. The separate deepmerge 4.3.1 mitigation for
+GHSA-gcqx-w48m-w2h4 verifies SHA-256 for its source, CommonJS and UMD entrypoints
+before replacing destination assignments with own data properties. This prevents
+prototype setters from changing the returned object's prototype, while retaining
+symbols, cloning, custom merge and array options. Tests cover unexpected source,
+missing patch, unknown version, prototype behavior and normal SVG optimization.
+It does not change the package version or close the upstream audit finding.
+Remove it only after a compatible upstream fix or reviewed replacement resolves
+every affected copy and the install, security, SVG and visual gates pass.
+
 GHSA-vfj7-8cjw-p6xm has no upstream fixed release as of 2026-10-18.
 `scripts/patch-braces.cjs` adds a 100-level parser stack bound and iterative AST
 validation to installed braces 3.0.3. It verifies the original SHA-256 of each
