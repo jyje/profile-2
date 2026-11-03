@@ -69,20 +69,16 @@ jobs:
       - name: Install browser
         run: npx playwright install --with-deps chromium
       - name: Verify runtime UX
-        id: ux
         env:
           VERIFY_ORIGIN: http://127.0.0.1:8080
           VERIFY_BASE_PATH: /
-        run: npm run lint:ux
-      - name: Retain runtime UX evidence
-        if: ${{ always() && (steps.ux.outcome == 'success' || steps.ux.outcome == 'failure') }}
-        uses: actions/upload-artifact@v7
-        with:
-          name: development-container-ux
-          path: .playwright-mcp/ux-lint/after/
-          include-hidden-files: true
-          if-no-files-found: error
-          retention-days: 7
+          UX_LINT_OUTPUT: ${{ runner.temp }}/development-ux
+        run: |
+          if ! npm run lint:ux > "$RUNNER_TEMP/development-ux.log" 2>&1; then
+            echo '::error::Development UX verification failed. Reproduce locally to inspect captures and diagnostics.'
+            exit 1
+          fi
+          node -e 'const report = require(process.env.UX_LINT_OUTPUT + "/report.json"); console.log(`Development UX passed: ${report.entries.length} captures, ${report.canaries.length} drift checks.`)'
       - name: Login after validation
         uses: docker/login-action@v4.7.0
         with:
@@ -93,8 +89,15 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
+          require_private_package() {
+            if ! visibility=$(gh api "/users/$GITHUB_REPOSITORY_OWNER/packages/container/profile-2-dev" --jq .visibility 2>/dev/null) || [ "$visibility" != private ]; then
+              echo '::error::Development image publication requires a verified private package with Actions access.'
+              return 1
+            fi
+          }
+          require_private_package
           docker push "$IMAGE"
-          test "$(gh api /users/${{ github.repository_owner }}/packages/container/profile-2-dev --jq .visibility)" = private
+          require_private_package
           docker buildx imagetools inspect "$IMAGE" --format '{{json .Manifest.Digest}}' > "$RUNNER_TEMP/image-digest.json"
           node -e 'const fs=require("fs"); const digest=JSON.parse(fs.readFileSync(process.env.RUNNER_TEMP+"/image-digest.json")); if(!/^sha256:[a-f0-9]{64}$/.test(digest))process.exit(1); fs.writeFileSync("image-reference.json",JSON.stringify({image:process.env.IMAGE,revision:process.env.GITHUB_SHA,digest},null,2));'
       - uses: actions/upload-artifact@v7
