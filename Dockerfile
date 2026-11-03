@@ -19,7 +19,7 @@ RUN test -n "$SITE_URL" && test "$SITE_BASE_URL" = / && test -f container-revisi
     && npm run content:check \
     && npm run build
 
-FROM nginx:1.29-alpine@sha256:5616878291a2eed594aee8db4dade5878cf7edcb475e59193904b198d9b830de
+FROM nginx:1.31-alpine@sha256:785835ea65db4bba6f021acc0f3be91b0fef76a53fe41f8588c6698d2aed0606
 ARG SOURCE_REVISION
 LABEL org.opencontainers.image.source="https://github.com/jyje/profile-2" \
       org.opencontainers.image.revision=$SOURCE_REVISION
