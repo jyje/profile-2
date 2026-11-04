@@ -99,6 +99,11 @@ export default function ScrollTrail({children}: {children: ReactNode}) {
       event.stopPropagation();
     };
     const dragStart = (event: DragEvent) => event.preventDefault();
+    const selectStart = (event: Event) => {
+      // Selection can start before the drag threshold and make the browser
+      // auto-scroll the list in the opposite direction near an edge.
+      if (drag) event.preventDefault();
+    };
     const wheel = (event: WheelEvent) => {
       // Shift-wheel axis mapping differs by browser/OS. Leave ordinary vertical
       // page scrolling and native horizontal trackpad gestures untouched.
@@ -110,6 +115,7 @@ export default function ScrollTrail({children}: {children: ReactNode}) {
     };
     list.addEventListener('scroll', measure, {passive: true});
     list.addEventListener('focusin', focusItem);
+    list.addEventListener('selectstart', selectStart);
     host.addEventListener('pointerdown', down);
     host.addEventListener('pointermove', move);
     host.addEventListener('pointerup', up);
@@ -125,6 +131,7 @@ export default function ScrollTrail({children}: {children: ReactNode}) {
       resize.disconnect(); mutations.disconnect();
       list.removeEventListener('scroll', measure);
       list.removeEventListener('focusin', focusItem);
+      list.removeEventListener('selectstart', selectStart);
       host.removeEventListener('pointerdown', down);
       host.removeEventListener('pointermove', move);
       host.removeEventListener('pointerup', up);

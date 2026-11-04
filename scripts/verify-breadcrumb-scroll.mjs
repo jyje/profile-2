@@ -57,11 +57,13 @@ export async function verifyBreadcrumbScroll(page, root, screenshots, locale) {
         // Desktop mouse drag must scroll, never navigate to the pressed link.
         const box = await list.boundingBox();
         const url = page.url();
+        const beforeDrag = await metrics();
         await page.mouse.move(box.x + box.width - 60, box.y + box.height / 2);
         await page.mouse.down();
         await page.mouse.move(box.x + box.width - 5, box.y + box.height / 2, {steps: 12});
         await page.mouse.up();
-        assert.ok((await metrics()).left < initial.left - 20, `Mouse drag scrolls toward earlier paths: ${locale}/${width}/${theme}/${route}, initial=${JSON.stringify(initial)}, after=${JSON.stringify(await metrics())}`);
+        const afterDrag = await metrics();
+        assert.ok(Math.abs(beforeDrag.left - afterDrag.left - 55) <= 1, `Mouse drag follows the pointer without native selection scrolling: ${locale}/${width}/${theme}/${route}, before=${JSON.stringify(beforeDrag)}, after=${JSON.stringify(afterDrag)}`);
         assert.equal(page.url(), url, 'Dragging must not navigate');
         assert.deepEqual(await home(), anchor, 'Sticky Home geometry survives scrolling');
         if (width === 390) {

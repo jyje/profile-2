@@ -55,10 +55,23 @@ experience; it does not add authentication or provision a Labs backend. The valu
 `publish-development-image.yaml` accepts trusted `dev` pushes or an explicit
 dispatch on `dev`. It does not run publication for pull requests or forks.
 Repository access is read-only except package write in this trusted job. Registry
-login happens after validation. It pushes a commit-SHA tag, verifies private
-package visibility and records its immutable digest in a narrow artifact. Tags
+login happens after validation. Before the first run, the owner must ensure the
+package already exists with private visibility and repository Actions access.
+If bootstrapping is necessary, use only a non-sensitive empty image and set the
+package private before invoking the development publisher. Never bootstrap with
+development site output. A source-repository association is not proof of private
+package visibility. The job checks visibility before uploading any image and
+fails closed on a missing package, public visibility or an unreadable setting.
+It pushes a commit-SHA tag, rechecks private package visibility and records its
+immutable digest in a narrow artifact. Tags
 can be moved; deploy the digest from the artifact, not `latest` or the SHA tag.
 No cluster credential is passed to this workflow.
+
+The runtime UX gate still creates screenshots and checks pixels and layout on the
+runner. Its screenshots, detailed report and diagnostics must not be published
+from a development build in this public repository. Only the result and aggregate
+counts appear in public logs. Reproduce the check against a local development
+container when troubleshooting. The public Pages capture policy is unchanged.
 
 Keep GitOps manifests, ingress/access policy and pull credentials in the cluster
 workspace. Use one desired-state writer: reviewed digest updates or the existing

@@ -3,6 +3,8 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
+import {spawnSync} from 'node:child_process';
+import {load} from 'js-yaml';
 import {prepareContainerContext} from './container-context.mjs';
 
 test('container publication is restricted to trusted dev and Pages remains main-only', async () => {
@@ -15,7 +17,6 @@ test('container publication is restricted to trusted dev and Pages remains main-
   assert.match(workflow, /persist-credentials: false/);
   assert.match(workflow, /REQUIRE_CLEAN_REVISION: 'true'/);
   assert.match(workflow, /--cap-drop ALL --security-opt no-new-privileges/);
-  assert.match(workflow, /\.visibility\)" = private/);
   assert.match(await read('.github/workflows/publish-github-pages.yaml'), /if: github.ref == 'refs\/heads\/main'/);
   assert.match(await read('.github/workflows/ci.yaml'), /branches:\s+- main\s+- dev/);
   const docker = await read('Dockerfile');
@@ -23,6 +24,39 @@ test('container publication is restricted to trusted dev and Pages remains main-
   assert.match(runtime, /USER 101:101/);
   assert.match(runtime, /COPY --from=build \/site\/build\//);
   assert.doesNotMatch(runtime, /npm|COPY \. /);
+});
+
+test('development publishing checks privacy on both sides of upload and retains only digest metadata', async () => {
+  const workflow = load(await fs.readFile(new URL('../.github/workflows/publish-development-image.yaml', import.meta.url), 'utf8'));
+  const steps = workflow.jobs.image.steps;
+  const publish = steps.find(step => step.run?.includes('docker push'));
+  const publishBoundary = publish.run.split('docker buildx imagetools inspect')[0];
+  for (const [before, after, status, pushes] of [
+    ['private', 'private', 0, 1], ['public', 'private', 1, 0],
+    ['missing', 'private', 1, 0], ['private', 'public', 1, 1],
+  ]) {
+    const script = `
+      gh() {
+        value="$BEFORE"
+        if [ -f "$RUNNER_TEMP/pushed" ]; then value="$AFTER"; fi
+        [ "$value" != missing ] || return 1
+        printf '%s\\n' "$value"
+      }
+      docker() { : > "$RUNNER_TEMP/pushed"; printf 'PUSHED\\n'; }
+      ${publishBoundary}
+    `;
+    const temp = await fs.mkdtemp(path.join(os.tmpdir(), 'container-publish-'));
+    try {
+      const result = spawnSync('bash', ['-e', '-o', 'pipefail', '-c', script], {
+        encoding: 'utf8', env: {...process.env, BEFORE: before, AFTER: after, RUNNER_TEMP: temp},
+      });
+      assert.equal(result.status, status, `${before} -> ${after}: ${result.stderr}`);
+      assert.equal(result.stdout.match(/^PUSHED$/gm)?.length ?? 0, pushes, `${before} -> ${after}`);
+    } finally {await fs.rm(temp, {recursive: true, force: true});}
+  }
+  const ux = steps.find(step => step.name === 'Verify runtime UX');
+  assert.match(ux.run, /npm run lint:ux > "\$RUNNER_TEMP\/development-ux\.log" 2>&1/);
+  assert.deepEqual(steps.filter(step => step.uses?.startsWith('actions/upload-artifact@')).map(step => step.with.path), ['image-reference.json']);
 });
 
 test('container context preserves authored dates without copying Git, credentials or private files', async () => {
