@@ -1,9 +1,12 @@
 # syntax=docker/dockerfile:1
 # Build only from scripts/container-context.mjs output, which preserves authored
 # dates without transmitting .git, ignored files or credentials to the builder.
-FROM node:26.10.0-alpine@sha256:0b36e8c136b94cd4fcf02188228e76c31ad5872eef3fec8cbd2eee500cfd9e80 AS build
+FROM node:26.13.1-alpine@sha256:6bd9ab43c0ec0190ca7b2d193906cb8b7edf6e7f4afa43ddeccd6452710bffb5 AS build
 WORKDIR /site
 RUN apk add --no-cache openssl
+# Node 26 no longer bundles Corepack. It resolves the pnpm version pinned by
+# package.json "packageManager" (network access is required at build time).
+RUN npm install --global corepack@0.36.0 && corepack enable
 COPY . .
 ARG SITE_URL
 ARG SITE_BASE_URL=/
@@ -13,11 +16,11 @@ ARG ALLOW_DIRTY_BUILD=false
 ENV SITE_URL=$SITE_URL SITE_BASE_URL=$SITE_BASE_URL SITE_CONTENT_MODE=$SITE_CONTENT_MODE LABS_REMOTE_ENTRY=$LABS_REMOTE_ENTRY
 RUN test -n "$SITE_URL" && test "$SITE_BASE_URL" = / && test -f container-revision.json \
     && node -e 'if (require("./container-revision.json").dirty && process.argv[1] !== "true") process.exit(1)' "$ALLOW_DIRTY_BUILD" \
-    && npm ci \
-    && npm run test:security \
-    && npm run lint:design \
-    && npm run content:check \
-    && npm run build
+    && pnpm install --frozen-lockfile \
+    && pnpm run test:security \
+    && pnpm run lint:design \
+    && pnpm run content:check \
+    && pnpm run build
 
 FROM nginx:1.29-alpine@sha256:5616878291a2eed594aee8db4dade5878cf7edcb475e59193904b198d9b830de
 ARG SOURCE_REVISION

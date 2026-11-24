@@ -48,3 +48,13 @@ test('official framework and coupled UI packages stay in coordinated groups', ()
   }
   assert.equal(npm['versioning-strategy'], 'increase');
 });
+
+test('npm ecosystem tracks the pnpm lockfile and workspace, not package-lock.json', async () => {
+  const npm = config.updates.find(update => update['package-ecosystem'] === 'npm');
+  assert.equal(npm.directory, '/');
+  assert.match(manifest.packageManager, /^pnpm@\d+\.\d+\.\d+$/);
+  await access(new URL('pnpm-lock.yaml', root));
+  await access(new URL('pnpm-workspace.yaml', root));
+  await assert.rejects(access(new URL('package-lock.json', root)), {code: 'ENOENT'});
+  await assert.rejects(access(new URL('npm-shrinkwrap.json', root)), {code: 'ENOENT'});
+});

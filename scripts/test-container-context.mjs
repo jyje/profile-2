@@ -23,7 +23,7 @@ test('container publication is restricted to trusted dev and Pages remains main-
   const runtime = docker.slice(docker.lastIndexOf('FROM nginx:'));
   assert.match(runtime, /USER 101:101/);
   assert.match(runtime, /COPY --from=build \/site\/build\//);
-  assert.doesNotMatch(runtime, /npm|COPY \. /);
+  assert.doesNotMatch(runtime, /npm|pnpm|corepack|COPY \. /);
 });
 
 test('development publishing checks privacy on both sides of upload and retains only digest metadata', async () => {
@@ -55,7 +55,7 @@ test('development publishing checks privacy on both sides of upload and retains 
     } finally {await fs.rm(temp, {recursive: true, force: true});}
   }
   const ux = steps.find(step => step.name === 'Verify runtime UX');
-  assert.match(ux.run, /npm run lint:ux > "\$RUNNER_TEMP\/development-ux\.log" 2>&1/);
+  assert.match(ux.run, /pnpm run lint:ux > "\$RUNNER_TEMP\/development-ux\.log" 2>&1/);
   assert.deepEqual(steps.filter(step => step.uses?.startsWith('actions/upload-artifact@')).map(step => step.with.path), ['image-reference.json']);
 });
 
@@ -106,4 +106,30 @@ test('title-only documents inherit the body date while explicit target overrides
     await fs.writeFile(source, '---\ntitle: 📄 Note\nlast_update:\n  date: "2025-04-01"\n---\n');
     assert.match(await run('target-override'), /2025-04-01/);
   } finally {await fs.rm(root, {recursive: true, force: true});}
+});
+
+test('container context carries the pnpm lockfile, workspace and patches but not package-lock.json', async () => {
+  const root = await fs.mkdtemp(path.join(os.tmpdir(), 'container-pnpm-'));
+  const destination = path.join(root, 'out');
+  const included = ['package.json', 'pnpm-lock.yaml', 'pnpm-workspace.yaml', 'patches/example@1.0.0.patch'];
+  const excluded = ['package-lock.json'];
+  try {
+    for (const file of [...included, ...excluded]) {
+      await fs.mkdir(path.dirname(path.join(root, file)), {recursive: true});
+      await fs.writeFile(path.join(root, file), 'synthetic');
+    }
+    const count = await prepareContainerContext({root, destination, files: [...included, ...excluded], revision: 'a'.repeat(40), readDate: () => undefined});
+    assert.equal(count, included.length);
+    for (const file of included) await fs.access(path.join(destination, file));
+    for (const file of excluded) await assert.rejects(fs.access(path.join(destination, file)));
+  } finally {await fs.rm(root, {recursive: true, force: true});}
+});
+
+test('Dockerfile installs with the pinned pnpm from the frozen lockfile and keeps a digest-pinned Node base', async () => {
+  const docker = await fs.readFile(new URL('../Dockerfile', import.meta.url), 'utf8');
+  const nvmrc = (await fs.readFile(new URL('../.nvmrc', import.meta.url), 'utf8')).trim();
+  assert.match(docker, new RegExp(`^FROM node:${nvmrc.replaceAll('.', '\\.')}-alpine@sha256:[0-9a-f]{64} AS build$`, 'm'));
+  assert.match(docker, /pnpm install --frozen-lockfile/);
+  assert.match(docker, /pnpm run build/);
+  assert.doesNotMatch(docker, /\bnpm (?:ci|run)\b/);
 });

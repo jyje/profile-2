@@ -25,19 +25,20 @@ jobs:
         with:
           fetch-depth: 0
           persist-credentials: false
+      - uses: pnpm/action-setup@v6.1.1
       - uses: actions/setup-node@v7
         with:
-          node-version: 26
-          cache: npm
+          node-version-file: .nvmrc
+          cache: pnpm
       - name: Validate configuration
         run: node -e 'const u = new URL(process.env.SITE_URL); if (u.protocol !== "https:") process.exit(1)'
-      - run: npm ci
+      - run: pnpm install --frozen-lockfile
       - name: Validate source contracts
         run: |
-          npm run test:security
-          npm run test:content
-          npm run test:design
-          npm run test:ui
+          pnpm run test:security
+          pnpm run test:content
+          pnpm run test:design
+          pnpm run test:ui
           node --test scripts/test-container-context.mjs
       - name: Prepare clean source context
         id: context
@@ -67,14 +68,14 @@ jobs:
           node scripts/verify-container.mjs
           docker exec profile2-ci sh -c 'test ! -e /site && test ! -e /usr/share/nginx/html/.git && ! command -v node'
       - name: Install browser
-        run: npx playwright install --with-deps chromium
+        run: pnpm exec playwright install --with-deps chromium
       - name: Verify runtime UX
         env:
           VERIFY_ORIGIN: http://127.0.0.1:8080
           VERIFY_BASE_PATH: /
           UX_LINT_OUTPUT: ${{ runner.temp }}/development-ux
         run: |
-          if ! npm run lint:ux > "$RUNNER_TEMP/development-ux.log" 2>&1; then
+          if ! pnpm run lint:ux > "$RUNNER_TEMP/development-ux.log" 2>&1; then
             echo '::error::Development UX verification failed. Reproduce locally to inspect captures and diagnostics.'
             exit 1
           fi

@@ -27,17 +27,20 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v6.1.1
+
       - name: Set up Node.js
         uses: actions/setup-node@v7
         with:
-          node-version: 26
-          cache: npm
+          node-version-file: .nvmrc
+          cache: pnpm
 
       - name: Install dependencies
-        run: npm ci
+        run: pnpm install --frozen-lockfile
 
       - name: Verify dependency security mitigations
-        run: npm run test:security
+        run: pnpm run test:security
 
       - name: Generate allowlisted dependency audit summary
         run: node scripts/audit-summary.mjs > audit-summary.json
@@ -51,48 +54,48 @@ jobs:
           retention-days: 7
 
       - name: Typecheck
-        run: npm run typecheck
+        run: pnpm run typecheck
 
       - name: Verify versioned design and content contracts
         run: |
-          npm run lint:design
-          npm run content:check
-          npm run lint:content
-          npm run test:design
+          pnpm run lint:design
+          pnpm run content:check
+          pnpm run lint:content
+          pnpm run test:design
 
       - name: Verify UI compatibility boundaries
-        run: npm run test:ui
+        run: pnpm run test:ui
 
       - name: Verify public content and About isolation
-        run: npm run test:content
+        run: pnpm run test:content
 
       - name: Verify container source and publication contracts
-        run: npm run test:container
+        run: pnpm run test:container
 
       - name: Build all locales for GitHub Pages
-        run: npm run build
+        run: pnpm run build
         env:
           SITE_URL: https://jyje.github.io
           SITE_BASE_URL: /profile-2/
 
       - name: Install browser for public navigation checks
-        run: npx playwright install --with-deps chromium
+        run: pnpm exec playwright install --with-deps chromium
 
       - name: Verify static routes and publication boundaries
-        run: npm run test:publication
+        run: pnpm run test:publication
 
       - name: Verify browser navigation and public About boundaries
         run: node scripts/verify-built-site.mjs
 
       - name: Verify wiki graphs and publication behavior
-        run: npm run test:wiki
+        run: pnpm run test:wiki
 
       - name: Verify bilingual breadcrumbs
-        run: npm run test:breadcrumbs
+        run: pnpm run test:breadcrumbs
 
       - name: UX-001 screenshot and coordinate lint
         id: ux_lint
-        run: npm run lint:ux
+        run: pnpm run lint:ux
 
       - name: Upload UX lint captures and report
         if: ${{ always() && (steps.ux_lint.outcome == 'success' || steps.ux_lint.outcome == 'failure') }}
@@ -105,4 +108,4 @@ jobs:
           retention-days: 7
 
       - name: Verify homepage intro, curation and navigation
-        run: npm run test:homepage
+        run: pnpm run test:homepage

@@ -7,7 +7,7 @@ import {createLastUpdateReader, withLastUpdate} from './content-last-update.mjs'
 import {formatContent} from './content-format/v1.mjs';
 import {planLocaleFallbacks} from './locale-fallback.mjs';
 
-const allowed = /^(?:(?:src|scripts|plugins|content|data|static|i18n|design-system|docs|container|\.github\/workflows)\/|(?:package(?:-lock)?\.json|docusaurus\.config\.ts|sidebars\.ts|tsconfig\.json|components\.json|\.docignore|\.prettierrc\.cjs|\.prettierignore|Dockerfile|\.dockerignore|\.github\/dependabot\.yaml)$)/;
+const allowed = /^(?:(?:src|scripts|plugins|content|data|static|i18n|design-system|docs|container|patches|\.github\/workflows)\/|(?:package\.json|pnpm-lock\.yaml|pnpm-workspace\.yaml|docusaurus\.config\.ts|sidebars\.ts|tsconfig\.json|components\.json|\.docignore|\.prettierrc\.cjs|\.prettierignore|Dockerfile|\.dockerignore|\.github\/dependabot\.yaml)$)/;
 const blocked = /^(?:hidden\/|data\/career\/|src\/generated\/|\.git\/)|(?:^|\/)\.env(?:\.|$)/;
 export async function prepareContainerContext({root, destination, files, readDate, revision, dirty = false, fallbacks = new Map()}) {
   if (!/^[0-9a-f]{40}$/.test(revision)) throw new Error('A full source revision is required');
