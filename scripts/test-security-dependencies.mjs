@@ -1,22 +1,50 @@
 import assert from 'node:assert/strict';
-import {readFileSync, mkdtempSync, mkdirSync, writeFileSync, rmSync} from 'node:fs';
+import {readFileSync, mkdtempSync, mkdirSync, writeFileSync, rmSync, copyFileSync, existsSync} from 'node:fs';
 import {tmpdir} from 'node:os';
 import path from 'node:path';
 import {execFileSync} from 'node:child_process';
 import {createRequire} from 'node:module';
 import test from 'node:test';
 import http from 'node:http';
-import {patchBraces} from './patch-braces.cjs';
-import {patchDeepmerge} from './patch-deepmerge.cjs';
-import {patchMinimatch} from './patch-minimatch.cjs';
+import dependencyPatches from './verify-dependency-patches.cjs';
 
+const {verifyDependencyPatches, installedCopies, mitigations} = dependencyPatches;
 const require = createRequire(import.meta.url);
 const braces = require('braces');
-const lock = JSON.parse(readFileSync(new URL('../package-lock.json', import.meta.url)));
+const project = path.resolve(import.meta.dirname, '..');
+
+// pnpm-lock.yaml holds two YAML documents: pnpm's own tooling, then this project. Only the
+// project document lists locked packages, as `name@version:` keys under `packages:`.
+function lockedVersions() {
+  const document = readFileSync(new URL('../pnpm-lock.yaml', import.meta.url), 'utf8').split('\n---\n').at(-1);
+  const section = document.split('\npackages:\n')[1].split('\nsnapshots:\n')[0];
+  const result = new Map();
+  for (const match of section.matchAll(/^  '?((?:@[^/@\s']+\/)?[^@\s']+)@([^:'\s]+)'?:\s*$/gm)) {
+    result.set(match[1], [...(result.get(match[1]) ?? []), match[2]]);
+  }
+  return result;
+}
+const installedVersions = name => installedCopies(project, name)
+  .map(directory => JSON.parse(readFileSync(path.join(directory, 'package.json'), 'utf8')).version);
+
+// A pnpm-shaped tree holding copies of the reviewed patched files, for fail-closed checks.
+function syntheticRoot() {
+  const root = mkdtempSync(path.join(tmpdir(), 'mitigation-integrity-'));
+  for (const [name, mitigation] of Object.entries(mitigations)) {
+    const source = installedCopies(project, name)[0];
+    const target = path.join(root, 'node_modules/.pnpm', `${name}@${mitigation.version}_patch_hash=fixture`, 'node_modules', name);
+    mkdirSync(target, {recursive: true});
+    copyFileSync(path.join(source, 'package.json'), path.join(target, 'package.json'));
+    for (const file of Object.keys(mitigation.files)) {
+      mkdirSync(path.dirname(path.join(target, file)), {recursive: true});
+      copyFileSync(path.join(source, file), path.join(target, file));
+    }
+  }
+  return root;
+}
 
 test('legacy minimatch bounds expansion and globparts while retaining ordinary matching', () => {
-  assert.ok(patchMinimatch(undefined, {check: true}) > 0);
-  patchMinimatch(); patchMinimatch(undefined, {check: true});
+  assert.ok(verifyDependencyPatches() > 0);
   const match = require('minimatch');
   for (const pattern of ['x'.repeat(8193), Array(130).fill('x').join('/'), '{1..300}', Array(17).fill('**').join('/')]) {
     assert.throws(() => match('x', pattern));
@@ -28,29 +56,6 @@ test('legacy minimatch bounds expansion and globparts while retaining ordinary m
   assert.equal(match('/img/logo.svg', '/img/*.{svg,png}'), true);
   assert.deepEqual(match.braceExpand('x{1..3}'), ['x1', 'x2', 'x3']);
   assert.ok(match.makeRe('*.html').test('index.html'));
-});
-
-test('legacy minimatch integrity and installation checks fail closed', () => {
-  const root = mkdtempSync(path.join(tmpdir(), 'matcher-integrity-'));
-  try {
-    const directory = path.join(root, 'node_modules/minimatch');
-    mkdirSync(directory, {recursive: true});
-    const metadata = version => writeFileSync(path.join(root, 'package-lock.json'), JSON.stringify({packages: {'node_modules/minimatch': {version}}}));
-    metadata('3.1.5');
-    const patched = readFileSync(require.resolve('minimatch'), 'utf8');
-    const file = path.join(directory, 'minimatch.js');
-    writeFileSync(file, patched);
-    patchMinimatch(root, {check: true});
-    writeFileSync(file, patched + '\n// synthetic unexpected modification\n');
-    assert.throws(() => patchMinimatch(root), /Unexpected minimatch source/);
-    const start = patched.indexOf('  // profile-2: bound globparts');
-    const end = patched.indexOf('  set = this.globParts', start);
-    writeFileSync(file, patched.slice(0, start) + patched.slice(end));
-    assert.throws(() => patchMinimatch(root, {check: true}), /Missing minimatch mitigation/);
-    patchMinimatch(root);
-    metadata('3.1.6');
-    assert.throws(() => patchMinimatch(root), /Review minimatch mitigation/);
-  } finally { rmSync(root, {recursive: true, force: true}); }
 });
 
 test('bounded matcher retains actual localized static serving and clean URLs', async () => {
@@ -80,10 +85,8 @@ test('bounded matcher retains actual localized static serving and clean URLs', a
   } finally { await new Promise(resolve => server.close(resolve)); rmSync(root, {recursive: true, force: true}); }
 });
 
-test('deepmerge own-key mitigation is integrity checked, idempotent and preserves ordinary options', () => {
-  assert.ok(patchDeepmerge(undefined, {check: true}) > 0);
-  patchDeepmerge();
-  patchDeepmerge(undefined, {check: true});
+test('deepmerge own-key mitigation is verified and preserves ordinary options', () => {
+  assert.ok(verifyDependencyPatches() > 0);
   const merge = require('deepmerge');
   const target = Object.create(null);
   Object.defineProperty(target, '__proto__', {value: {syntheticFlag: true}, enumerable: true});
@@ -111,40 +114,14 @@ test('SVG optimization still produces valid SVG with viewBox and shape content',
   assert.match(output, /<(?:path|rect)/);
 });
 
-test('deepmerge mitigation rejects missing patches, tampered sources and unknown versions', () => {
-  const root = mkdtempSync(path.join(tmpdir(), 'merge-integrity-'));
-  try {
-    const directory = path.join(root, 'node_modules/deepmerge');
-    mkdirSync(path.join(directory, 'dist'), {recursive: true});
-    const metadata = version => writeFileSync(path.join(root, 'package-lock.json'), JSON.stringify({packages: {'node_modules/deepmerge': {version}}}));
-    metadata('4.3.1');
-    const originalRoot = path.dirname(require.resolve('deepmerge/package.json'));
-    for (const file of ['index.js', 'dist/cjs.js', 'dist/umd.js']) {
-      writeFileSync(path.join(directory, file), readFileSync(path.join(originalRoot, file)));
-    }
-    patchDeepmerge(root, {check: true});
-    const file = path.join(directory, 'index.js');
-    const patched = readFileSync(file, 'utf8');
-    writeFileSync(file, patched + '\n// synthetic unexpected modification\n');
-    assert.throws(() => patchDeepmerge(root), /Unexpected deepmerge source/);
-    writeFileSync(file, patched.replace('// profile-2: define own merge keys (GHSA-gcqx-w48m-w2h4)\n', '').replace(/Object\.defineProperty\(destination, key, \{value: (.*), enumerable: true, configurable: true, writable: true\}\)/g, 'destination[key] = $1'));
-    assert.throws(() => patchDeepmerge(root, {check: true}), /Missing deepmerge mitigation/);
-    patchDeepmerge(root);
-    metadata('4.3.2');
-    assert.throws(() => patchDeepmerge(root), /Review deepmerge mitigation/);
-  } finally { rmSync(root, {recursive: true, force: true}); }
-});
-
 test('reviewed security versions cover every locked and installed toolchain copy', () => {
   const approved = {'body-parser': '1.20.9', qs: '6.16.2', joi: '17.13.9', undici: '7.30.1', 'serialize-javascript': '7.1.3'};
+  const locked = lockedVersions();
   for (const [name, version] of Object.entries(approved)) {
-    const entries = Object.entries(lock.packages).filter(([key]) => key === `node_modules/${name}` || key.endsWith(`/node_modules/${name}`));
-    assert.ok(entries.length, `${name} must be present`);
-    for (const [key, item] of entries) {
-      assert.equal(item.version, version, `${name}: review changes to the security baseline`);
-      const installed = JSON.parse(readFileSync(new URL(`../${key}/package.json`, import.meta.url)));
-      assert.equal(installed.version, item.version, `${name}: run npm ci to match the lockfile`);
-    }
+    assert.deepEqual(locked.get(name), [version], `${name}: review changes to the security baseline`);
+    const installed = installedVersions(name);
+    assert.ok(installed.length, `${name} must be installed`);
+    for (const value of installed) assert.equal(value, version, `${name}: run pnpm install --frozen-lockfile to match the lockfile`);
   }
 });
 
@@ -184,44 +161,66 @@ test('patched Undici retains Agent, redirect and response consumption contracts'
 
 test('install, build, development and CI cannot silently omit the mitigation', () => {
   const manifest = JSON.parse(readFileSync(new URL('../package.json', import.meta.url)));
-  assert.equal(manifest.scripts.postinstall, 'node scripts/patch-dependencies.cjs');
+  assert.match(manifest.packageManager, /^pnpm@\d+\.\d+\.\d+$/);
+  assert.equal(manifest.scripts.postinstall, undefined, 'pnpm patches replace the former postinstall mutation');
+  assert.equal(manifest.overrides, undefined, 'npm-style overrides are ignored by pnpm; pins live in pnpm-workspace.yaml');
+  const workspace = readFileSync(new URL('../pnpm-workspace.yaml', import.meta.url), 'utf8');
+  const lock = readFileSync(new URL('../pnpm-lock.yaml', import.meta.url), 'utf8');
+  for (const [name, {version}] of Object.entries(mitigations)) {
+    const patch = `patches/${name}@${version}.patch`;
+    assert.ok(workspace.includes(`${name}@${version}: ${patch}`), `${name}: patchedDependencies entry`);
+    assert.ok(existsSync(new URL(`../${patch}`, import.meta.url)), `${patch} must exist`);
+    assert.match(lock, new RegExp(`^  ${name}@${version.replaceAll('.', '\\.')}: [0-9a-f]{64}$`, 'm'), `${name}: the lockfile must record the patch hash`);
+  }
   for (const file of ['build-site.mjs', 'development-command.mjs', 'dev-all.mjs', 'sync-locked.mjs']) {
-    assert.match(readFileSync(new URL(file, import.meta.url), 'utf8'), /patchDependencies\(undefined, \{check: true\}\)/);
+    assert.match(readFileSync(new URL(file, import.meta.url), 'utf8'), /verifyDependencyPatches\(\)/);
   }
   for (const file of ['ci.yaml', 'publish-github-pages.yaml']) {
-    assert.match(readFileSync(new URL('../.github/workflows/' + file, import.meta.url), 'utf8'), /npm run test:security/);
+    assert.match(readFileSync(new URL('../.github/workflows/' + file, import.meta.url), 'utf8'), /pnpm run test:security/);
   }
 });
 
 test('every locked worker pool and selector parser has the security pin', () => {
+  const locked = lockedVersions();
   for (const [name, version] of [['tinypool', '2.1.2'], ['postcss-selector-parser', '7.1.6']]) {
-    const entries = Object.entries(lock.packages).filter(([key]) => key.endsWith(`/node_modules/${name}`) || key === `node_modules/${name}`);
-    assert.ok(entries.length, `${name} must be present`);
-    for (const [, item] of entries) assert.equal(item.version, version);
+    assert.deepEqual(locked.get(name), [version], `${name} must be present at the pinned version`);
   }
 });
 
-test('braces mitigation is installed, integrity checked, and idempotent', () => {
-  assert.ok(patchBraces(undefined, {check: true}) > 0);
-  patchBraces();
-  patchBraces(undefined, {check: true});
+test('braces mitigation is installed and verified', () => {
+  assert.ok(verifyDependencyPatches() > 0);
 });
 
-test('missing, tampered and unknown braces sources fail closed', () => {
-  const root = mkdtempSync(path.join(tmpdir(), 'braces-integrity-'));
+test('mitigation guard accepts the reviewed result and fails closed on missing, tampered and unknown copies', () => {
+  for (const name of Object.keys(mitigations)) {
+    const root = syntheticRoot();
+    try {
+      assert.equal(verifyDependencyPatches(root), 3);
+      const copy = installedCopies(root, name)[0];
+      const file = path.join(copy, Object.keys(mitigations[name].files)[0]);
+      const reviewed = readFileSync(file, 'utf8');
+      writeFileSync(file, reviewed + '\n// synthetic unexpected modification\n');
+      assert.throws(() => verifyDependencyPatches(root), new RegExp(`Missing or unexpected ${name} mitigation`));
+      rmSync(file);
+      assert.throws(() => verifyDependencyPatches(root), new RegExp(`Missing or unexpected ${name} mitigation`));
+      writeFileSync(file, reviewed);
+      assert.equal(verifyDependencyPatches(root), 3);
+      writeFileSync(path.join(copy, 'package.json'), JSON.stringify({name, version: '0.0.0-unreviewed'}));
+      assert.throws(() => verifyDependencyPatches(root), new RegExp(`Review ${name} mitigation`));
+      rmSync(path.dirname(path.dirname(copy)), {recursive: true});
+      assert.throws(() => verifyDependencyPatches(root), /dependency disappeared/);
+    } finally { rmSync(root, {recursive: true, force: true}); }
+  }
+});
+
+test('an unpatched duplicate copy beside the patched one is rejected', () => {
+  const root = syntheticRoot();
   try {
-    mkdirSync(path.join(root, 'node_modules/braces/lib'), {recursive: true});
-    const fixtureLock = version => writeFileSync(path.join(root, 'package-lock.json'), JSON.stringify({packages: {'node_modules/braces': {version}}}));
-    fixtureLock('3.0.3');
-    const patched = readFileSync(require.resolve('braces/lib/parse'), 'utf8');
-    const unpatched = patched.replaceAll(/      \/\/ profile-2: bounded braces recursion \(GHSA-vfj7-8cjw-p6xm\)\n      if \(stack.length >= 100\) throw new SyntaxError\('Brace nesting exceeds maximum depth \(100\)'\);\n/g, '');
-    const file = path.join(root, 'node_modules/braces/lib/parse.js');
-    writeFileSync(file, unpatched);
-    assert.throws(() => patchBraces(root, {check: true}), /Missing braces/);
-    writeFileSync(file, patched + '\n// unexpected change\n');
-    assert.throws(() => patchBraces(root), /Unexpected braces source/);
-    fixtureLock('3.0.4');
-    assert.throws(() => patchBraces(root), /Review braces mitigation/);
+    const duplicate = path.join(root, 'node_modules/.pnpm/braces@3.0.3/node_modules/braces');
+    mkdirSync(path.join(duplicate, 'lib'), {recursive: true});
+    writeFileSync(path.join(duplicate, 'package.json'), JSON.stringify({name: 'braces', version: '3.0.3'}));
+    for (const file of Object.keys(mitigations.braces.files)) writeFileSync(path.join(duplicate, file), '// unpatched upstream source\n');
+    assert.throws(() => verifyDependencyPatches(root), /Missing or unexpected braces mitigation/);
   } finally { rmSync(root, {recursive: true, force: true}); }
 });
 

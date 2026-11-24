@@ -1,0 +1,46 @@
+# pnpm settings for this single-package project.
+# Security pins live here so local, CI and container installs resolve the same
+# reviewed versions. npm's nested "overrides" became pnpm "parent>child" selectors.
+overrides:
+  "@docusaurus/core>tinypool": 2.1.2
+  postcss-selector-parser: 7.1.6
+  "@module-federation/dts-plugin>adm-zip": 0.6.1
+  "@module-federation/dts-plugin>undici": 7.30.1
+  "copy-webpack-plugin>serialize-javascript": 7.1.3
+  "css-minimizer-webpack-plugin>serialize-javascript": 7.1.3
+  "sockjs>uuid": 11.1.1
+
+# Dependency lifecycle scripts stay blocked unless reviewed. npm ran every install
+# script; these two were the only ones in the old lockfile besides optional fsevents.
+# @swc/core only verifies its native binding, core-js only prints a funding notice.
+allowBuilds:
+  "@swc/core": false
+  core-js: false
+
+patchedDependencies:
+  braces@3.0.3: patches/braces@3.0.3.patch
+  deepmerge@4.3.1: patches/deepmerge@4.3.1.patch
+  minimatch@3.1.5: patches/minimatch@3.1.5.patch
+
+# pnpm hides packages that are not declared in package.json. The security suite
+# verifies the exact transitive copies that Docusaurus, webpack and the HTTP
+# stack load (each has a single locked copy), so only these names are made
+# visible at the project root. Site code must not import them directly.
+publicHoistPattern:
+  - braces
+  - deepmerge
+  - joi
+  - micromatch
+  - minimatch
+  - postcss-selector-parser
+  - serialize-javascript
+  - tinypool
+  - undici
+  - body-parser
+  - qs
+  - webpack
+  - copy-webpack-plugin
+  - css-minimizer-webpack-plugin
+  - mini-css-extract-plugin
+  - css-loader
+  - "@svgr/plugin-svgo"

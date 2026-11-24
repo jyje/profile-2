@@ -1,0 +1,44 @@
+diff --git a/minimatch.js b/minimatch.js
+index 2e4a058a130dceebf83a7bd435f5d22b765ac836..04917890e666cb98e5675bdbd7799b83f45ea507 100644
+--- a/minimatch.js
++++ b/minimatch.js
+@@ -188,6 +188,15 @@ function make () {
+   // These will be regexps, except in the case of "**", which is
+   // set to the GLOBSTAR object for globstar behavior,
+   // and will not contain any / characters
++  // profile-2: bound globparts before allocation (GHSA-g3hv-75wg-m249)
++  var partBudget = 8192
++  for (var budgetIndex = 0; budgetIndex < set.length; budgetIndex++) {
++    partBudget--
++    for (var charIndex = 0; charIndex < set[budgetIndex].length; charIndex++) {
++      if (set[budgetIndex][charIndex] === '/') partBudget--
++      if (partBudget < 0) throw new RangeError('Expanded pattern exceeds serving part budget')
++    }
++  }
+   set = this.globParts = set.map(function (s) {
+     return s.split(slashSplit)
+   })
+@@ -268,7 +277,11 @@ function braceExpand (pattern, options) {
+     return [pattern]
+   }
+ 
+-  return expand(pattern)
++  var boundedExpansion = expand(pattern, {max: 257})
++  if (boundedExpansion.length > 256 || boundedExpansion.reduce(function (sum, value) { return sum + value.length }, 0) > 65536) {
++    throw new RangeError('Brace expansion exceeds serving budget')
++  }
++  return boundedExpansion
+ }
+ 
+ var MAX_PATTERN_LENGTH = 1024 * 64
+@@ -277,6 +290,10 @@ var assertValidPattern = function (pattern) {
+     throw new TypeError('invalid pattern')
+   }
+ 
++  // profile-2: bound legacy pattern complexity (GHSA-g3hv-75wg-m249)
++  if (pattern.length > 8192 || pattern.split('/').length > 128 || (pattern.match(/\*\*/g) || []).length > 16 || (pattern.match(/\{/g) || []).length > 32) {
++    throw new RangeError('Pattern exceeds legacy serving complexity limit')
++  }
+   if (pattern.length > MAX_PATTERN_LENGTH) {
+     throw new TypeError('pattern is too long')
+   }

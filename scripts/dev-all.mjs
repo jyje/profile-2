@@ -9,9 +9,9 @@ import {spawn} from 'node:child_process';
 import handler from 'serve-handler';
 import {requestPath} from './request-path.mjs';
 import {shouldRebuild} from './source-watch.mjs';
-import bracesMitigation from './patch-dependencies.cjs';
+import dependencyPatches from './verify-dependency-patches.cjs';
 
-bracesMitigation.patchDependencies(undefined, {check: true});
+dependencyPatches.verifyDependencyPatches();
 
 const root = path.resolve(import.meta.dirname, '..');
 const ownedRoot = path.join(root, '.dev-all');
@@ -70,7 +70,7 @@ function buildInto(slot) {
   fs.rmSync(destination, {recursive: true, force: true});
   return new Promise((resolve) => {
     const relative = path.relative(root, destination);
-    buildProcess = spawn('npm', ['run', 'build', '--', '--out-dir', relative], {
+    buildProcess = spawn('pnpm', ['run', 'build', '--out-dir', relative], {
       cwd: root,
       env: {...process.env, SITE_CONTENT_MODE: 'development', LABS_REMOTE_ENTRY: process.env.LABS_REMOTE_ENTRY ?? 'local'},
       stdio: 'inherit',
