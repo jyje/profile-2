@@ -1,6 +1,7 @@
 import {spawnSync} from 'node:child_process';
 import {readFileSync} from 'node:fs';
 import {pathToFileURL} from 'node:url';
+import {normalizePnpmAudit, parsePnpmLock} from './lib/pnpm-audit.mjs';
 
 const levels = new Set(['info', 'low', 'moderate', 'high', 'critical']);
 const issues = {undici: 66, joi: 68, minimatch: 69, deepmerge: 70, 'body-parser': 71, qs: 72, 'serialize-javascript': 73, braces: 65};
@@ -51,13 +52,15 @@ export function summarizeAudit(audit, lock) {
 
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
   try {
-    const result = spawnSync('npm', ['audit', '--package-lock-only', '--ignore-scripts', '--json'], {encoding: 'utf8', maxBuffer: 16 * 1024 * 1024});
-    if (![0, 1].includes(result.status)) throw new Error();
-    const report = summarizeAudit(JSON.parse(result.stdout), JSON.parse(readFileSync('package-lock.json')));
+    // pnpm audit exits 1 when advisories exist and also on failures, so success is
+    // decided by a parseable report with the expected shape, never by status alone.
+    const result = spawnSync('pnpm', ['audit', '--json'], {encoding: 'utf8', maxBuffer: 16 * 1024 * 1024});
+    if (result.error || ![0, 1].includes(result.status)) throw new Error();
+    const report = summarizeAudit(normalizePnpmAudit(JSON.parse(result.stdout)), parsePnpmLock(readFileSync('pnpm-lock.yaml', 'utf8')));
     console.log(JSON.stringify(report, null, 2));
     if (report.roots.some(root => !root.issue)) process.exitCode = 1;
   } catch {
-    console.error('Sanitized audit reporting failed. Review diagnostics privately; no raw output was published.');
+    console.error('Sanitized audit reporting failed (pnpm audit could not run or returned unusable output). Review diagnostics privately; no raw output was published.');
     process.exitCode = 1;
   }
 }
