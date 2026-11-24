@@ -31,12 +31,12 @@ and available-height contract. Callbacks from disposed mounts are ignored.
 
 ## Verification
 
-- `npm run test:ui`: 7 passing theme compatibility and remote screen checks.
-- `npm run test:content`: 28 passing content, graph, date and publication checks.
-- `npm run test:breadcrumbs`: both locales, all page families, one breadcrumb
+- `pnpm run test:ui`: 7 passing theme compatibility and remote screen checks.
+- `pnpm run test:content`: 28 passing content, graph, date and publication checks.
+- `pnpm run test:breadcrumbs`: both locales, all page families, one breadcrumb
   and JSON-LD list, parent destinations, project base paths, 390/864/1222px,
   light/dark themes, long labels, keyboard navigation, home/404 and print hiding.
-- `npm run test:labs-breadcrumbs`: run against the all-locale development server
+- `pnpm run test:labs-breadcrumbs`: run against the all-locale development server
   configured for the local remote; covers nested navigation, translated labels,
   stale callbacks, old v1 remotes, connection failure/retry and touch input.
 - Public bilingual build, `test:publication`, `test:wiki` and

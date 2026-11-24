@@ -42,7 +42,7 @@ function assertPreparedContent(root = ROOT, mode = contentMode()) {
   const marker = path.join(root, '.content-build/publication-context.json');
   const expected = JSON.stringify(publicationContext(root, mode));
   if (!fs.existsSync(marker) || fs.readFileSync(marker, 'utf8') !== expected) {
-    throw new Error('Content mode or .docignore changed. Use npm run build for public output, or npm run dev for local documents.');
+    throw new Error('Content mode or .docignore changed. Use pnpm run build for public output, or pnpm run dev for local documents.');
   }
 }
 

@@ -43,21 +43,21 @@ emoji titles, canonical routes, and Git-derived modification dates.
 
 ## Local development
 
-Use [.nvmrc](../../.nvmrc), currently Node 26.10.0, and install the lockfile with
-`npm ci`. CI and Pages currently select Node major 26; that is a project choice,
+Use [.nvmrc](../../.nvmrc), currently Node 26.13.1, and install the lockfile with
+`pnpm install --frozen-lockfile`. CI and Pages currently select Node major 26; that is a project choice,
 not a claim about Docusaurus's minimum Node requirement.
 
 | Command | Behavior |
 | --- | --- |
-| `npm run dev` | Both locales, automatic rebuild/reload, all interfaces on port 3000; includes development-only content |
-| `npm run dev:ko` / `npm run dev:en` | Single-locale HMR on port 3000; includes development-only content |
-| `npm start` | Standard single-locale Docusaurus development entrypoint; includes development-only content |
-| `npm run preview:lan` | Build and serve both locales on all interfaces, port 3000; development content included, no file watching |
-| `npm run build` | Build both locales into `build/`; public content by default |
-| `npm run serve` | Serve an existing build without rebuilding or watching |
-| `npm run sync` | Validate and regenerate staged content and curation in the selected content mode |
+| `pnpm run dev` | Both locales, automatic rebuild/reload, all interfaces on port 3000; includes development-only content |
+| `pnpm run dev:ko` / `pnpm run dev:en` | Single-locale HMR on port 3000; includes development-only content |
+| `pnpm start` | Standard single-locale Docusaurus development entrypoint; includes development-only content |
+| `pnpm run preview:lan` | Build and serve both locales on all interfaces, port 3000; development content included, no file watching |
+| `pnpm run build` | Build both locales into `build/`; public content by default |
+| `pnpm run serve` | Serve an existing build without rebuilding or watching |
+| `pnpm run sync` | Validate and regenerate staged content and curation in the selected content mode |
 
-Use `npm run dev` for the normal full-site view. It serves the last successful
+Use `pnpm run dev` for the normal full-site view. It serves the last successful
 build while rebuilding both locales and reloads browsers after success. It is
 slower than HMR. Docusaurus's HMR server handles one locale at a time.
 
@@ -84,7 +84,7 @@ The current home page contains an introduction, grouped icon navigation and
 date-based recommendations with a refresh control. Localized copy lives in
 `src/pages/index.tsx`; it consumes generated `curation.json` and daily-curation
 utilities. The separate navbar order does not reorder these authored quick-link
-groups. `npm run sync` validates [home-curation.yml](../../data/home-curation.yml)
+groups. `pnpm run sync` validates [home-curation.yml](../../data/home-curation.yml)
 and regenerates the recommendation catalog. IDs are source-relative locale
 blog/wiki paths without `.md`; blog IDs retain the date prefix.
 
@@ -120,7 +120,7 @@ routes, so local guide and design URLs remain `/wiki/guide/` and `/wiki/design/`
 Ignored documents receive a localized publication-warning callout before any
 English fallback notice. Do not copy generated warnings into source documents.
 
-`npm run build` defaults to `SITE_CONTENT_MODE=public`; CI and Pages explicitly
+`pnpm run build` defaults to `SITE_CONTENT_MODE=public`; CI and Pages explicitly
 set it. Development entrypoints opt into `SITE_CONTENT_MODE=development`.
 Exclusions happen before Docusaurus metadata is created, removing matched pages
 and colocated assets from public routes, navigation, search, graphs, tags,
@@ -136,7 +136,7 @@ secrecy: the source remains readable in this public Git repository.
 For the current project Pages deployment:
 
 ```bash
-SITE_CONTENT_MODE=public SITE_URL=https://jyje.github.io SITE_BASE_URL=/profile-2/ npm run build
+SITE_CONTENT_MODE=public SITE_URL=https://jyje.github.io SITE_BASE_URL=/profile-2/ pnpm run build
 ```
 
 The current public site is [profile-2 on GitHub Pages](https://jyje.github.io/profile-2/).
@@ -150,7 +150,7 @@ pushes to `main` and manual dispatch. It reads the origin/base path from Pages
 configuration, builds public content, verifies publication, and uploads/deploys
 the artifact. Required Pages repository settings are separate from local builds.
 `static/.nojekyll` also supports branch-based static hosting, but the current
-workflow uses Pages artifacts. Do not replace it with `npm run deploy` implicitly.
+workflow uses Pages artifacts. Do not replace it with `pnpm run deploy` implicitly.
 
 Directory-index HTML and `trailingSlash: true` support canonical directory URLs.
 Check both slash and slashless forms with `test:publication`, including initial
@@ -161,23 +161,23 @@ HTTP status without JavaScript; client navigation is not proof of static routing
 Career exports are private-workspace responsibilities, not public-site commands.
 The heading is retained for existing maintenance links.
 
-After `npm ci`, run the following sequentially in a free worktree, without a
+After `pnpm install --frozen-lockfile`, run the following sequentially in a free worktree, without a
 single-locale HMR process sharing its staging directories:
 
 ```bash
-npm run typecheck
-npm run test:ui
-npm run test:content
-SITE_CONTENT_MODE=public SITE_URL=https://jyje.github.io SITE_BASE_URL=/profile-2/ npm run build
-npx playwright install chromium
-npm run test:publication
+pnpm run typecheck
+pnpm run test:ui
+pnpm run test:content
+SITE_CONTENT_MODE=public SITE_URL=https://jyje.github.io SITE_BASE_URL=/profile-2/ pnpm run build
+pnpm exec playwright install chromium
+pnpm run test:publication
 node scripts/verify-built-site.mjs
-npm run test:wiki
-npm run test:breadcrumbs
-npm run test:homepage
+pnpm run test:wiki
+pnpm run test:breadcrumbs
+pnpm run test:homepage
 ```
 
-Linux runners may need `npx playwright install --with-deps chromium`, as CI uses.
+Linux runners may need `pnpm exec playwright install --with-deps chromium`, as CI uses.
 `verify-built-site.mjs` checks public navigation, localized About instructions,
 compatibility routes, keyboard/touch behavior, and responsive light/dark screens.
 `test:publication` also scans output for retired career payloads. The public CI
@@ -185,7 +185,7 @@ must not export or upload private PDFs. In the private workspace, preserve the
 one-page A4 Resume and multi-page Full CV requirements and inspect every changed
 PDF page. No private document layout is changed by this site migration.
 
-Run `npm run test:labs-breadcrumbs` separately against an all-locale development
+Run `pnpm run test:labs-breadcrumbs` separately against an all-locale development
 host configured for the local remote. It intercepts remote loading with fixtures;
 also inspect the actual Vue app. See the [breadcrumb verification record](breadcrumbs.md).
 Framework upgrades additionally require the [compatibility checklist](docusaurus-compatibility.md#verification-gates).

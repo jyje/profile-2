@@ -11,13 +11,13 @@ profile_format: 1
 템플릿은 vault의 `_templates/v1/{ko,en}/`에 있으며 루트 `.docignore`에 기록되어 있습니다. 공개·개발 빌드 모두 템플릿과 그 첨부 파일을 페이지로 내보내지 않습니다. 비공개 초안 보관소가 아니므로 비밀 정보를 넣지 마세요.
 
 ```sh
-npm run content:new -- --kind wiki --locale ko --path d/example.md --title '📄 예시'
-npm run content:new -- --kind blog --locale ko --path 2026-10-18-example.md --title '예시'
-npm run content:format
-npm run content:check
+pnpm run content:new --kind wiki --locale ko --path d/example.md --title '📄 예시'
+pnpm run content:new --kind blog --locale ko --path 2026-10-18-example.md --title '예시'
+pnpm run content:format
+pnpm run content:check
 ```
 
-`profile_template`과 `profile_format`은 템플릿·포매터 버전입니다. 기존 글을 템플릿 문구로 덮어쓰지 않습니다. `npm run content:migrate`로 명시적으로 전환하고 변경 내용을 검토하세요. 무시되는 가이드·설계 문서도 검사하지만 생성 미러와 `hidden/`은 수정하지 않습니다. 새 블로그 글은 초안으로 생성되며, 공개 저장소의 초안은 비공개가 아닙니다.
+`profile_template`과 `profile_format`은 템플릿·포매터 버전입니다. 기존 글을 템플릿 문구로 덮어쓰지 않습니다. `pnpm run content:migrate`로 명시적으로 전환하고 변경 내용을 검토하세요. 무시되는 가이드·설계 문서도 검사하지만 생성 미러와 `hidden/`은 수정하지 않습니다. 새 블로그 글은 초안으로 생성되며, 공개 저장소의 초안은 비공개가 아닙니다.
 
 사진·캡션은 인라인 스타일 대신 데이터 블록을 사용합니다.
 
@@ -27,7 +27,7 @@ npm run content:check
   caption: 사진 설명과 출처는 작성자가 소유합니다.
 ```
 
-블로그 본문은 기본 제목 아래의 `##`부터 시작합니다. 위키는 메타데이터 또는 기존 `#` 제목을 유지하며, 번역에도 같은 이모지를 사용합니다. 커밋 전 검사는 `npm run hooks:install`로 설치합니다. 부분 스테이징 파일에 자동 수정이 필요하면 중단하므로, 포맷 후 의도한 변경만 다시 스테이징하세요.
+블로그 본문은 기본 제목 아래의 `##`부터 시작합니다. 위키는 메타데이터 또는 기존 `#` 제목을 유지하며, 번역에도 같은 이모지를 사용합니다. 커밋 전 검사는 `pnpm run hooks:install`로 설치합니다. 부분 스테이징 파일에 자동 수정이 필요하면 중단하므로, 포맷 후 의도한 변경만 다시 스테이징하세요.
 
 ## Vault 열기
 
@@ -61,7 +61,7 @@ profile_format: 1
 ---
 ```
 
-제목만 있는 언어 파일도 작성 원본이므로 템플릿과 포맷 버전을 유지합니다. 이 표시가 없는 기존 파일을 추가하거나 다른 브랜치의 콘텐츠를 병합했다면 `npm run content:migrate`를 실행하세요. 본문은 비워 두어야 하며, 다른 언어의 본문은 포맷 도구가 아니라 빌드 준비 과정에서 가져옵니다.
+제목만 있는 언어 파일도 작성 원본이므로 템플릿과 포맷 버전을 유지합니다. 이 표시가 없는 기존 파일을 추가하거나 다른 브랜치의 콘텐츠를 병합했다면 `pnpm run content:migrate`를 실행하세요. 본문은 비워 두어야 하며, 다른 언어의 본문은 포맷 도구가 아니라 빌드 준비 과정에서 가져옵니다.
 
 위키 홈 하단의 [문서 그래프](../index.md#document-graph)에서 위키·블로그·태그의 연결을 탐색할 수 있습니다. 각 문서와 블로그 글의 본문 하단에도 현재 문서의 직접 연결·역링크·태그를 보여주는 그래프가 자동 표시됩니다. 별도의 Markdown 코드를 넣을 필요가 없습니다. 노드를 잡고 흔들면 연결된 노드도 움직이며, 배경 드래그와 확대·축소 버튼으로 탐색합니다. 키보드로는 노드 선택 목록과 문서 링크를 이용할 수 있습니다.
 
@@ -119,7 +119,7 @@ Obsidian 콜아웃 문법을 그대로 쓰면 사이트에서 Docusaurus 알림 
 /img/figures/raspberry-pi
 ```
 
-표준 표기는 백틱입니다. 작은따옴표 세 개(`'''anatomy`로 시작해 `'''`로 끝나는 블록)로 써도 같은 블록으로 처리하고, `npm run content:format`이 원문을 위 백틱 형태로 바꿔 저장합니다. 코드 블록 안에 적은 예시는 바꾸지 않습니다.
+표준 표기는 백틱입니다. 작은따옴표 세 개(`'''anatomy`로 시작해 `'''`로 끝나는 블록)로 써도 같은 블록으로 처리하고, `pnpm run content:format`이 원문을 위 백틱 형태로 바꿔 저장합니다. 코드 블록 안에 적은 예시는 바꾸지 않습니다.
 
 경로는 `/`로 시작하고, `..`, 빈 구간, 쿼리, 공백은 허용하지 않습니다. 형식이 틀리면 `content:check`가 `CONTENT-004`로, 파일이 없으면 `lint:content`가 `anatomy-asset-missing`으로 알려줍니다. `anatomy-figure`는 이 매크로로 대체되었습니다.
 
@@ -137,4 +137,4 @@ Obsidian 콜아웃 문법을 그대로 쓰면 사이트에서 Docusaurus 알림 
 
 - 확장자는 `.md`를 씁니다. React 컴포넌트가 필요할 때만 `.mdx`를 씁니다.
 - 블로그 파일명은 `YYYY-MM-DD-slug.md`이고, frontmatter의 `slug`가 주소가 됩니다.
-- 블로그와 위키에서 공통 태그를 씁니다. 새 태그는 `data/tags.yml`에 kebab-case 주소와 한국어·영어 표시 이름을 등록한 뒤 `npm run sync`를 실행합니다.
+- 블로그와 위키에서 공통 태그를 씁니다. 새 태그는 `data/tags.yml`에 kebab-case 주소와 한국어·영어 표시 이름을 등록한 뒤 `pnpm run sync`를 실행합니다.

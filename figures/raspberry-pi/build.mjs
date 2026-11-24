@@ -1,5 +1,5 @@
 // Raspberry Pi 4 Model B on a bench, with a GPIO probe gantry.
-// Source of static/anatomy/raspberry-pi*. Run through: npm run build:anatomy -- raspberry-pi
+// Source of static/anatomy/raspberry-pi*. Run through: pnpm run build:anatomy raspberry-pi
 // Direct: node figures/raspberry-pi/build.mjs [--light] [--full] [--out <dir>]
 //   default: just the card, for embedding. --full adds the legend, caption and page margins.
 import { mkdirSync, writeFileSync } from "node:fs";

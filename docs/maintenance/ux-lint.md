@@ -70,11 +70,11 @@ upgrades cannot silently invalidate that calculation.
 
 ```sh
 # Public GitHub Pages project-path build:
-SITE_BASE_URL=/profile-2/ npm run build
-npm run lint:ux
+SITE_BASE_URL=/profile-2/ pnpm run build
+pnpm run lint:ux
 
 # Existing bilingual development staging:
-VERIFY_ORIGIN=http://localhost:3000 VERIFY_BASE_PATH=/ npm run lint:ux
+VERIFY_ORIGIN=http://localhost:3000 VERIFY_BASE_PATH=/ pnpm run lint:ux
 ```
 
 Default input is `build/` served under `/profile-2/`. `VERIFY_BUILD_DIR`,

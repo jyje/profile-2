@@ -51,7 +51,7 @@ from public source paths because ignored private files cannot be committed here.
   regression suites passed. No live Labs/backend behavior was changed or certified.
 - An independent public-source copy built both locales at `/` with no hidden
   folder, generated inputs, private sibling repository, or Git history. It reused
-  installed lockfile dependencies, not a fresh npm install. Root-path publication
+  installed lockfile dependencies, not a fresh pnpm install. Root-path publication
   and browser verification passed as well.
 - Private workspace validation, 13 tests, and typecheck passed after append-only
   preservation. Existing missing-translation, editorial-review and expired-

@@ -55,8 +55,8 @@ Read [UX lint](../../docs/maintenance/ux-lint.md) before changing layout. Inspec
 ## Audit and repair
 
 1. Capture affected pages before editing. A stale build is not verification.
-2. Run `npm run lint:ux` against a fresh public project-path build. For bilingual
-   staging use `VERIFY_ORIGIN=http://localhost:3000 VERIFY_BASE_PATH=/ npm run
+2. Run `pnpm run lint:ux` against a fresh public project-path build. For bilingual
+   staging use `VERIFY_ORIGIN=http://localhost:3000 VERIFY_BASE_PATH=/ pnpm run
    lint:ux`. Do not overlap content builds or switch to a single-locale server.
 3. Read `.playwright-mcp/ux-lint/after/report.json` and open the PNGs. Compare About
    overview/portfolio/resume, wiki, blog list/post, tags and Labs at each width,

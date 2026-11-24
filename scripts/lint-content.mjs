@@ -7,7 +7,7 @@ import macroModule from '../plugins/content-templates/macros.cjs';
 const {macros, normalizeMacroFences} = macroModule;
 
 // Structure lint for every authored document that can render: content/{ko,en}/{wiki,blog}.
-// Prettier-level formatting, stamps and titles belong to `npm run content:check`; this adds what it does not cover.
+// Prettier-level formatting, stamps and titles belong to `pnpm run content:check`; this adds what it does not cover.
 // Baseline checks apply to all documents. A document that stamps `profile_layout: {kind, version}` also gets that
 // layout version's rules. Layouts are registered in design-system/content-contract.json; their scaffolds live in
 // content/_templates/, which is outside the locale roots and ignored by publication (see test-lint-content.mjs).
@@ -158,7 +158,7 @@ export function lintDocument(root, file, source, registry, {assets = true, tags}
   }
   const figures = document.fences.filter(item => item.lang === 'anatomy');
   if (figures.length && image === undefined && (document.frontMatter?.type === 'Reference' || document.frontMatter?.profile_layout !== undefined)) {
-    add('warn', 'anatomy-thumbnail', 1, 'Add an `image:` front matter (npm run build:anatomy writes static/img/figures/<name>/thumbnail.png)');
+    add('warn', 'anatomy-thumbnail', 1, 'Add an `image:` front matter (pnpm run build:anatomy writes static/img/figures/<name>/thumbnail.png)');
   }
   if (assets) {
     for (const fence of figures) {
@@ -326,7 +326,7 @@ export function fixContent(root, {write = true} = {}) {
 
 export function assertContentLint(root) {
   const errors = lintContent(root).filter(item => item.severity === 'error');
-  if (errors.length) throw new Error(`Content lint failed:\n${errors.map(format).join('\n')}\nRun "npm run lint:content" for details.`);
+  if (errors.length) throw new Error(`Content lint failed:\n${errors.map(format).join('\n')}\nRun "pnpm run lint:content" for details.`);
 }
 
 const format = item => `${item.severity.padEnd(5)} ${item.file}:${item.line}  ${item.rule}  ${item.message}`;

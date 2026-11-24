@@ -46,7 +46,7 @@ Docusaurus navbar dropdowns, mobile drawer, built-in search and document
 navigation remain unchanged. Vue Labs remains independent. This migration
 does not alter the graph's physics, hover/drag logic, data or selection state.
 
-Run `npm run test:ui`, `npm run typecheck` and the bilingual build. Check light
+Run `pnpm run test:ui`, `pnpm run typecheck` and the bilingual build. Check light
 and dark mode, keyboard focus, mobile overflow, and unaffected document styles.
 When adding a portal-based component, validate its mount container, inherited
 tokens, stacking and focus handling explicitly. Disabling Preflight means

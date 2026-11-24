@@ -58,7 +58,7 @@ the final correction changed only six resume pages, which were re-rendered and
 reviewed. The other 18 page images were identical to their reviewed versions.
 No font-size reduction or automatic clipping was introduced.
 
-The existing server was stopped and the feature worktree's `npm run dev` was
+The existing server was stopped and the feature worktree's `pnpm run dev` was
 started on `0.0.0.0:3000`. Both `/about/selected-cv/?role=inference` and
 `/en/about/selected-cv/?role=inference` returned HTTP 200 and rendered the
 requested role. The live 320px view had no horizontal overflow. Local development

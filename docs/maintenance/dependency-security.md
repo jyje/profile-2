@@ -32,7 +32,7 @@ Primary references:
 
 ## Operational boundaries
 
-Use repository scripts and lifecycle-enabled `npm ci`. The patch changes
+Use repository scripts and lifecycle-enabled `pnpm install --frozen-lockfile`. The patch changes
 installed dependencies only, never the registry tarball or published version.
 No audit exception, alert dismissal or `npm audit --force` is used.
 Do not pass attacker-controlled glob patterns into the development server or
@@ -49,10 +49,10 @@ request handler. Existing range/output limitations still apply.
 
 Verified with Node 26.10.0 / npm 11.19.1:
 
-- Clean `npm ci` applied the root lifecycle patch successfully. No forced or
+- Clean `pnpm install --frozen-lockfile` applied the root lifecycle patch successfully. No forced or
   legacy-peer installation flags were used. npm reported existing third-party
   lifecycle approval notices; the production build still completed successfully.
-- `npm run test:security`: 9 tests passed, including prototype-inherited worker
+- `pnpm run test:security`: 9 tests passed, including prototype-inherited worker
   options, missing/tampered patch rejection and deep string/direct-AST inputs.
 - Typecheck, UI (12), content (32) and design-system (13) tests passed; design
   lint and content-format checks reported zero violations.

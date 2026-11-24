@@ -13,12 +13,12 @@ profile_format: 1
 1. 스캐폴드를 만듭니다. 한국어와 영어를 각각 실행하고, 영어 제목에는 한글을 쓰지 않습니다.
 
    ```bash
-   npm run content:new -- --kind wiki --locale ko --layout reference --path d/raspberry-pi.md --title "🍓 라즈베리파이"
-   npm run content:new -- --kind wiki --locale en --layout reference --path d/raspberry-pi.md --title "🍓 Raspberry Pi"
+   pnpm run content:new --kind wiki --locale ko --layout reference --path d/raspberry-pi.md --title "🍓 라즈베리파이"
+   pnpm run content:new --kind wiki --locale en --layout reference --path d/raspberry-pi.md --title "🍓 Raspberry Pi"
    ```
 
 2. 소개 자료 하나만 남기고, 필요 없는 섹션은 지웁니다. 빈 섹션은 오류입니다.
-3. `npm run content:check`(포맷, 스탬프)와 `npm run lint:content`(구조)를 실행합니다. 빌드와 개발 서버도 구조 검사를 합니다.
+3. `pnpm run content:check`(포맷, 스탬프)와 `pnpm run lint:content`(구조)를 실행합니다. 빌드와 개발 서버도 구조 검사를 합니다.
 
 스캐폴드는 `content/_templates/v1/{ko,en}/wiki-reference.md`에 있습니다. 이 폴더는 로케일 소스 루트 밖이고 `.docignore`에도 있어서 어떤 모드에서도 렌더링되지 않습니다.
 
@@ -46,7 +46,7 @@ profile_format: 1
 
 첫 H2 앞에 소개 자료가 하나 있어야 합니다.
 
-- Anatomy 그림: `anatomy` 매크로(본문은 그림 폴더 경로 한 줄). 사용법은 [Obsidian 작성 가이드](./obsidian-authoring.md)를 봅니다. 그림의 소스는 `figures/<name>/build.mjs`이고, `npm run build:anatomy -- <name>`이 다크/라이트 페이지와 소셜 카드용 `thumbnail.png`를 `static/img/figures/<name>/`에 만듭니다. 문서 front matter에 `image: /img/figures/<name>/thumbnail.png`를 적습니다.
+- Anatomy 그림: `anatomy` 매크로(본문은 그림 폴더 경로 한 줄). 사용법은 [Obsidian 작성 가이드](./obsidian-authoring.md)를 봅니다. 그림의 소스는 `figures/<name>/build.mjs`이고, `pnpm run build:anatomy <name>`이 다크/라이트 페이지와 소셜 카드용 `thumbnail.png`를 `static/img/figures/<name>/`에 만듭니다. 문서 front matter에 `image: /img/figures/<name>/thumbnail.png`를 적습니다.
 - 썸네일 또는 다이어그램 이미지: `![설명](./assets/파일.png)`
 - `mermaid` 코드 블록 (사이트에서 Mermaid를 켠 뒤에 사용합니다)
 
@@ -54,8 +54,8 @@ profile_format: 1
 
 두 검사가 역할을 나눕니다.
 
-- `npm run content:check`: 포맷(prettier), 스탬프, 제목, 블록 스키마. 문서마다 `profile_template`과 `profile_format`이 필요합니다.
-- `npm run lint:content`: 이 레이아웃의 구조와 소개 자료. `design-system/layouts/reference-v1.json`이 규칙을 정의합니다.
+- `pnpm run content:check`: 포맷(prettier), 스탬프, 제목, 블록 스키마. 문서마다 `profile_template`과 `profile_format`이 필요합니다.
+- `pnpm run lint:content`: 이 레이아웃의 구조와 소개 자료. `design-system/layouts/reference-v1.json`이 규칙을 정의합니다.
 
 `lint:content`가 보는 것은 다음과 같습니다.
 
@@ -64,8 +64,8 @@ profile_format: 1
 - Anatomy 그림이 있는 Reference 문서에 `image:`가 없으면 경고, `/`로 시작하는 `image:` 파일이 `static/`에 없으면 오류입니다.
 - 영어 문서가 제목만 있으면(본문은 한국어에서 가져옴) 본문 구조 검사는 건너뜁니다.
 - `profile_layout`이 없는 Reference 문서는 레거시로 분류되며 `--verbose`로 목록을 봅니다. `--strict`는 경고도 오류로 취급합니다.
-- `npm run lint:content -- --fix`는 불릿이 한 줄뿐인 레거시 `## Name`을 `## Definition` 끝의 `- 표기:` 줄로 옮깁니다. 판단이 필요한 경우(불릿이 여러 개이거나 하위 헤딩이 있는 경우)는 건드리지 않습니다. `--dry-run`으로 먼저 확인합니다.
-- `npm run report:content`는 Reference 문서마다 레이아웃, 상태, 소개 자료, 썸네일, 섹션 유무를 표로 보여줍니다. `Understanding`과 `Usage`가 비어 있는 문서를 찾을 때 씁니다.
+- `pnpm run lint:content --fix`는 불릿이 한 줄뿐인 레거시 `## Name`을 `## Definition` 끝의 `- 표기:` 줄로 옮깁니다. 판단이 필요한 경우(불릿이 여러 개이거나 하위 헤딩이 있는 경우)는 건드리지 않습니다. `--dry-run`으로 먼저 확인합니다.
+- `pnpm run report:content`는 Reference 문서마다 레이아웃, 상태, 소개 자료, 썸네일, 섹션 유무를 표로 보여줍니다. `Understanding`과 `Usage`가 비어 있는 문서를 찾을 때 씁니다.
 
 ## 태그
 
@@ -77,7 +77,7 @@ profile_format: 1
 - 한국어 문서와 영어 문서는 같은 태그를 씁니다.
 - 슬러그를 바꾸면 옛 슬러그를 `aliases`에 적어 둡니다. 옛 주소가 새 주소로 리다이렉트됩니다.
 
-`npm run lint:content`가 슬러그·라벨 형식, 라벨과 슬러그의 일치, 라벨 중복, 별칭 충돌, 문서의 미등록 태그, 한국어와 영어의 태그 불일치를 오류로 잡습니다. 태그 이름을 바꾸면 주소가 바뀌기 때문에 자동 수정은 없습니다. 직접 고칩니다. `content/{ko,en}/{wiki,blog}/tags.yml`은 `data/tags.yml`에서 생성되는 파일이므로 손으로 고치지 않습니다.
+`pnpm run lint:content`가 슬러그·라벨 형식, 라벨과 슬러그의 일치, 라벨 중복, 별칭 충돌, 문서의 미등록 태그, 한국어와 영어의 태그 불일치를 오류로 잡습니다. 태그 이름을 바꾸면 주소가 바뀌기 때문에 자동 수정은 없습니다. 직접 고칩니다. `content/{ko,en}/{wiki,blog}/tags.yml`은 `data/tags.yml`에서 생성되는 파일이므로 손으로 고치지 않습니다.
 
 ## 버전 관리
 

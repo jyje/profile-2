@@ -9,7 +9,7 @@ import {writeThumbnail} from './anatomy-thumbnail.mjs';
 const root = path.resolve(import.meta.dirname, '..');
 const name = process.argv[2];
 if (!name || !fs.existsSync(path.join(root, 'figures', name, 'build.mjs'))) {
-  console.error(`Usage: npm run build:anatomy -- <name>   (needs figures/<name>/build.mjs)`);
+  console.error(`Usage: pnpm run build:anatomy <name>   (needs figures/<name>/build.mjs)`);
   process.exit(1);
 }
 const script = path.join(root, 'figures', name, 'build.mjs');

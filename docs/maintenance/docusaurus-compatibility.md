@@ -8,7 +8,7 @@ maintenance obligations, not a guarantee of compatibility with future releases.
 
 At this policy's introduction, the host targets Docusaurus 3.10.2, React 19,
 and Node 26. `.nvmrc` selects 26.10.0 while CI/Pages select major 26. Consult
-[package.json](../../package.json), [package-lock.json](../../package-lock.json),
+[package.json](../../package.json), [pnpm-lock.yaml](../../pnpm-lock.yaml),
 [.nvmrc](../../.nvmrc), and the workflow files for the actual current versions.
 
 `future.v4: true` in [docusaurus.config.ts](../../docusaurus.config.ts) enables
@@ -87,7 +87,7 @@ Security updates remain separate from the weekly version-update schedule and
 grouping. There are no blanket ignores, auto-merge rules, or alternate target
 branches. GitHub's repository security-update setting must also be enabled;
 this YAML alone does not enable it. Review the existing overrides and the local
-braces guard whenever Dependabot proposes related updates. `npm run test:security`
+braces guard whenever Dependabot proposes related updates. `pnpm run test:security`
 checks the YAML naming, ecosystems, schedules, bot format and grouping policy.
 
 - Upgrade direct official `@docusaurus/*` packages together to one target release.
@@ -95,12 +95,12 @@ checks the YAML naming, ecosystems, schedules, bot format and grouping policy.
   and verify resolved versions in the lockfile. Use exact target versions when
   making that coordinated upgrade, rather than leaving official packages free to
   drift independently. This follows the [official same-version requirement](https://docusaurus.io/docs/installation#updating-your-docusaurus-version).
-- Commit manifest and lockfile together. Regenerate with the approved Node/npm
-  environment, review the diff, then prove a clean `npm ci` install. Do not use
-  an incidental `npm update` as a framework migration.
+- Commit manifest and lockfile together. Regenerate with the approved Node/pnpm
+  environment, review the diff, then prove a clean `pnpm install --frozen-lockfile` install. Do not use
+  an incidental `pnpm update` as a framework migration.
 - Check engines and peer dependencies for Node, React/React DOM, MDX, TypeScript,
   search, and build plugins. Match the target release's requirements, not a
-  guessed v4 requirement. Record the Node/npm versions used in local and CI checks.
+  guessed v4 requirement. Record the Node/pnpm versions used in local and CI checks.
   Node changes must reconcile `.nvmrc`, engines, CI, and Pages configurations.
 - Do not use `--force`, `--legacy-peer-deps`, or a forced audit fix to hide conflicts.
   Upgrade, replace, or defer the incompatible integration with explicit review.
@@ -165,10 +165,10 @@ validation to installed braces 3.0.3. It verifies the original SHA-256 of each
 modified file, checks every installed lockfile path, and rejects unknown sources
 or versions rather than guessing a new patch. The `postinstall` lifecycle applies
 it; build and development entrypoints refuse missing or changed patches.
-Always run `npm ci` with lifecycle scripts enabled. Raw Docusaurus CLI invocation
+Always run `pnpm install --frozen-lockfile` with lifecycle scripts enabled. Raw Docusaurus CLI invocation
 is not a substitute for the guarded repository entrypoints.
 
-`npm run test:security` verifies the patch, ordinary glob semantics, hostile
+`pnpm run test:security` verifies the patch, ordinary glob semantics, hostile
 nesting/direct ASTs, worker compatibility, and all locked fixed-version pins.
 CI and Pages both run this gate. Do not dismiss the braces alert as fixed or
 renumber the dependency to hide it: npm audit and Dependabot still correctly
@@ -220,7 +220,7 @@ additional results in the PR:
   content, while the all-locale development view includes its warning callouts.
 - Blog list/grid, actual search results, global tags and cross-links, graph
   hover/drag, and document-level graph rendering. Preserve canonical destinations.
-- `npm run test:labs-breadcrumbs` against the configured development host:
+- `pnpm run test:labs-breadcrumbs` against the configured development host:
   old/new v1 remotes, nested fixture navigation, translated labels, stale callbacks,
   errors/retries, and unmount cleanup. Inspect the actual Vue remote too; fixtures
   do not certify production remote deployment or API services.

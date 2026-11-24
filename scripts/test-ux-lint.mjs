@@ -48,8 +48,8 @@ test('authored pages declare navigation data instead of placing breadcrumbs insi
 
 function assertCaptureWorkflow(workflow,name){
   const steps=workflow.jobs.build.steps;
-  const lint=steps.findIndex(step=>step.run==='npm run lint:ux');
-  assert.ok(lint>steps.findIndex(step=>/npm run build/.test(step.run??'')),name);
+  const lint=steps.findIndex(step=>step.run==='pnpm run lint:ux');
+  assert.ok(lint>steps.findIndex(step=>/pnpm run build/.test(step.run??'')),name);
   assert.equal(steps[lint].id,'ux_lint');
   const upload=steps.find(step=>step.uses?.startsWith('actions/upload-artifact@')&&/ux-lint/.test(step.with?.name??''));
   assert.ok(upload,name);

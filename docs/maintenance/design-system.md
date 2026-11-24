@@ -32,15 +32,15 @@ weaken baselines to silence failures.
 
 ```sh
 nvm use
-npm ci
-npx playwright install chromium
-npm run hooks:install
-npm run lint:design
-npm run design:fix
-npm run content:check
-npm run content:format
-npm run content:migrate
-npm run test:design
+pnpm install --frozen-lockfile
+pnpm exec playwright install chromium
+pnpm run hooks:install
+pnpm run lint:design
+pnpm run design:fix
+pnpm run content:check
+pnpm run content:format
+pnpm run content:migrate
+pnpm run test:design
 ```
 
 Safe fixes are equivalent spacing/shadow tokens, an explicit button type outside
@@ -59,7 +59,7 @@ Canonical inputs are `content/{ko,en}/{blog,wiki}` and authored Korean/English
 page MDX, including `.docignore` guides/design notes. Generated mirrors, hidden
 drafts, build output and private repositories are not inputs. Token changes retain
 current values and CSS-module ownership; no Tailwind layout rewrite is required.
-Public `npm run build` enforces the static contracts. Development permits WIP
+Public `pnpm run build` enforces the static contracts. Development permits WIP
 formatting; the pre-commit and publication gates do not.
 
 ## Versioned scaffolds and existing articles
@@ -72,9 +72,9 @@ publication roots. Neither public nor development output includes scaffolds or
 their colocated assets. These are public, versioned templates, not secret storage.
 
 ```sh
-npm run content:new -- --kind wiki --locale ko --path d/example.md --title '📄 예시'
-npm run content:new -- --kind blog --locale en --path 2026-10-18-example.md --title 'Example'
-npm run content:new -- --kind page --locale en --path example.mdx --title 'Example'
+pnpm run content:new --kind wiki --locale ko --path d/example.md --title '📄 예시'
+pnpm run content:new --kind blog --locale en --path 2026-10-18-example.md --title 'Example'
+pnpm run content:new --kind page --locale en --path example.mdx --title 'Example'
 ```
 
 The generator refuses overwrites/path traversal and requires an authored blog
@@ -94,7 +94,7 @@ A wiki page may also stamp a versioned **layout** with
 stamp: `design-system/content-contract.json` registers each version, its rules live
 in `design-system/layouts/<kind>-v<N>.json`, and its scaffolds in
 `content/_templates/v<N>/{locale}/wiki-<kind>.md`. Scaffold one with
-`npm run content:new -- --kind wiki --layout reference ...`. `npm run lint:content`
+`pnpm run content:new --kind wiki --layout reference ...`. `pnpm run lint:content`
 enforces the rules (H2 set and order, empty sections, intro visual, locale parity,
 Anatomy assets) and also runs inside `syncAll()`. A published layout version is
 immutable: a rule change is a new version that pages opt into explicitly.

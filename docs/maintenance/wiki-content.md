@@ -31,7 +31,7 @@ file: localized category files by themselves do not translate the default sideba
 
 ## Publication modes and dates
 
-Root `.docignore` defines public exclusions. `npm run dev` includes excluded sources
+Root `.docignore` defines public exclusions. `pnpm run dev` includes excluded sources
 from `_guide/` and `_design/` under the local `/wiki/guide/` and `/wiki/design/`
 aliases. A localized, generated warning precedes the document body and any English
 fallback notice. Authored source Markdown is never modified to insert warnings.
@@ -69,16 +69,16 @@ This work does not replace that existing external asset dependency.
 ## Reproducible verification
 
 ```sh
-npm run test:content
-npm run test:ui
-npm run typecheck
-SITE_URL=https://jyje.github.io SITE_BASE_URL=/profile-2/ npm run build
-npm run test:publication
-npm run test:wiki
+pnpm run test:content
+pnpm run test:ui
+pnpm run typecheck
+SITE_URL=https://jyje.github.io SITE_BASE_URL=/profile-2/ pnpm run build
+pnpm run test:publication
+pnpm run test:wiki
 node scripts/verify-built-site.mjs
 
 # Against the running all-locale development server:
-SITE_CONTENT_MODE=development VERIFY_ORIGIN=http://127.0.0.1:3000 VERIFY_BASE_PATH=/ npm run test:wiki
+SITE_CONTENT_MODE=development VERIFY_ORIGIN=http://127.0.0.1:3000 VERIFY_BASE_PATH=/ pnpm run test:wiki
 ```
 
 The wiki browser check covers both locales, legacy query/hash forwarding, inline
@@ -141,7 +141,7 @@ fall back to the framework's hardcoded development example.
 
 Single-locale HMR commands share the generated staging tree with public builds.
 They print a warning: do not run public build/typecheck concurrently with those
-commands. Use `npm run dev` for the supported all-locale workflow that serves
+commands. Use `pnpm run dev` for the supported all-locale workflow that serves
 separate successful output slots while serialized builds run. This restriction
 does not claim full per-mode isolation of the single-locale HMR entrypoints.
 

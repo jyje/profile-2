@@ -8,7 +8,7 @@ plugin. The remote uses official `@module-federation/vite` 1.22.1.
 
 1. In the sibling `labs` checkout, run `npm ci` with Node 26.
 2. Run `LABS_PUBLIC_ORIGIN=http://<LAN-IP>:5174 npm run dev` there.
-3. In profile-2, run `npm run dev`. The all-locale server defaults
+3. In profile-2, run `pnpm run dev`. The all-locale server defaults
    `LABS_REMOTE_ENTRY` to `local`; the browser uses its own hostname on port 5174.
 4. Visit `/labs` and `/en/labs` on port 3000. The existing language preference
    can redirect a directly entered URL; use the navbar language menu to switch.

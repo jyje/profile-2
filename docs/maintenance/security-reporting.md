@@ -1,6 +1,6 @@
 # Dependency audit reporting
 
-Run `npm run audit:summary` after a clean installation. The reporter invokes
+Run `pnpm run audit:summary` after a clean installation. The reporter invokes
 lockfile-only npm audit and emits a versioned allowlisted JSON summary. CI
 uploads only `audit-summary.json`, never the scanner's raw stdout/stderr.
 

@@ -11,7 +11,7 @@ async function launch() {
 
 export async function writeThumbnail(root, name) {
   const source = path.join(root, 'static/img/figures', name, 'light', 'index.html');
-  if (!fs.existsSync(source)) throw new Error(`Missing ${path.relative(root, source)}; run npm run build:anatomy -- ${name}`);
+  if (!fs.existsSync(source)) throw new Error(`Missing ${path.relative(root, source)}; run pnpm run build:anatomy ${name}`);
   const output = path.join(root, 'static/img/figures', name, 'thumbnail.png');
   const browser = await launch();
   try {

@@ -12,8 +12,8 @@ Use a clean, full-history checkout with Node 26 and OpenSSL. The TLS regression
 suite creates and removes ephemeral certificates; it never reads operational keys.
 
 ```sh
-npm ci
-npm run test:container
+pnpm install --frozen-lockfile
+pnpm run test:container
 node scripts/container-context.mjs > /tmp/profile2-context.json
 ```
 
@@ -35,7 +35,7 @@ docker buildx build --load --platform linux/arm64 --tag profile2-validation:dev 
 docker run -d --name profile2-validation --read-only \
   --tmpfs /tmp:rw,noexec,nosuid,size=32m --cap-drop ALL \
   --security-opt no-new-privileges -p 127.0.0.1:3038:8080 profile2-validation:dev
-npm run verify:container
+pnpm run verify:container
 docker rm -f profile2-validation
 ```
 

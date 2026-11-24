@@ -21,7 +21,7 @@ problems, and I explore the technologies behind AI-native development.
 
 ## Explore
 
-Contributors: after `nvm use && npm ci`, run `npm run hooks:install`. Versioned
+Contributors: after `nvm use && corepack enable && pnpm install --frozen-lockfile`, run `pnpm run hooks:install`. Versioned
 scaffolds, safe autofix and screenshot gates are documented in the
 [project design system](docs/maintenance/design-system.md).
 
@@ -66,13 +66,17 @@ that the existing `jyje.online` domain has migrated to this repository.
 
 ## Run Locally
 
-Use the Node.js version in [.nvmrc](.nvmrc). With nvm installed:
+Use Node.js 26 (the exact version is pinned in [.nvmrc](.nvmrc)) and pnpm. pnpm comes
+from Corepack, which reads the version from the `packageManager` field in
+[package.json](package.json), so there is nothing to install globally. With nvm
+installed:
 
 ```bash
 nvm install
 nvm use
-npm ci
-npm run dev
+corepack enable
+pnpm install --frozen-lockfile
+pnpm run dev
 ```
 
 Open `http://localhost:3000/` or `http://localhost:3000/en/`. Both languages rebuild

@@ -11,13 +11,13 @@ profile_format: 1
 Scaffolds live in the vault's `_templates/v1/{ko,en}/` folder, recorded in root `.docignore`. Neither public nor development builds publish them or their assets as pages. These are public scaffolds, not private draft storage.
 
 ```sh
-npm run content:new -- --kind wiki --locale en --path d/example.md --title '📄 Example'
-npm run content:new -- --kind blog --locale en --path 2026-10-18-example.md --title 'Example'
-npm run content:format
-npm run content:check
+pnpm run content:new --kind wiki --locale en --path d/example.md --title '📄 Example'
+pnpm run content:new --kind blog --locale en --path 2026-10-18-example.md --title 'Example'
+pnpm run content:format
+pnpm run content:check
 ```
 
-`profile_template` and `profile_format` identify the schema and formatter. Existing prose is never replaced with scaffold prose. Run `npm run content:migrate` explicitly and review its diff. Ignored guides/design notes are checked; generated mirrors and hidden drafts are not edited. New blog files start as drafts, but drafts in public repositories are not private.
+`profile_template` and `profile_format` identify the schema and formatter. Existing prose is never replaced with scaffold prose. Run `pnpm run content:migrate` explicitly and review its diff. Ignored guides/design notes are checked; generated mirrors and hidden drafts are not edited. New blog files start as drafts, but drafts in public repositories are not private.
 
 Use a data block for a captioned image instead of inline styling:
 
@@ -27,7 +27,7 @@ Use a data block for a captioned image instead of inline styling:
   caption: Authors own the caption and attribution.
 ```
 
-Blog bodies start at `##` under the native title. Wiki notes retain title metadata or their existing `#` heading, with matching emoji in translations. Install the pre-commit gate with `npm run hooks:install`. Partial-stage autofix aborts; format explicitly and restage only intended hunks.
+Blog bodies start at `##` under the native title. Wiki notes retain title metadata or their existing `#` heading, with matching emoji in translations. Install the pre-commit gate with `pnpm run hooks:install`. Partial-stage autofix aborts; format explicitly and restage only intended hunks.
 
 ## Opening the vault
 
@@ -62,7 +62,7 @@ profile_format: 1
 ```
 
 Title-only locale files are authored sources too: keep their template and formatter
-versions, and run `npm run content:migrate` after adding legacy files or merging
+versions, and run `pnpm run content:migrate` after adding legacy files or merging
 content from a branch without these stamps. Migration must leave the body empty
 so staging, not the authoring formatter, supplies the borrowed text.
 
@@ -122,7 +122,7 @@ Repeated structured data in blog posts, wiki documents, and pages can use YAML c
 /img/figures/raspberry-pi
 ```
 
-Backticks are the standard form. A block written with three apostrophes (opening with `'''anatomy` and closing with `'''`) is treated as the same block, and `npm run content:format` rewrites the source into the backtick form above. Examples written inside code blocks are left alone.
+Backticks are the standard form. A block written with three apostrophes (opening with `'''anatomy` and closing with `'''`) is treated as the same block, and `pnpm run content:format` rewrites the source into the backtick form above. Examples written inside code blocks are left alone.
 
 The path starts with `/` and may not contain `..`, empty segments, a query or spaces. `content:check` reports a malformed path as `CONTENT-004`, and `lint:content` reports a missing file as `anatomy-asset-missing`. `anatomy-figure` has been replaced by this macro.
 
@@ -140,4 +140,4 @@ Title-only English `.md` and `.mdx` pages show the Korean body with a browser tr
 
 - Use the `.md` extension. Use `.mdx` only when a React component is needed.
 - Blog files are named `YYYY-MM-DD-slug.md`, and the `slug` in the front matter becomes the URL.
-- Use the shared taxonomy for blog and wiki content. Register each kebab-case slug and its Korean and English display names in `data/tags.yml`, then run `npm run sync`.
+- Use the shared taxonomy for blog and wiki content. Register each kebab-case slug and its Korean and English display names in `data/tags.yml`, then run `pnpm run sync`.
